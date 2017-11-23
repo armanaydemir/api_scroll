@@ -1,0 +1,17 @@
+{
+  "name": "scroll_api",
+  "version": "1.0.0",
+  "description": "api to collect scroll data",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Arman Aydemir",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.1",
+    "request": "^2.83.0"
+  }
+}
