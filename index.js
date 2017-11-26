@@ -11,18 +11,38 @@ var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
 
+var sections = []
+
 // nytimes articles for testing -----
 // https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
 // https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
-
+// https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html
 
 function parse_body(body) {
 	const $ = cheerio.load(body);
-	const woah = $('p');
+	const bodies = $('p');
 	var i = 0;
-	var sections = [];
-	while(i < woah.length){
-		sections.push(woah[i].children[0].data);
+	sections = []; // need to fix this so it gets everything and not just the first tag of text
+	while(i < bodies.length){
+		var o = 0;
+		var subsections = [];
+		//console.log(bodies[i].children.length)
+		while(o < bodies[i].children.length){
+			if(bodies[i].children[o].type == 'text'){
+				subsections.push(bodies[i].children[o].data);
+				console.log(bodies[i].children[o].data)
+			}
+			else if(bodies[i].children[o].type == 'tag'){
+				console.log(bodies[i].children[o].children[0].data)
+				subsections.push(bodies[i].children[o].children[0].data);
+			}
+			o ++;
+			//console.log(subsections);
+		}	
+		//console.log(subsections);
+		//console.log(subsections.join(''));
+		//console.log('------------------------')
+		sections.push(subsections.join());
 		i ++;
 	}
 	console.log(sections);
@@ -40,10 +60,10 @@ function init_article(address) {
 	});
 }
 
-init_article("https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html");
+init_article("https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html");
 
 app.get("/", function(req, res) {
-    res.send("Hello World");
+    res.send(sections);
 });
 
 var server = app.listen(3000, function () {
