@@ -66,6 +66,12 @@ app.get("/", function(req, res) {
     res.send(sections);
 });
 
+app.post("/submit_data", function(req, res) {
+	console.log('bitch i might might')
+	console.log(req);
+	console.log(res);
+});
+
 var server = app.listen(3000, function () {
     console.log("Listening on port %s...", server.address().port);
 });
