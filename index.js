@@ -53,6 +53,7 @@ function init_article(address) {
     		parse_body(body);
     	}
     	console.log(error)
+    	console.log('waoijsadfl;kadjsf')
 	});
 }
 
