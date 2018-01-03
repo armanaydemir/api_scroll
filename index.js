@@ -5,7 +5,11 @@ var app = express();
 var request = require('request');
 var fs = require('fs');
 
+// to do
 console.log('started at least')
+//take out immediate repeats
+//add device type (8, 8s, x, etc) or be able to deduce it from device id
+//add starting screen to app
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -53,9 +57,10 @@ function init_article(address) {
     request(options, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
     		parse_body(body);
-    	}
-    	console.log(error)
-    	console.log('waoijsadfl;kadjsf')
+    	}else{
+	    	console.log(error)
+	    	console.log('waoijsadfl;kadjsf')
+	    }
 	});
 }
 
@@ -77,7 +82,9 @@ app.get("/", function(req, res) {
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-	fs.appendFileSync(data.device_id + ':' + data.startTime + ':' + article + '.csv', JSON.stringify(data) + '\n')
+	console.log(data)
+	var csvify = [data.time, data.top_line, data.top_section, data.bottom_line, data.bottom_section];
+	fs.appendFileSync(data.device_id + ':' + data.startTime + ':' + article + '.csv', csvify.join() + '\n')
 	res.sendStatus(200)
 });
 
