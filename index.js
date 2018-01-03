@@ -5,6 +5,8 @@ var app = express();
 var request = require('request');
 var fs = require('fs');
 
+console.log('started at least')
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
