@@ -52,6 +52,7 @@ function init_article(address) {
 		if (!error && response.statusCode == 200) {
     		parse_body(body);
     	}
+    	console.log(error)
 	});
 }
 
@@ -74,7 +75,6 @@ app.get("/", function(req, res) {
 app.post("/submit_data", function(req, res) {
 	var data = req.body
 	fs.appendFileSync(data.device_id + ':' + data.startTime + ':' + article + '.csv', JSON.stringify(data) + '\n')
-	//writer.write(data)
 	res.sendStatus(200)
 });
 
