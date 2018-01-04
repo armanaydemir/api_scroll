@@ -7,9 +7,9 @@ var fs = require('fs');
 
 // to do
 console.log('started at least')
-//take out immediate repeats
+//set timer to throttle api on xcode
 //add device type (8, 8s, x, etc) or be able to deduce it from device id
-//add starting screen to app
+//fix up starting screen (constraints) and addd ability to link to own article
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,13 +18,11 @@ var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
 
-var sections = []
-
 function parse_body(body) {
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 0;
-	sections = []; 
+	var sections = []; 
 	while(i < bodies.length){
 		var o = 0;
 		var subsections = [];
@@ -47,44 +45,39 @@ function parse_body(body) {
 		i ++;
 	}
 	console.log(sections[sections.length-1]);
+	return sections;
 }
 
-function init_article(address) {
+function init_article(address, res) {
    	var options = {
     	url: 'https://mercury.postlight.com/parser?url=' + address,
     	headers: headers
 	};
     request(options, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
-    		parse_body(body);
+    		res.send(parse_body(body));
     	}else{
-	    	console.log(error)
-	    	console.log('waoijsadfl;kadjsf')
+	    	console.log('error: ' + error)
+	    	res.send(error);
 	    }
 	});
 }
 
-// nytimes articles for testing -----
-// https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
-// https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
-// https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html
-
-article = "https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html"
-
-init_article(article);
-
-article = article.split('/')
-article = article[article.length -1]
 
 app.get("/", function(req, res) {
-    res.send(sections);
+	var data = req.query
+	console.log(data.articleLink);
+
+    init_article(data.articleLink, res);
 });
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
 	console.log(data)
+	var link = data.article.split('/')
+	link = link[link.length-1]
 	var csvify = [data.time, data.top_line, data.top_section, data.bottom_line, data.bottom_section];
-	fs.appendFileSync(data.device_id + ':' + data.startTime + ':' + article + '.csv', csvify.join() + '\n')
+	fs.appendFileSync(data.device_id + ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
 	res.sendStatus(200)
 });
 
