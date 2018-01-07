@@ -69,6 +69,9 @@ function init_article(address, res) {
 	});
 }
 
+app.get("/test", function(req, res) {
+	res.send('hi this test worked')
+});
 
 app.get("/article", function(req, res) {
 	var data = req.query
