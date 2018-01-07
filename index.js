@@ -70,6 +70,7 @@ function init_article(address, res) {
 }
 
 app.get("/test", function(req, res) {
+	console.log('woah');
 	res.send('hi this test worked')
 });
 
