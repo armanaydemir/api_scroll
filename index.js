@@ -7,6 +7,7 @@ var fs = require('fs');
 
 // to do
 console.log('started at least')
+// change api route on app side to /article instead of /
 //test with different articles and phone types to make sure data is valid
 //give list of article to select from to start with
 
@@ -69,7 +70,7 @@ function init_article(address, res) {
 }
 
 
-app.get("/", function(req, res) {
+app.get("/article", function(req, res) {
 	var data = req.query
 	console.log(data.articleLink);
 
