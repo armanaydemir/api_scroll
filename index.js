@@ -7,9 +7,14 @@ var fs = require('fs');
 
 // to do
 console.log('started at least')
-//set timer to throttle api on xcode
-//add device type (8, 8s, x, etc) or be able to deduce it from device id
-//fix up starting screen (constraints) and addd ability to link to own article
+//test with different articles and phone types to make sure data is valid
+//give list of article to select from to start with
+
+
+
+// https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
+// https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
+// https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -77,7 +82,7 @@ app.post("/submit_data", function(req, res) {
 	var link = data.article.split('/')
 	link = link[link.length-1]
 	var csvify = [data.time, data.top_line, data.top_section, data.bottom_line, data.bottom_section];
-	fs.appendFileSync(data.device_id + ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
+	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
 	res.sendStatus(200)
 });
 
