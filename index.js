@@ -91,6 +91,6 @@ app.post("/submit_data", function(req, res) {
 	res.sendStatus(200)
 });
 
-var server = app.listen(8080, function () {
+var server = app.listen(80, function () {
     console.log("Listening on port %s...", server.address().port);
 });
