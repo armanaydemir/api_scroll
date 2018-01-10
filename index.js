@@ -74,7 +74,7 @@ app.get("/test", function(req, res) {
 	res.send('hi this test worked')
 });
 
-app.get("/article", function(req, res) {
+app.get("/", function(req, res) {
 	var data = req.query
 	console.log(data.articleLink);
 
@@ -91,6 +91,6 @@ app.post("/submit_data", function(req, res) {
 	res.sendStatus(200)
 });
 
-var server = app.listen(4000, function () {
+var server = app.listen(3000, function () {
     console.log("Listening on port %s...", server.address().port);
 });
