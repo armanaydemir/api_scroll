@@ -7,9 +7,8 @@ var fs = require('fs');
 
 // to do
 console.log('started at least')
-// change api route on app side to /article instead of /
 //test with different articles and phone types to make sure data is valid
-//give list of article to select from to start with
+//change api endpoint on app side
 
 
 
@@ -47,7 +46,7 @@ function parse_body(body) {
 		//console.log(subsections);
 		//console.log(subsections.join(''));
 		//console.log('------------------------')
-		sections.push((i+1) + subsections.join('')); // i + 1 is for debugging
+		sections.push(subsections.join(''));
 		i ++;
 	}
 	console.log(sections[sections.length-1]);
@@ -68,11 +67,6 @@ function init_article(address, res) {
 	    }
 	});
 }
-
-app.get("/test", function(req, res) {
-	console.log('woah');
-	res.send('hi this test worked')
-});
 
 app.get("/", function(req, res) {
 	var data = req.query
