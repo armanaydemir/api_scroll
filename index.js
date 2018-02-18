@@ -4,6 +4,7 @@ const cheerio = require('cheerio')
 var app = express();
 var request = require('request');
 var fs = require('fs');
+var moment = require('moment')
 
 // to do
 console.log('started at least')
@@ -80,6 +81,7 @@ app.post("/submit_data", function(req, res) {
 	console.log(data)
 	var link = data.article.split('/')
 	link = link[link.length-1]
+	data.time = moment(data.time).unix
 	var csvify = [data.time, data.top_line, data.top_section, data.bottom_line, data.bottom_section];
 	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
 	res.sendStatus(200)
