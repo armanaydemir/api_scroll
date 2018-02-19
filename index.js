@@ -78,11 +78,11 @@ app.get("/", function(req, res) {
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-	console.log(data)
 	var link = data.article.split('/')
 	link = link[link.length-1]
 	data.time = moment(data.time).unix()
-	var csvify = [data.time, data.top_line, data.top_section, data.bottom_line, data.bottom_section];
+	var csvify = [data.time, parseInt(data.top_line), parseInt(data.top_section), parseInt(data.bottom_line), parseInt(data.bottom_section)];
+	console.log(csvify)
 	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
 	res.sendStatus(200)
 });
