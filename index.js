@@ -6,10 +6,7 @@ var request = require('request');
 var fs = require('fs');
 var moment = require('moment')
 
-// to do
 console.log('started at least')
-//test with different articles and phone types to make sure data is valid
-//change api endpoint on app side
 
 
 
@@ -72,7 +69,6 @@ function init_article(address, res) {
 app.get("/", function(req, res) {
 	var data = req.query
 	console.log(data.articleLink);
-
     init_article(data.articleLink, res);
 });
 
@@ -81,9 +77,7 @@ app.post("/submit_data", function(req, res) {
 	var link = data.article.split('/')
 	link = link[link.length-1]
 	data.time = moment(data.time).unix()
-	var csvify = [data.time, parseInt(data.top_line), parseInt(data.top_section), parseInt(data.bottom_line), parseInt(data.bottom_section)];
-	console.log(csvify)
-	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
+	console.log(data)
 	res.sendStatus(200)
 });
 
