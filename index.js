@@ -75,8 +75,9 @@ app.get("/", function(req, res) {
 app.post("/submit_data", function(req, res) {
 	var data = req.body
 	var link = data.article.split('/')
-	link = link[link.length-1]
+	data.article = link[link.length-1]
 	data.time = moment(data.time).unix()
+	data.startTime = moment(data.startTime).unix()
 	console.log(data)
 	res.sendStatus(200)
 });
