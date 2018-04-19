@@ -78,7 +78,13 @@ app.post("/submit_data", function(req, res) {
 	data.article = link[link.length-1]
 	data.time = moment(data.time).unix()
 	data.startTime = moment(data.startTime).unix()
-	var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, data.text];
+	console.log('       ')
+	console.log('----------')
+	console.log('       ')
+	console.log(data.text)
+	console.log(typeof data.text)
+	console.log(JSON.stringify(data.text))
+	var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
   	fs.appendFileSync(data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
 
 	res.sendStatus(200)
