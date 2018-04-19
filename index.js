@@ -78,7 +78,9 @@ app.post("/submit_data", function(req, res) {
 	data.article = link[link.length-1]
 	data.time = moment(data.time).unix()
 	data.startTime = moment(data.startTime).unix()
-	console.log(data)
+	var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, data.text];
+  	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')		  	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
+
 	res.sendStatus(200)
 });
 
