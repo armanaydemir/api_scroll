@@ -74,16 +74,12 @@ app.get("/", function(req, res) {
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-	var link = data.article.split('/')
+	var link = data.article.split('.html')[0]
+	link = data.article.split('/')
 	data.article = link[link.length-1]
 	data.time = moment(data.time).unix()
 	data.startTime = moment(data.startTime).unix()
-	console.log('       ')
-	console.log('----------')
-	console.log('       ')
-	console.log(data.text)
-	console.log(typeof data.text)
-	console.log(JSON.stringify(data.text))
+
 	var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
   	fs.appendFileSync(data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
 
