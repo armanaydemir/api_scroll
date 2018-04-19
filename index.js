@@ -79,7 +79,7 @@ app.post("/submit_data", function(req, res) {
 	data.time = moment(data.time).unix()
 	data.startTime = moment(data.startTime).unix()
 	var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, data.text];
-  	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')		  	fs.appendFileSync(data.device_id +':' + data.device_type+ ':' + data.startTime + ':' + link + '.csv', csvify.join() + '\n')
+  	fs.appendFileSync(data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
 
 	res.sendStatus(200)
 });
