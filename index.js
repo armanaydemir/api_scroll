@@ -72,7 +72,7 @@ app.get("/", function(req, res) {
     init_article(data.articleLink, res);
 });
 
-app.post("/close_article", function(req,res)){
+app.post("/close_article", function(req,res){
 	var data = req.body
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
@@ -83,7 +83,7 @@ app.post("/close_article", function(req,res)){
 	fs.rename('temp/' + filename, 'data/' + filename)
 
 	res.sendStatus(200)
-}
+});
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
