@@ -72,6 +72,19 @@ app.get("/", function(req, res) {
     init_article(data.articleLink, res);
 });
 
+app.post("/close_article", function(req,res)){
+	var data = req.body
+	data.article = data.article.split('.html')[0]
+	var link = data.article.split('/')
+	data.article = link[link.length-1]
+	data.time = moment(data.time).unix()
+	data.startTime = moment(data.startTime).unix()
+	var filename = data.UDID + ':' + data.startTime + ':' + data.article + '.csv'
+	fs.rename('temp/' + filename, 'data/' + filename)
+
+	res.sendStatus(200)
+}
+
 app.post("/submit_data", function(req, res) {
 	var data = req.body
 	data.article = data.article.split('.html')[0]
@@ -81,7 +94,7 @@ app.post("/submit_data", function(req, res) {
 	data.startTime = moment(data.startTime).unix()
 
 	var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
-  	fs.appendFileSync(data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
+  	fs.appendFileSync('temp/' + data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
 
 	res.sendStatus(200)
 });
