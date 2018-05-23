@@ -35,9 +35,10 @@ function parse_body(body) {
 				subsections.push(bodies[i].children[o].data.replace('\\n',''));
 				//console.log(bodies[i].children[o].data)
 			}
-			else if(bodies[i].children[o].type == 'tag'){
+			else if(bodies[i].children[o].type == 'tag' && bodies[i].children[o].children.length > 0 && bodies[i].children[o].children[0].data){
+				//console.log(bodies[i].children[o].children[0])
 				subsections.push(bodies[i].children[o].children[0].data.replace('\\n',''));
-				//console.log(bodies[i].children[o].children[0].data)
+				
 			}
 			o ++;
 		}	
@@ -65,6 +66,22 @@ function init_article(address, res) {
 	    }
 	});
 }
+
+function test_article(address) {
+	var options = {
+    	url: 'https://mercury.postlight.com/parser?url=' + address,
+    	headers: headers
+	};
+    request(options, function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+    		console.log(parse_body(body));
+    	}else{
+	    	console.log('error: ' + error)
+	    }
+	});
+}
+
+//test_article("https://mobile.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html?rref=collection%2Fsectioncollection%2Ftechnology&action=click&contentCollection=technology&region=rank&module=package&version=highlights&contentPlacement=1&pgtype=sectionfront")
 
 app.get("/", function(req, res) {
 	var data = req.query
