@@ -9,6 +9,11 @@ var moment = require('moment')
 console.log('started at least')
 
 
+//starting with first line of article at bottom, users scrolls first line to situate it to comfortable postition
+//add blank space to bottom so bottom line can be at the top
+
+// text at top of line - get time appear and time left 
+
 
 // https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
 // https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
@@ -108,10 +113,10 @@ app.post("/submit_data", function(req, res) {
 	var link = data.article.split('/')
 	data.article = link[link.length-1]
 	data.time = moment(data.time).unix()
-	data.startTime = moment(data.startTime).unix()
-
-	var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
-  	fs.appendFileSync('temp/' + data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
+	data.appeared = moment(data.appeared).unix()
+	console.log(data)
+	//var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
+  	//fs.appendFileSync('temp/' + data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
 
 	res.sendStatus(200)
 });
