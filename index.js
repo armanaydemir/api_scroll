@@ -27,11 +27,11 @@ var headers = {
 };
 
 function parse_body(body) {
+	let title = JSON.parse(body).title
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 0;
 	var sections = []; 
-	var title = body.title
 	sections.push(title)
 	while(i < bodies.length){
 		var o = 0;
@@ -88,7 +88,9 @@ function test_article(address) {
 	});
 }
 
+//test_article("https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html")
 test_article("https://mobile.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html?rref=collection%2Fsectioncollection%2Ftechnology&action=click&contentCollection=technology&region=rank&module=package&version=highlights&contentPlacement=1&pgtype=sectionfront")
+
 
 app.get("/", function(req, res) {
 	var data = req.query
