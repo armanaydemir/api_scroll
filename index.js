@@ -7,13 +7,9 @@ var fs = require('fs');
 var moment = require('moment')
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/scrollData";
+var url = "mongodb://localhost:27017/scrollDataTemp";
 
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  console.log("Database created!");
-  db.close();
-});
+
 
 console.log('started at least')
 
@@ -97,7 +93,7 @@ function test_article(address) {
 	});
 }
 
-test_article("https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html")
+//test_article("https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html")
 //test_article("https://mobile.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html?rref=collection%2Fsectioncollection%2Ftechnology&action=click&contentCollection=technology&region=rank&module=package&version=highlights&contentPlacement=1&pgtype=sectionfront")
 
 
@@ -128,6 +124,13 @@ app.post("/submit_data", function(req, res) {
 	data.time = moment(data.time).unix()
 	data.appeared = moment(data.appeared).unix()
 	console.log(data)
+	MongoClient.connect(url, function(err, db) {
+  		if (err) throw err;
+  		db.collection(data.UDID + ':' + data.startTime + ':' + data.article).insertOne(data, function(e, res){
+  			if (e) throw e;
+  			db.close();
+  		})
+	});
 	//var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
   	//fs.appendFileSync('temp/' + data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
 
