@@ -121,6 +121,7 @@ app.post("/submit_data", function(req, res) {
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
 	data.article = link[link.length-1]
+
 	//data.time = moment(data.time).unix()
 	//data.appeared = moment(data.appeared).unix()
 	console.log(data)
@@ -128,7 +129,7 @@ app.post("/submit_data", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbtemp = db.db("temp")
   		if (err) throw err;
-  		dbtemp.collection(data.UDID + ':'+ data.article).insertOne(data, function(e, res){
+  		dbtemp.collection(data.UDID + '_'+ data.article).insertOne(data, function(e, res){
   			if (e) throw e;
 
   			db.close();
