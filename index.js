@@ -129,7 +129,7 @@ app.post("/submit_data", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbtemp = db.db("temp")
   		if (err) throw err;
-  		dbtemp.collection(data.UDID + '_'+ data.article).insertOne(data, function(e, res){
+  		dbtemp.collection(data.type).insertOne(data, function(e, res){
   			if (e) throw e;
 
   			db.close();
