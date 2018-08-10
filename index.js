@@ -6,6 +6,15 @@ var request = require('request');
 var fs = require('fs');
 var moment = require('moment')
 
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/scrollData";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  console.log("Database created!");
+  db.close();
+});
+
 console.log('started at least')
 
 
