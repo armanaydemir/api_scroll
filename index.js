@@ -121,8 +121,8 @@ app.post("/submit_data", function(req, res) {
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
 	data.article = link[link.length-1]
-	data.time = moment(data.time).unix()
-	data.appeared = moment(data.appeared).unix()
+	//data.time = moment(data.time).unix()
+	//data.appeared = moment(data.appeared).unix()
 	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
