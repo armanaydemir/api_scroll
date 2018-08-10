@@ -103,6 +103,9 @@ app.get("/", function(req, res) {
     init_article(data.articleLink, res);
 });
 
+
+
+
 app.post("/close_article", function(req,res){
 	var data = req.body
 	data.article = data.article.split('.html')[0]
@@ -120,7 +123,8 @@ app.post("/submit_data", function(req, res) {
 	var data = req.body
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
-	data.article = link[link.length-1]
+	data.article = link[link.length-1].replace(/-/g, '_');
+	data.UDID = data.UDID.replace.replace(/-/g, '_');
 
 	//data.time = moment(data.time).unix()
 	//data.appeared = moment(data.appeared).unix()
@@ -129,14 +133,12 @@ app.post("/submit_data", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbtemp = db.db("temp")
   		if (err) throw err;
-  		dbtemp.collection(data.type).insertOne(data, function(e, res){
+  		dbtemp.collection(data.UDID + ' ' + data.article).insertOne(data, function(e, res){
   			if (e) throw e;
 
   			db.close();
   		});
 	});
-	//var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
-  	//fs.appendFileSync('temp/' + data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
 
 	res.sendStatus(200)
 });
