@@ -7,7 +7,7 @@ var fs = require('fs');
 var moment = require('moment')
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/scrollDataTemp";
+var url = "mongodb://localhost:27017/";
 
 
 
@@ -124,9 +124,10 @@ app.post("/submit_data", function(req, res) {
 	data.time = moment(data.time).unix()
 	data.appeared = moment(data.appeared).unix()
 	console.log(data)
+	var dbtemp = db.db("temp")
 	MongoClient.connect(url, function(err, db) {
   		if (err) throw err;
-  		db.collection(data.UDID + ':' + data.startTime + ':' + data.article).insertOne(data, function(e, res){
+  		dbtemp.collection(data.UDID + ':' + data.startTime + ':' + data.article).insertOne(data, function(e, res){
   			if (e) throw e;
   			db.close();
   		})
