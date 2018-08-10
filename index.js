@@ -124,13 +124,15 @@ app.post("/submit_data", function(req, res) {
 	data.time = moment(data.time).unix()
 	data.appeared = moment(data.appeared).unix()
 	console.log(data)
-	var dbtemp = db.db("temp")
+	
 	MongoClient.connect(url, function(err, db) {
+		var dbtemp = db.db("temp")
   		if (err) throw err;
   		dbtemp.collection(data.UDID + ':' + data.startTime + ':' + data.article).insertOne(data, function(e, res){
   			if (e) throw e;
+
   			db.close();
-  		})
+  		});
 	});
 	//var csvify = [data.UDID, data.type, data.article, data.startTime, data.time, JSON.stringify(data.text)];
   	//fs.appendFileSync('temp/' + data.UDID + ':' + data.startTime + ':' + data.article + '.csv', csvify.join() + '\n')
