@@ -115,7 +115,7 @@ app.post("/close_article", function(req,res){
 	data.startTime = moment(data.startTime).unix()
 
 	MongoClient.connect(url, function(err, db) {
-		var dbd= db.db('data')
+		var dbd = db.db('data')
 		if (err) throw err; // this is also where actuall article session should be copied to permanent db from 'temp'
   		dbd.collection('sessions').insertOne(data, function(e, res){ //collection of all reading sessions with thier article, UDID, start time, device type, link, etc
   			if (e) throw e;
