@@ -126,10 +126,10 @@ app.post("/submit_data", function(req, res) {
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
 	data.article = data.artcle + '.html'
-	data.articleTitle = link[link.length-1].replace(/-/g, '_');
+	data.articleTitle = link[link.length-1].replace(/-/g, '_');ß
 	data.UDID = data.UDID.replace(/-/g, '_');
 
-	data.startTime = moment(data.time).unix()
+	data.startTime = moment(data.startTime).unix()
 	//data.appeared = moment(data.appeared).unix()
 	console.log(data)
 	
