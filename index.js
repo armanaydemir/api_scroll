@@ -116,10 +116,10 @@ app.post("/close_article", function(req,res){
 
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
-		if (err) throw err; // this is also where actuall article session should be copied to permanent db from 'temp'
-  		dbd.collection('sessions').insertOne(data, function(e, res){ //collection of all reading sessions with thier article, UDID, start time, device type, link, etc
-  			if (e) throw e;
-  		}); 
+		if (err) throw err; 
+		// this is also where actuall article session should be copied to permanent db from 'temp'
+		//collection of all reading sessions with thier article, UDID, start time, device type, link, etc
+  		dbd.collection('sessions').insertOne(data, function(e, res){ if (e) throw e; }); 
   		db.close();
 	});
   	
@@ -145,9 +145,7 @@ app.post("/submit_data", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbtemp = db.db("temp")
 		if (err) throw err;
-  		dbtemp.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){
-  			if (e) throw e;
-  		});
+  		dbtemp.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
