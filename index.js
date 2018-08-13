@@ -121,12 +121,15 @@ app.post("/close_article", function(req,res){
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
+
+	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
+	data.article = data.artcle + '.html'
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 
-	//data.time = moment(data.time).unix()
+	data.startTime = moment(data.time).unix()
 	//data.appeared = moment(data.appeared).unix()
 	console.log(data)
 	
