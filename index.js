@@ -94,7 +94,7 @@ function test_article(address) {
 }
 
 //test_article("https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html")
-//test_article("https://mobile.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html?rref=collection%2Fsectioncollection%2Ftechnology&action=click&contentCollection=technology&region=rank&module=package&version=highlights&contentPlacement=1&pgtype=sectionfront")
+//test_article("https://mobile.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html")
 
 
 app.get("/", function(req, res) {
@@ -114,7 +114,7 @@ app.post("/close_article", function(req,res){
 	data.time = moment(data.time).unix()
 	data.startTime = moment(data.startTime).unix()
 	var filename = data.UDID + ':' + data.startTime + ':' + data.article + '.csv'
-	fs.rename('temp/' + filename, 'data/' + filename)
+	//fs.rename('temp/' + filename, 'data/' + filename)
 
 	res.sendStatus(200)
 });
@@ -123,7 +123,7 @@ app.post("/submit_data", function(req, res) {
 	var data = req.body
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
-	data.article = link[link.length-1].replace(/-/g, '_');
+	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 
 	//data.time = moment(data.time).unix()
@@ -133,7 +133,7 @@ app.post("/submit_data", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbtemp = db.db("temp")
   		if (err) throw err;
-  		dbtemp.collection(data.UDID + data.article).insertOne(data, function(e, res){
+  		dbtemp.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){
   			if (e) throw e;
 
   			db.close();
