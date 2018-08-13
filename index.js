@@ -108,18 +108,26 @@ app.get("/", function(req, res) {
 
 app.post("/close_article", function(req,res){
 	var data = req.body
+	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
-	data.article = link[link.length-1]
+	data.article = data.article + '.html'
+	data.articleTitle = link[link.length-1].replace(/-/g, '_');
+	data.UDID = data.UDID.replace(/-/g, '_');
+	//time formatting
 	data.time = moment(data.time).unix()
 	data.startTime = moment(data.startTime).unix()
+	console.log(data)
 
+	const article_db_link = data.UDID + data.articleTitle + data.startTime
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
+		var dbtemp = db.db('temp')
 		if (err) throw err; 
-		// this is also where actuall article session should be copied to permanent db from 'temp'
+		// this is also where actual article session should be copied to permanent db from 'temp'
+		dbtemp.collection(article_db_link).copyTo(dbd.collection(article_db_link))
 		//collection of all reading sessions with thier article, UDID, start time, device type, link, etc
-  		dbd.collection('sessions').insertOne(data, function(e, res){ if (e) throw e; }); 
+  		dbd.collection('sessions').insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
   	
@@ -136,7 +144,7 @@ app.post("/submit_data", function(req, res) {
 	data.article = data.article + '.html'
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
-
+	//time formatting
 	data.startTime = moment(data.startTime).unix()
 	data.appeared = moment(data.appeared).unix()
 	data.time = moment(data.time).unix()
