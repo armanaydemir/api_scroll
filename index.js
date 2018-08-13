@@ -133,7 +133,7 @@ app.post("/submit_data", function(req, res) {
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
-	data.article = data.artcle + '.html'
+	data.article = data.article + '.html'
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 
