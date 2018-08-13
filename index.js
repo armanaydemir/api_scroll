@@ -113,8 +113,16 @@ app.post("/close_article", function(req,res){
 	data.article = link[link.length-1]
 	data.time = moment(data.time).unix()
 	data.startTime = moment(data.startTime).unix()
-	var filename = data.UDID + ':' + data.startTime + ':' + data.article + '.csv'
-	//fs.rename('temp/' + filename, 'data/' + filename)
+
+	MongoClient.connect(url, function(err, db) {
+		var dbarticle = db.db('data')
+		if (err) throw err; // this is also where actuall article session should be copied to permanent db from 'temp'
+  		dbtemp.collection('sessions').insertOne(data, function(e, res){ //collection of all reading sessions with thier article, UDID, start time, device type, link, etc
+  			if (e) throw e;
+  		}); 
+  		db.close();
+	});
+  	
 
 	res.sendStatus(200)
 });
@@ -130,17 +138,17 @@ app.post("/submit_data", function(req, res) {
 	data.UDID = data.UDID.replace(/-/g, '_');
 
 	data.startTime = moment(data.startTime).unix()
-	//data.appeared = moment(data.appeared).unix()
+	data.appeared = moment(data.appeared).unix()
+	data.time = moment(data.time).unix()
 	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
 		var dbtemp = db.db("temp")
-  		if (err) throw err;
+		if (err) throw err;
   		dbtemp.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){
   			if (e) throw e;
-
-  			db.close();
   		});
+  		db.close();
 	});
 
 	res.sendStatus(200)
