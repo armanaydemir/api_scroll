@@ -122,11 +122,8 @@ app.post("/close_article", function(req,res){
 	const article_db_link = data.UDID + data.articleTitle + data.startTime
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
-		var dbtemp = db.db('temp')
 		if (err) throw err; 
-		// this is also where actual article session should be copied to permanent db from 'temp'
-		dbtemp.collection(article_db_link).copyTo(dbd.collection(article_db_link))
-		//collection of all reading sessions with thier article, UDID, start time, device type, link, etc
+		//collection of all completed reading sessions with thier article, UDID, start time, device type, link, etc
   		dbd.collection('sessions').insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
@@ -151,9 +148,9 @@ app.post("/submit_data", function(req, res) {
 	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
-		var dbtemp = db.db("temp")
+		var dbd = db.db("data")
 		if (err) throw err;
-  		dbtemp.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
