@@ -142,6 +142,7 @@ app.post("/submit_data", function(req, res) {
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 	//time formatting
+	console.log(data.startTime) // need to update times to make them more specific (ie milliseconds instead of seconds)
 	data.startTime = moment(data.startTime).unix()
 	data.appeared = moment(data.appeared).unix()
 	data.time = moment(data.time).unix()
