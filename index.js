@@ -104,7 +104,7 @@ app.get("/", function(req, res) {
 		if(e) throw e;
 		var dbarticle = db.db('read')
 		var order = {articleTitle: 1};
-		dbarticle.collection('articles').sort(order).toArray(function(err, results){
+		dbarticle.collection('articles').find().sort(order).toArray(function(err, results){
 			if(err) throw err;
 			console.log(results)
 		});
