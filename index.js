@@ -65,6 +65,11 @@ function parse_body(body) {
 }
 
 function init_article(address, res) {
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbarticle = db.db('read')
+
+	})
    	var options = {
     	url: 'https://mercury.postlight.com/parser?url=' + address,
     	headers: headers
@@ -99,18 +104,25 @@ function test_article(address) {
 
 app.get("/", function(req, res) {
 	var data = req.query
+
+	data.article_link = data.articleLink.split('.html')[0] + '.html'
 	console.log(data.articleLink);
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbarticle = db.db('read')
-		var order = {articleTitle: 1};
-		dbarticle.collection('articles').find().sort(order).toArray(function(err, results){
-			if(err) throw err;
-			console.log(results)
-		});
-	});
     init_article(data.articleLink, res);
 });
+
+app.get('articles', function(req, res){
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db('data')
+		var order = {title: 1};
+		dbd.collection('articles').find().sort(order).toArray(function(err, results){
+			if(err) throw err;
+			console.log(results)
+			db.close()
+		});
+	});
+});
+
 
 
 
@@ -120,7 +132,7 @@ app.post("/close_article", function(req,res){
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
-	data.article = data.article + '.html'
+	data.article_link = data.article + '.html'
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 	//time formatting
@@ -128,13 +140,12 @@ app.post("/close_article", function(req,res){
 	data.startTime = moment(data.startTime).unix()
 	console.log(data)
 
-	const article_db_link = data.UDID + data.articleTitle + data.startTime
+	data.article_db_link = data.UDID + data.articleTitle + data.startTime
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
-		var dbarticle = db.db('read')
 		if (err) throw err; 
 		//collection of all completed reading sessions with thier article, UDID, start time, device type, link, etc
-		dbarticle.collection('articles').insertOne(data, function(e, res){ if (e) throw e; });
+		dbd.collection('articles').insertOne({'text': db.text, 'db_link':db.article_db_link, 'article_link':data.article_link, 'title': data.title}, function(e, res){ if (e) throw e; });
   		dbd.collection('sessions').insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
@@ -161,7 +172,7 @@ app.post("/submit_data", function(req, res) {
 	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db("data")
+		var dbd = db.db("sessions") // maybe change the name of the db
 		if (err) throw err;
   		dbd.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
