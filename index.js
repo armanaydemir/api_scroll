@@ -65,11 +65,11 @@ function parse_body(body) {
 }
 
 function init_article(address, res) {
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbarticle = db.db('read')
+	// MongoClient.connect(url, function(e, db) {
+	// 	if(e) throw e;
+	// 	var dbd= db.db('data')
 
-	})
+	// })
    	var options = {
     	url: 'https://mercury.postlight.com/parser?url=' + address,
     	headers: headers
@@ -136,17 +136,16 @@ app.post("/close_article", function(req,res){
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 	//time formatting
-	data.time = moment(data.time).unix()
-	data.startTime = moment(data.startTime).unix()
 	console.log(data)
 
-	data.article_db_link = data.UDID + data.articleTitle + data.startTime
+	data.db_link = data.UDID + data.articleTitle + data.startTime
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
 		//collection of all completed reading sessions with thier article, UDID, start time, device type, link, etc
-		dbd.collection('articles').insertOne({'text': db.text, 'db_link':db.article_db_link, 'article_link':data.article_link, 'title': data.title}, function(e, res){ if (e) throw e; });
-  		dbd.collection('sessions').insertOne(data, function(e, res){ if (e) throw e; });
+		dbd.collection('articles').insertOne({'text': data.text, 'db_link': data.articleTitle, 'article_link':data.article_link, 'title': data.title}, function(e, res){ if (e) throw e; });
+		dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_db_link': data.articleTitle, 'startTime': data.startTime, 
+												'endTime': data.time, 'session_db_link': data.db_link }, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 	
@@ -166,9 +165,6 @@ app.post("/submit_data", function(req, res) {
 	data.UDID = data.UDID.replace(/-/g, '_');
 	//time formatting
 	console.log(data.startTime) // need to update times to make them more specific (ie milliseconds instead of seconds)
-	data.startTime = moment(data.startTime).unix()
-	data.appeared = moment(data.appeared).unix()
-	data.time = moment(data.time).unix()
 	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
