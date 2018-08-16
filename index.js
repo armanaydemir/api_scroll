@@ -100,6 +100,15 @@ function test_article(address) {
 app.get("/", function(req, res) {
 	var data = req.query
 	console.log(data.articleLink);
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbarticle = db.db('read')
+		var order = {articleTitle: 1};
+		dbarticle.collection('articles').sort(order).toArray(function(err, results){
+			if(err) throw err;
+			console.log(results)
+		});
+	});
     init_article(data.articleLink, res);
 });
 
@@ -122,11 +131,14 @@ app.post("/close_article", function(req,res){
 	const article_db_link = data.UDID + data.articleTitle + data.startTime
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
+		var dbarticle = db.db('read')
 		if (err) throw err; 
 		//collection of all completed reading sessions with thier article, UDID, start time, device type, link, etc
+		dbarticle.collection('articles').insertOne(data, function(e, res){ if (e) throw e; });
   		dbd.collection('sessions').insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
+	
   	
 
 	res.sendStatus(200)
