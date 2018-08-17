@@ -30,7 +30,7 @@ function purge_data() {
 				if(err) throw err;
 				console.log(complete)
 				console.log(s)
-				console.log(s.filter(id => complete.includes(id)))
+				console.log(s.filter(id => complete.includes(id.name)))
 
 			});
 		});
