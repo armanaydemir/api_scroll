@@ -25,11 +25,12 @@ function purge_data() {
 		if(e) throw e;
 		dbd.collection('sessions').find().toArray(function(error, c){
 			if(error) throw error;
-			var complete = c.map(x => x.session_db_link);
-			console.log(complete)
+			const complete = c.map(x => x.session_db_link);	
 			dbsessions.listCollections().toArray(function(err, s){
 				if(err) throw err;
+				console.log(complete)
 				console.log(s.filter(id => complete.includes(id)))
+				
 			});
 		});
 	})
