@@ -9,16 +9,13 @@ var moment = require('moment')
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
-
-
 console.log('started at least')
 
 
-//starting with first line of article at bottom, users scrolls first line to situate it to comfortable postition
+//fix title bug (long titles go off of screen)
 //add blank space to bottom so bottom line can be at the top
-
-// text at top of line - get time appear and time left 
-
+//add functions for purging and exporting data
+//document db schema n functions
 
 // https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
 // https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
@@ -26,7 +23,7 @@ console.log('started at least')
 // https://www.nytimes.com/2018/08/12/movies/the-meg-surprise-box-office-monster.html
 // https://www.nytimes.com/2018/08/10/arts/design/tulsa-park-gathering-place.html
 // https://www.nytimes.com/2018/08/13/world/europe/erdogan-turkey-lira-crisis.html
-// 
+// https://www.nytimes.com/2018/08/16/technology/google-employees-protest-search-censored-china.html
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,6 +31,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
+
+function test_article(address) {
+	var options = {
+    	url: 'https://mercury.postlight.com/parser?url=' + address,
+    	headers: headers
+	};
+    request(options, function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+    		console.log(parse_body(body));
+    	}else{
+	    	console.log('error: ' + error)
+	    }
+	});
+}
 
 function parse_body(body) {
 	const title = JSON.parse(body).title
@@ -69,16 +80,18 @@ function parse_body(body) {
 }
 
 function init_article(address, res) {
-	var query = {'article_link': address.split('.html')[0] + '.html'}
+	var l = address.split('/')
+	var db_link = l[l.length-1].replace(/-/g,'_')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		dbd.collection('articles').findOne(query, function(err, result){
+		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
 			if(err) throw err;
 			db.close()
 			if(!err & result){
 				res.send(result.text)
 			}else{
+				console.log('new article scrape')
 				var options = {
 					url: 'https://mercury.postlight.com/parser?url=' + address,
 					headers: headers
@@ -93,32 +106,15 @@ function init_article(address, res) {
 				});
 			}
 		})
-		
-	});
-   	
-}
-
-function test_article(address) {
-	var options = {
-    	url: 'https://mercury.postlight.com/parser?url=' + address,
-    	headers: headers
-	};
-    request(options, function(error, response, body) {
-		if (!error && response.statusCode == 200) {
-    		console.log(parse_body(body));
-    	}else{
-	    	console.log('error: ' + error)
-	    }
 	});
 }
 
 //test_article("https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html")
-//test_article("https://mobile.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html")
+//test_article("https://www.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html")
 
 
 app.get("/", function(req, res) {
 	var data = req.query
-
 	data.article_link = data.articleLink.split('.html')[0] + '.html'
 	console.log(data.articleLink);
     init_article(data.articleLink, res);
@@ -132,11 +128,11 @@ app.get('/articles', function(req, res){
 		dbd.collection('articles').find().sort(order).toArray(function(err, results){
 			if(err) throw err;
 			console.log(results)
+			res.send(results)
 			db.close()
 		});
 	});
 });
-
 
 
 app.post("/close_article", function(req,res){
@@ -174,7 +170,7 @@ app.post("/submit_data", function(req, res) {
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 
-	console.log(data)
+	//console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
@@ -186,6 +182,21 @@ app.post("/submit_data", function(req, res) {
 	res.sendStatus(200)
 });
 
+
+
+
+
+
+
 var server = app.listen(22364, function () {
     console.log("Listening on port %s...", server.address().port);
 });
+
+
+
+
+
+
+
+
+
