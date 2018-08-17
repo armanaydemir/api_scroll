@@ -75,20 +75,23 @@ function init_article(address, res) {
 		var dbd = db.db('data')
 		dbd.collection('articles').findOne(query, function(err, result){
 			if(err) throw err;
-			console.log(result)
 			db.close()
-			var options = {
-				url: 'https://mercury.postlight.com/parser?url=' + address,
-				headers: headers
-			};
-			request(options, function(error, response, body) {
-				if (!error && response.statusCode == 200) {
-					res.send(parse_body(body));
-				}else{
-					console.log('error: ' + error)
-					res.send(error);
-				}
-			});
+			if(!err & result){
+				res.send(result.text)
+			}else{
+				var options = {
+					url: 'https://mercury.postlight.com/parser?url=' + address,
+					headers: headers
+				};
+				request(options, function(error, response, body) {
+					if (!error && response.statusCode == 200) {
+						res.send(parse_body(body));
+					}else{
+						console.log('error: ' + error)
+						res.send(error);
+					}
+				});
+			}
 		})
 		
 	});
