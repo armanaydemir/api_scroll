@@ -29,8 +29,8 @@ function purge_data() {
 			dbsessions.listCollections().toArray(function(err, s){
 				if(err) throw err;
 				console.log(complete)
-				console.log(s)
-				console.log(s.filter(id => complete.includes(id.name)))
+				const sessions = s.map(x => x.name);
+				console.log(sessions.filter(id => complete.includes(id.name)))
 
 			});
 		});
