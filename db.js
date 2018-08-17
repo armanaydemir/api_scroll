@@ -13,7 +13,7 @@ function export_data() {
 			console.log(sessions)
 			db.close()
 		});
-	});
+	})
 }
 
 
@@ -31,7 +31,7 @@ function purge_data() {
 				console.log(s.filter(id => complete.includes(id)))
 			});
 		});
-	});
+	})
 }
 
 
