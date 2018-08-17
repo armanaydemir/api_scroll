@@ -23,6 +23,10 @@ console.log('started at least')
 // https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
 // https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
 // https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html
+// https://www.nytimes.com/2018/08/12/movies/the-meg-surprise-box-office-monster.html
+// https://www.nytimes.com/2018/08/10/arts/design/tulsa-park-gathering-place.html
+// https://www.nytimes.com/2018/08/13/world/europe/erdogan-turkey-lira-crisis.html
+// 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -65,23 +69,30 @@ function parse_body(body) {
 }
 
 function init_article(address, res) {
-	// MongoClient.connect(url, function(e, db) {
-	// 	if(e) throw e;
-	// 	var dbd= db.db('data')
-
-	// })
-   	var options = {
-    	url: 'https://mercury.postlight.com/parser?url=' + address,
-    	headers: headers
-	};
-    request(options, function(error, response, body) {
-		if (!error && response.statusCode == 200) {
-    		res.send(parse_body(body));
-    	}else{
-	    	console.log('error: ' + error)
-	    	res.send(error);
-	    }
+	var query = {'article_link': address.split('.html')[0] + '.html'}
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db('data')
+		dbd.collection('articles').findOne(query, function(err, result){
+			if(err) throw err;
+			console.log(result)
+			db.close()
+			var options = {
+				url: 'https://mercury.postlight.com/parser?url=' + address,
+				headers: headers
+			};
+			request(options, function(error, response, body) {
+				if (!error && response.statusCode == 200) {
+					res.send(parse_body(body));
+				}else{
+					console.log('error: ' + error)
+					res.send(error);
+				}
+			});
+		})
+		
 	});
+   	
 }
 
 function test_article(address) {
@@ -110,7 +121,7 @@ app.get("/", function(req, res) {
     init_article(data.articleLink, res);
 });
 
-app.get('articles', function(req, res){
+app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
@@ -125,8 +136,6 @@ app.get('articles', function(req, res){
 
 
 
-
-
 app.post("/close_article", function(req,res){
 	var data = req.body
 	//article link and UDID stuffs
@@ -135,21 +144,19 @@ app.post("/close_article", function(req,res){
 	data.article_link = data.article + '.html'
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
-	//time formatting
+
 	console.log(data)
 
 	data.db_link = data.UDID + data.articleTitle + data.startTime
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		//collection of all completed reading sessions with thier article, UDID, start time, device type, link, etc
+		//need to document these db 'schemas' n stuff along with make function to purge incomplete data along with exporting completed
 		dbd.collection('articles').insertOne({'text': data.text, 'db_link': data.articleTitle, 'article_link':data.article_link, 'title': data.title}, function(e, res){ if (e) throw e; });
 		dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_db_link': data.articleTitle, 'startTime': data.startTime, 
-												'endTime': data.time, 'session_db_link': data.db_link }, function(e, res){ if (e) throw e; });
+									'endTime': data.time, 'session_db_link': data.db_link }, function(e, res){ if (e) throw e; });
   		db.close();
 	});
-	
-  	
 
 	res.sendStatus(200)
 });
@@ -163,12 +170,11 @@ app.post("/submit_data", function(req, res) {
 	data.article = data.article + '.html'
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
-	//time formatting
-	console.log(data.startTime) // need to update times to make them more specific (ie milliseconds instead of seconds)
+
 	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db("sessions") // maybe change the name of the db
+		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
   		dbd.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
