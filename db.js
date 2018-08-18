@@ -2,6 +2,9 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
 
+//need to export these functions so i can call them from terminal
+
+
 //need to finish this ... export to csv??
 var export_data = function(){
 	MongoClient.connect(url, function(e, db){
@@ -43,6 +46,8 @@ var  purge_incomplete = function() {
 	})
 }
 
+
+//wipes all data, complete restart... be carefullll
 var complete_wipe = function() {
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
@@ -58,7 +63,7 @@ var complete_wipe = function() {
 }
 
 
-complete_wipe()
+purge_incomplete()
 
 
 
