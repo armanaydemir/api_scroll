@@ -29,7 +29,7 @@ function purge_incomplete() {
 			dbsessions.listCollections().toArray(function(err, s){
 				if(err) throw err;
 				var sessions = s.map(x => x.name);
-				sessions = sessions.filter(id => complete.indexOf(id) == -1) //filtering out the completed sessions
+				sessions = sessions.filter(id => complete.indexOf(id) == -1 && id != 'system.indexes') //filtering out the completed sessions
 				console.log(sessions)
 				sessions.forEach(function(e){ //deleting each incompete session
 					dbsessions.dropCollection(e, function(derr, del){
