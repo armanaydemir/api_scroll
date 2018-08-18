@@ -17,8 +17,8 @@ function export_data() {
 }
 
 
-
-function purge_data() {
+// purges sessions that were never 'tapped to submit'
+function purge_incomplete() {
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
 		var dbd = db.db('data')
@@ -28,17 +28,29 @@ function purge_data() {
 			const complete = c.map(x => x.session_db_link);	
 			dbsessions.listCollections().toArray(function(err, s){
 				if(err) throw err;
-				console.log(complete)
-				console.log(typeof complete)
-				const sessions = s.map(x => x.name);
+				var sessions = s.map(x => x.name);
+				sessions = sessions.filter(id => complete.indexOf(id) != -1) //filtering out the completed sessions
 				console.log(sessions)
-				console.log(complete.indexOf(sessions[1]))
-				console.log(sessions.filter(id => complete.indexOf(id) != -1))
-
+				sessions.forEach(function(e){ //deleting each incompete session
+					dbsessions.dropCollection(e, function(derr, del){
+						if(derr) throw derr
+						if(!del) console.log('unable to delete' + e)
+					})
+				});
+				db.close()
 			});
 		});
 	})
 }
+
+// function complete_wipe() {
+// 	MongoClient.connect(url, function(e, db){
+// 		var dbsessions = db.db('sessions')
+// 		var dbd = db.db('data')
+// 		if(e) throw e;
+
+// 	})
+// }
 
 
 purge_data()
