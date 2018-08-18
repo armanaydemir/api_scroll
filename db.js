@@ -32,8 +32,8 @@ function purge_data() {
 				console.log(typeof complete)
 				const sessions = s.map(x => x.name);
 				console.log(sessions)
-				console.log(complete.indexOf(sessions[0]))
-				console.log(sessions.filter(id => complete.includes(id)))
+				console.log(complete.indexOf(sessions[1]))
+				console.log(sessions.filter(id => complete.indexOf(id) != -1))
 
 			});
 		});
