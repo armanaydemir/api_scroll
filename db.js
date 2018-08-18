@@ -3,7 +3,7 @@ var url = "mongodb://localhost:27017/";
 
 
 //need to finish this ... export to csv??
-function export_data() {
+var export_data = function(){
 	MongoClient.connect(url, function(e, db){
 		var dbd = db.db('data')
 		var dbsessions = db.db('sessions')
@@ -18,7 +18,8 @@ function export_data() {
 
 
 // purges sessions that were never 'tapped to submit'
-function purge_incomplete() { // we also need a db.close in here but im taking it out for debug
+ // we also need a db.close in here but im taking it out for debug
+var  purge_incomplete = function() {
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
 		var dbd = db.db('data')
@@ -29,7 +30,7 @@ function purge_incomplete() { // we also need a db.close in here but im taking i
 			dbsessions.listCollections().toArray(function(err, s){
 				if(err) throw err;
 				var sessions = s.map(x => x.name);
-				sessions = sessions.filter(id => complete.indexOf(id) == -1 && id != 'system.indexes') //filtering out the completed sessions
+				sessions = sessions.filter(id => complete.indexOf(id) == -1 || id != 'system.indexes') //filtering out the completed sessions
 				console.log(sessions)
 				sessions.forEach(function(e){ //deleting each incompete session
 					dbsessions.dropCollection(e, function(derr, del){
@@ -42,17 +43,22 @@ function purge_incomplete() { // we also need a db.close in here but im taking i
 	})
 }
 
-// function complete_wipe() {
-// 	MongoClient.connect(url, function(e, db){
-// 		var dbsessions = db.db('sessions')
-// 		var dbd = db.db('data')
-// 		if(e) throw e;
+var complete_wipe = function() {
+	MongoClient.connect(url, function(e, db){
+		var dbsessions = db.db('sessions')
+		var dbd = db.db('data')
+		if(e) throw e;
+		dbd.dropDatabase(function(err,r){
+			if(err) throw err
+		})
+		dbsessions.dropDatabase(function(err, r){
+			if(err) throw err
+		})
+	})
+}
 
-// 	})
-// }
 
-
-purge_incomplete()
+complete_wipe()
 
 
 
