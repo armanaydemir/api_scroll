@@ -53,7 +53,7 @@ function purge_incomplete() {
 // }
 
 
-purge_data()
+purge_incomplete()
 
 
 
