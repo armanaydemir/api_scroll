@@ -18,7 +18,7 @@ function export_data() {
 
 
 // purges sessions that were never 'tapped to submit'
-function purge_incomplete() {
+function purge_incomplete() { // we also need a db.close in here but im taking it out for debug
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
 		var dbd = db.db('data')
@@ -37,7 +37,6 @@ function purge_incomplete() {
 						if(!del) console.log('unable to delete' + e)
 					})
 				});
-				db.close()
 			});
 		});
 	})
