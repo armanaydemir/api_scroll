@@ -1,7 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
-require('make-runnable');
-
 
 //need to export these functions so i can call them from terminal
 
@@ -66,8 +64,10 @@ var complete_wipe = function() {
 }
 
 
-purge_incomplete()
 
+// for calling functions from terminal
+module.exports = {'purge': purge_incomplete, 'wipe': complete_wipe}
+require('make-runnable');
 
 
 
