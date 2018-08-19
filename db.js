@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
+require('make-runnable');
 
 
 //need to export these functions so i can call them from terminal
