@@ -24,6 +24,7 @@ var export_data = function(){
 // purges sessions that were never 'tapped to submit'
  // we also need a db.close in here but im taking it out for debug
 var  purge_incomplete = function() {
+	console.log('purge')
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
 		var dbd = db.db('data')
@@ -50,6 +51,7 @@ var  purge_incomplete = function() {
 
 //wipes all data, complete restart... be carefullll
 var complete_wipe = function() {
+	console.log('wipe')
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
 		var dbd = db.db('data')
