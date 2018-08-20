@@ -1,9 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
-//need to export these functions so i can call them from terminal
-
-
 //need to finish this ... export to csv??
 var export_data = function(){
 	MongoClient.connect(url, function(e, db){
@@ -20,7 +17,7 @@ var export_data = function(){
 
 
 // purges sessions that were never 'tapped to submit'
- // we also need a db.close in here but im taking it out for debug
+// we need a db.close in here but im taking it out for debug
 var  purge_incomplete = function() {
 	console.log('purge')
 	MongoClient.connect(url, function(e, db){
@@ -46,8 +43,24 @@ var  purge_incomplete = function() {
 	})
 }
 
+// purges all session data (deletes everything but the articles)
+var session_wipe = function() {
+	console.log('session wipe')
+	MongoClient.connect(url, function(e, db){
+		var dbsessions = db.db('sessions')
+		var dbd = db.db('data')
+		if(e) throw e;
+		dbd.dropCollection('sessions', function(err,r){
+			if(err) throw err
+		})
+		dbsessions.dropDatabase(function(err, r){
+			if(err) throw err
+		})
+	})
+}
 
-//wipes all data, complete restart... be carefullll
+
+//wipes all data, complete restart... be carefullll need db close in here too
 var complete_wipe = function() {
 	console.log('wipe')
 	MongoClient.connect(url, function(e, db){
@@ -62,6 +75,8 @@ var complete_wipe = function() {
 		})
 	})
 }
+
+
 
 
 
