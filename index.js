@@ -11,6 +11,7 @@ var url = "mongodb://localhost:27017/";
 
 console.log('started at least')
 
+// add a 'previous last line' to sessions document
 //fix constraints for starting vc
 //fix title bug (long titles go off of screen)
 //add blank space to bottom so bottom line can be at the top
@@ -136,6 +137,8 @@ app.get('/articles', function(req, res){
 });
 
 
+
+
 app.post("/close_article", function(req,res){
 	var data = req.body
 	//article link and UDID stuffs
@@ -174,7 +177,7 @@ app.post("/submit_data", function(req, res) {
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 
-	console.log(data)
+	//console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db

@@ -15,6 +15,25 @@ var export_data = function(){
 	})
 }
 
+//"schema" for this db 
+// ---------------------------------------------------------------------
+// db: data (contains everything but actual session data)
+// 		collection: articles (for now contains every article read, but can later add scraper to this)
+//			document: text - where we save the article text, db_link - version of title that is used in session db, article_link - link to article at nytimes.com,
+//					  title - normal title shown at top of article and in list of articles
+//		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
+//			document: UDID - id for that specific phone, article_db_link - same as db_link in articles collection, startTime - when session started, endTime - when session closed,
+//					  session_db_link - link to this session's collection in the sessions db (see below)
+// db: sessions (each collection holds scrolling data for specfic session)			  
+//		collection: UDID + article_db_link + startTime (each title of collection is combination of these, should be same as session_db_link above)
+//			(new document every time a new last line appears)
+//			documents: UDID, last_line - what the new last line is, first_line - what the first line is right now, 
+//					   content_offset - how much user has scrolled, article - same as article_link in articles collection, articleTitle - same as db_link in articles collection,
+//					   appeared - time when previous last line appeared, startTime - same as startTime in sessions collection, time - time when data was sent to server (given by phone)
+// 
+// will add previous last line to sessions db documents which is what the last line was (can help figure out which direction is going, also helps when last line is empty string)
+// ---------------------------------------------------------------------
+
 
 // purges sessions that were never 'tapped to submit'
 // we need a db.close in here but im taking it out for debug
