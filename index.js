@@ -11,10 +11,13 @@ var url = "mongodb://localhost:27017/";
 
 console.log('started at least')
 
-// add a 'previous last line' to sessions document
+
+
+//add a 'previous last line' to sessions document, also add date written for article documents
 //fix constraints for starting vc
 //fix title bug (long titles go off of screen)
 //add blank space to bottom so bottom line can be at the top
+//make sure time stuff is always correct (no offset and stuff)
 
 //perhaps add scraper that adds to article db
 

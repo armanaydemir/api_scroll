@@ -16,7 +16,7 @@ var export_data = function(){
 }
 
 //"schema" for this db 
-// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // db: data (contains everything but actual session data)
 // 		collection: articles (for now contains every article read, but can later add scraper to this)
 //			document: text - where we save the article text, db_link - version of title that is used in session db, article_link - link to article at nytimes.com,
@@ -32,7 +32,7 @@ var export_data = function(){
 //					   appeared - time when previous last line appeared, startTime - same as startTime in sessions collection, time - time when data was sent to server (given by phone)
 // 
 // will add previous last line to sessions db documents which is what the last line was (can help figure out which direction is going, also helps when last line is empty string)
-// ---------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 
 // purges sessions that were never 'tapped to submit'
@@ -99,8 +99,8 @@ var complete_wipe = function() {
 
 
 
-// for calling functions from terminal
-module.exports = {'purge': purge_incomplete, 'wipe': complete_wipe}
+// for calling functions from terminal (can call each function like "node db.js purge" or "node db.js wipe")
+module.exports = {'purge': purge_incomplete, 'wipe': complete_wipe, 'session_wipe': session_wipe, 'export': export_data}
 require('make-runnable');
 
 
