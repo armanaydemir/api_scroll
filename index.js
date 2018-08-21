@@ -148,11 +148,10 @@ app.post("/close_article", function(req,res){
 	console.log(data)
 
 	data.db_link = data.UDID + data.articleTitle + data.startTime
-	// perhaps need to change this so it doesnt add same article multiple times
+
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		
 		dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_db_link': data.articleTitle, 'startTime': data.startTime, 
 									'endTime': data.time, 'session_db_link': data.db_link }, function(e, res){ if (e) throw e; });
 		dbd.collection('articles').findOne({'db_link': data.articleTitle}, function(err, result){
@@ -175,7 +174,7 @@ app.post("/submit_data", function(req, res) {
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 
-	//console.log(data)
+	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
