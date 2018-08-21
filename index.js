@@ -11,11 +11,11 @@ var url = "mongodb://localhost:27017/";
 
 console.log('started at least')
 
-
+//fix constraints for starting vc
 //fix title bug (long titles go off of screen)
 //add blank space to bottom so bottom line can be at the top
-//add functions for purging and exporting data
-//document db schema n functions
+
+//perhaps add scraper that adds to article db
 
 // https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
 // https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
@@ -24,6 +24,7 @@ console.log('started at least')
 // https://www.nytimes.com/2018/08/10/arts/design/tulsa-park-gathering-place.html
 // https://www.nytimes.com/2018/08/13/world/europe/erdogan-turkey-lira-crisis.html
 // https://www.nytimes.com/2018/08/16/technology/google-employees-protest-search-censored-china.html
+// https://www.nytimes.com/2018/08/18/business/west-democracy-turkey-erdogan-financial-crisis.html
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -147,11 +148,14 @@ app.post("/close_article", function(req,res){
 	console.log(data)
 
 	data.db_link = data.UDID + data.articleTitle + data.startTime
+	// perhaps need to change this so it doesnt add same article multiple times
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		//need to document these db 'schemas' n stuff along with make function to purge incomplete data along with exporting completed
-		dbd.collection('articles').insertOne({'text': data.text, 'db_link': data.articleTitle, 'article_link':data.article_link, 'title': data.title}, function(e, res){ if (e) throw e; });
+		dbd.collection('articles').findOne({'db_link': data.articleTitle}, function(err, result){
+			if(!result & !err) dbd.collection('articles').insertOne({'text': data.text, 'db_link': data.articleTitle, 'article_link':data.article_link, 'title': data.title}, function(e, res){ if (e) throw e; });
+		})
+	
 		dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_db_link': data.articleTitle, 'startTime': data.startTime, 
 									'endTime': data.time, 'session_db_link': data.db_link }, function(e, res){ if (e) throw e; });
   		db.close();
