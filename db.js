@@ -1,19 +1,9 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
+var request = require('request');
+const cheerio = require('cheerio')
 
-//need to finish this ... export to csv??
-var export_data = function(){
-	MongoClient.connect(url, function(e, db){
-		var dbd = db.db('data')
-		var dbsessions = db.db('sessions')
-		if(e) throw e;
-		dbd.collection('sessions').find().toArray(function(err, sessions){
-			if(err) throw err;
-			console.log(sessions)
-			db.close()
-		});
-	})
-}
+
 
 //"schema" for this db 
 // ---------------------------------------------------------------------------
@@ -34,6 +24,85 @@ var export_data = function(){
 // will add previous last line to sessions db documents which is what the last line was (can help figure out which direction is going, also helps when last line is empty string)
 // ----------------------------------------------------------------------------
 
+
+
+//two of the exact same functions in index.js and db.js, should condense and call it from the other one
+function parse_body(body) {
+	const title = JSON.parse(body).title
+	const $ = cheerio.load(body);
+	const bodies = $('p');
+	var i = 0;
+	var sections = []; 
+	sections.push(title)
+	while(i < bodies.length){
+		var o = 0;
+		var subsections = [];
+		while(o < bodies[i].children.length){
+			if(bodies[i].children[o].type == 'text'){
+				subsections.push(bodies[i].children[o].data.replace('\\n',''));
+			}
+			else if(bodies[i].children[o].type == 'tag' && bodies[i].children[o].children.length > 0 && bodies[i].children[o].children[0].data){
+				subsections.push(bodies[i].children[o].children[0].data.replace('\\n',''));
+				
+			}
+			o ++;
+		}	
+		sections.push(subsections.join(''));
+		i ++;
+	}
+	console.log(title);
+	return sections;
+}
+
+function add_article(address) {
+	address = address.split('.html')[0] + '.html'
+	var l = address.split('/')
+	var db_link = l[l.length-1].replace(/-/g,'_')
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db('data')
+		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
+			if(err) throw err;
+			if(result){
+				console.log("already added")
+			}else{
+				console.log('new article scrape')
+				var options = {
+					url: 'https://mercury.postlight.com/parser?url=' + address,
+					headers: headers
+				};
+				request(options, function(error, response, body) {
+					if (!error && response.statusCode == 200) {
+						// need to text this function
+						var text = parse_body(body);
+						console.log(text)
+						console.log(db_link)
+						console.log(address)
+						console.log(text[0])
+						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': data}, function(e, res){ if (e) throw e; })
+						db.close()
+					}else{
+						console.log('error: ' + error)
+					}
+				});
+			}
+		})
+	});
+}
+
+//need to finish this ... export to csv??
+var export_data = function(){
+	MongoClient.connect(url, function(e, db){
+		var dbd = db.db('data')
+		var dbsessions = db.db('sessions')
+		if(e) throw e;
+		dbd.collection('sessions').find().toArray(function(err, sessions){
+			if(err) throw err;
+			console.log(sessions)
+			db.close()
+		});
+	})
+}
 
 // purges sessions that were never 'tapped to submit'
 // we need a db.close in here but im taking it out for debug
@@ -100,7 +169,7 @@ var complete_wipe = function() {
 
 
 // for calling functions from terminal (can call each function like "node db.js purge" or "node db.js wipe")
-module.exports = {'purge': purge_incomplete, 'wipe': complete_wipe, 'session_wipe': session_wipe, 'export': export_data}
+module.exports = {'purge': purge_incomplete, 'wipe': complete_wipe, 'session_wipe': session_wipe, 'export': export_data, 'add_article': add_article}
 require('make-runnable');
 
 
