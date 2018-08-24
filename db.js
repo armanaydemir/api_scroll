@@ -83,7 +83,7 @@ function add_article(address) {
 						console.log(db_link)
 						console.log(address)
 						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': data}, function(e, res){ if (e) throw e; })
+						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': text[0]}, function(e, res){ if (e) throw e; })
 						db.close()
 					}else{
 						console.log('error: ' + error)
