@@ -3,6 +3,9 @@ var url = "mongodb://localhost:27017/";
 var request = require('request');
 const cheerio = require('cheerio')
 
+var headers = {
+    'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
+};
 
 
 //"schema" for this db 
@@ -54,6 +57,7 @@ function parse_body(body) {
 	return sections;
 }
 
+//adds article to article database so it can be seen on starting screens
 function add_article(address) {
 	address = address.split('.html')[0] + '.html'
 	var l = address.split('/')
