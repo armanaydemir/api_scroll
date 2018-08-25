@@ -13,10 +13,11 @@ console.log('started at least')
 
 
 
-//add a 'previous last line' to sessions document, also add date written, genre, last date read, n maybe others for article documents
+//add date written, genre, last date read, n maybe others for article documents
 //fix constraints for starting vc
 //add blank space to bottom so bottom line can be at the top
-//make sure time stuff is always correct (no offset and stuff)
+//figure out how to translate time from CFAbsolute to normal
+// pause/cancel session when user leaves app
 
 //perhaps add scraper that adds to article db
 
@@ -147,7 +148,10 @@ app.post("/close_article", function(req,res){
 	data.article_link = data.article + '.html'
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
+	data.date_written = link.slice(3, 6).join('/')
+	data.genre = link.slice(6, link.length-1).join('/')
 
+	
 	console.log(data)
 
 	data.db_link = data.UDID + data.articleTitle + data.startTime

@@ -20,11 +20,11 @@ var headers = {
 // db: sessions (each collection holds scrolling data for specfic session)			  
 //		collection: UDID + article_db_link + startTime (each title of collection is combination of these, should be same as session_db_link above)
 //			(new document every time a new last line appears)
-//			documents: UDID, last_line - what the new last line is, first_line - what the first line is right now, 
+//			documents: UDID, last_line - what the new last line is, first_line - what the first line is right now, previous_last_line - what the previous last line is
 //					   content_offset - how much user has scrolled, article - same as article_link in articles collection, articleTitle - same as db_link in articles collection,
-//					   appeared - time when previous last line appeared, startTime - same as startTime in sessions collection, time - time when data was sent to server (given by phone)
+//					   appeared - time when previous last line appeared, startTime - same as startTime in sessions collection, time - time when data was sent to server (given by phone),
+//
 // 
-// will add previous last line to sessions db documents which is what the last line was (can help figure out which direction is going, also helps when last line is empty string)
 // ----------------------------------------------------------------------------
 
 
