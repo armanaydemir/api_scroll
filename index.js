@@ -149,7 +149,7 @@ app.post("/close_article", function(req,res){
 	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 	data.date_written = link.slice(3, 6).join('/')
-	data.genre = link.slice(6, link.length-1).join('/')
+	data.category = link.slice(6, link.length-1).join('/')
 
 	
 	console.log(data)
@@ -162,7 +162,8 @@ app.post("/close_article", function(req,res){
 		dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_db_link': data.articleTitle, 'startTime': data.startTime, 
 									'endTime': data.time, 'session_db_link': data.db_link }, function(e, res){ if (e) throw e; });
 		dbd.collection('articles').findOne({'db_link': data.articleTitle}, function(err, result){
-			if(!result & !err) dbd.collection('articles').insertOne({'text': data.text, 'db_link': data.articleTitle, 'article_link':data.article_link, 'title': data.title}, function(e, res){ if (e) throw e; });
+			if(!result & !err) dbd.collection('articles').insertOne({'text': data.text, 'db_link': data.articleTitle, 'article_link':data.article_link, 'title': data.title,
+														'date_written': data.date_written, 'category': data.category}, function(e, res){ if (e) throw e; });
 			db.close()
 		})
 	

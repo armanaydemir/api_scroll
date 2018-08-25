@@ -62,6 +62,8 @@ function add_article(address) {
 	address = address.split('.html')[0]
 	var l = address.split('/')
 	var db_link = l[l.length-1].replace(/-/g,'_')
+	date_written = link.slice(3, 6).join('/')
+	category = link.slice(6, link.length-1).join('/')
 	address = address + '.html'
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
@@ -84,7 +86,7 @@ function add_article(address) {
 						console.log(db_link)
 						console.log(address)
 						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': text[0]}, function(e, res){ if (e) throw e; })
+						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category}, function(e, res){ if (e) throw e; })
 						db.close()
 					}else{
 						console.log('error: ' + error)
