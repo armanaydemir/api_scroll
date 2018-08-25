@@ -60,8 +60,8 @@ function parse_body(body) {
 //adds article to article database so it can be seen on starting screens
 function add_article(address) {
 	address = address.split('.html')[0]
-	var l = address.split('/')
-	var db_link = l[l.length-1].replace(/-/g,'_')
+	var link = address.split('/')
+	var db_link = link[link.length-1].replace(/-/g,'_')
 	date_written = link.slice(3, 6).join('/')
 	category = link.slice(6, link.length-1).join('/')
 	address = address + '.html'
