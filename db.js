@@ -59,9 +59,10 @@ function parse_body(body) {
 
 //adds article to article database so it can be seen on starting screens
 function add_article(address) {
-	address = address.split('.html')[0] + '.html'
+	address = address.split('.html')[0]
 	var l = address.split('/')
 	var db_link = l[l.length-1].replace(/-/g,'_')
+	address = address + '.html'
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
