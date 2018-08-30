@@ -145,10 +145,10 @@ var session_wipe = function() {
 		var dbsessions = db.db('sessions')
 		var dbd = db.db('data')
 		if(e) throw e;
-		dbd.dropCollection('sessions', function(err,r){
+		dbsessions.dropDatabase(function(err, r){
 			if(err) throw err
 		})
-		dbsessions.dropDatabase(function(err, r){
+		dbd.dropCollection('sessions', function(err,r){
 			if(err) throw err
 		})
 	})
