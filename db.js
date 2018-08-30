@@ -13,7 +13,7 @@ var headers = {
 // db: data (contains everything but actual session data)
 // 		collection: articles (for now contains every article read, but can later add scraper to this)
 //			document: text - where we save the article text, db_link - version of title that is used in session db, article_link - link to article at nytimes.com,
-//					  title - normal title shown at top of article and in list of articles
+//					  title - normal title shown at top of article and in list of articles,
 //		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
 //			document: UDID - id for that specific phone, article_db_link - same as db_link in articles collection, startTime - when session started, endTime - when session closed,
 //					  session_db_link - link to this session's collection in the sessions db (see below)
