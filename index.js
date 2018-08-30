@@ -91,18 +91,15 @@ function init_article(address, res) {
 	var l = address.split('.html')[0]
 	l = l.split('/')
 	var db_link = l[l.length-1].replace(/-/g,'_')
-	console.log('-----------------')
+
 	console.log(db_link)
-	console.log('woahhh')
-	console.log(typeof db_link)
+	
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
 		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
 			if(err) throw err;
 			db.close()
-			console.log(result)
-			console.log(err)
 			if(!err && result){
 				res.send(result.text)
 			}else{
@@ -122,7 +119,6 @@ function init_article(address, res) {
 			}
 		})
 	});
-	console.log('-----------------')
 }
 
 
