@@ -12,12 +12,13 @@ var url = "mongodb://localhost:27017/";
 console.log('started at least')
 
 
-
-//add date written, genre, last date read, n maybe others for article documents
-//fix constraints for starting vc
+//for some reason init_Article will scrape again even though article is already in db
+//change last_line and first_line to word index on article
+//add last date read, number of times read for article documents
 //add blank space to bottom so bottom line can be at the top
 //figure out how to translate time from CFAbsolute to normal
-// pause/cancel session when user leaves app
+//pause/cancel session when user leaves app
+//fix error states on app
 
 //perhaps add scraper that adds to article db
 
@@ -29,6 +30,7 @@ console.log('started at least')
 // https://www.nytimes.com/2018/08/13/world/europe/erdogan-turkey-lira-crisis.html
 // https://www.nytimes.com/2018/08/16/technology/google-employees-protest-search-censored-china.html
 // https://www.nytimes.com/2018/08/18/business/west-democracy-turkey-erdogan-financial-crisis.html
+// https://www.nytimes.com/2018/08/25/business/elon-musk-tesla-private.html
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -84,9 +86,11 @@ function parse_body(body) {
 	return sections;
 }
 
+
 function init_article(address, res) {
 	var l = address.split('/')
 	var db_link = l[l.length-1].replace(/-/g,'_')
+	print(db_link)
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
@@ -113,9 +117,6 @@ function init_article(address, res) {
 		})
 	});
 }
-
-//test_article("https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html")
-//test_article("https://www.nytimes.com/2018/05/22/technology/amazon-facial-recognition.html")
 
 
 app.get("/", function(req, res) {
@@ -193,6 +194,20 @@ app.post("/submit_data", function(req, res) {
 
 	res.sendStatus(200)
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
