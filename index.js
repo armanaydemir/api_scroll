@@ -103,7 +103,7 @@ function init_article(address, res) {
 			db.close()
 			console.log(result)
 			console.log(err)
-			if(!err & result){
+			if(!err && result){
 				res.send(result.text)
 			}else{
 				console.log('new article scrape')
