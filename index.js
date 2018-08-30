@@ -90,7 +90,7 @@ function parse_body(body) {
 function init_article(address, res) {
 	var l = address.split('/')
 	var db_link = l[l.length-1].replace(/-/g,'_')
-	print(db_link)
+	console.log(db_link)
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
