@@ -92,12 +92,14 @@ function init_article(address, res) {
 	l = l.split('/')
 	var db_link = l[l.length-1].replace(/-/g,'_')
 	console.log(db_link)
+	console.log(typeof db_link)
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
 		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
 			if(err) throw err;
 			db.close()
+			console.log(result)
 			if(!err & result){
 				res.send(result.text)
 			}else{
