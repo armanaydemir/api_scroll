@@ -3,12 +3,14 @@ var url = "mongodb://localhost:27017/";
 var request = require('request');
 const cheerio = require('cheerio')
 
+var nyt_key = "24d73377812a46e88fdaa3ecb8c0d935" // new york times api key for top stories
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
 
 
 //"schema" for this db 
+// add version to sessions collection 
 // ---------------------------------------------------------------------------
 // db: data (contains everything but actual session data)
 // 		collection: articles (for now contains every article read, but can later add scraper to this)
@@ -171,6 +173,22 @@ var complete_wipe = function() {
 	})
 }
 
+function scrape_top() {
+	request.get({
+	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+	  qs: {
+	    'api-key': nyt_key
+	  },
+	}, function(err, response, body) {
+	 	body = JSON.parse(body);
+	 	r = body.results
+	 	i = 0
+	 	while(i < r.length){
+	 		r[i].url
+	 	}
+	})
+}
+
 
 
 
@@ -178,6 +196,8 @@ var complete_wipe = function() {
 // for calling functions from terminal (can call each function like "node db.js purge" or "node db.js wipe")
 module.exports = {'purge': purge_incomplete, 'wipe': complete_wipe, 'session_wipe': session_wipe, 'export': export_data, 'add_article': add_article}
 require('make-runnable');
+
+setInterval(scrape_top, 10000)
 
 
 
