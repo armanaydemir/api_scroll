@@ -6,21 +6,30 @@ var request = require('request');
 var fs = require('fs');
 var moment = require('moment')
 
+var nyt_key = "24d73377812a46e88fdaa3ecb8c0d935" // new york times api key for top stories
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
+const version = "v0.1.1"
+
 console.log('started at least')
 
-
-//for some reason init_Article will scrape again even though article is already in db
-//change last_line and first_line to word index on article
-//add last date read, number of times read for article documents
+// keep pushing updates to hockey
+//
+//TODO add scraper for nytimes and politico that adds to article db, doensnt matter if some articles are messed up
+//versions
+//change article db_link to just id instead of title
+//---------------------------------------------------------------------------------------------------------------
+//just ignore links with /interactive (only good nytimes articles (check on init article))
 //add blank space to bottom so bottom line can be at the top
-//figure out how to translate time from CFAbsolute to normal
 //pause/cancel session when user leaves app
-//fix error states on app
+//black screen when article is loading... add spinner
+//change the font to something better (same as nytimes??)
+//---------------------------------------------------------------------------------------------------------------
 
-//perhaps add scraper that adds to article db
+
+//figure out how to translate time from CFAbsolute to normal (http://home.max-weller.de/test/cfabsolutetime/)
 
 // https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
 // https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
@@ -31,6 +40,8 @@ console.log('started at least')
 // https://www.nytimes.com/2018/08/16/technology/google-employees-protest-search-censored-china.html
 // https://www.nytimes.com/2018/08/18/business/west-democracy-turkey-erdogan-financial-crisis.html
 // https://www.nytimes.com/2018/08/25/business/elon-musk-tesla-private.html
+// https://www.nytimes.com/2018/09/02/arts/television/tv-writers-diversity.html
+// https://www.nytimes.com/2018/09/08/reader-center/anonymous-op-ed-trump.html
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -38,6 +49,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
+
+function scrape_top() {
+	request.get({
+	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+	  qs: {
+	    'api-key': nyt_key
+	  },
+	}, function(err, response, body) {
+	 	body = JSON.parse(body);
+		console.log(body);
+	})
+}
 
 function test_article(address) {
 	var options = {
@@ -88,12 +111,15 @@ function parse_body(body) {
 
 
 function init_article(address, res) {
+	if(!address.includes("https://www.nytimes.com")){
+		print('isnt nytimes')
+	}
 	var l = address.split('.html')[0]
 	l = l.split('/')
 	var db_link = l[l.length-1].replace(/-/g,'_')
 
 	console.log(db_link)
-	
+
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
@@ -222,7 +248,7 @@ var server = app.listen(22364, function () {
     console.log("Listening on port %s...", server.address().port);
 });
 
-
+setInterval(scrape_top, 10000)
 
 
 
