@@ -58,8 +58,51 @@ function scrape_top() {
 	  },
 	}, function(err, response, body) {
 	 	body = JSON.parse(body);
-		console.log(body);
+	 	r = body.results
+	 	i = 0
+	 	while(i < r.length){
+	 		r[i].url
+	 	}
 	})
+}
+
+function add_article(address) {
+	address = address.split('.html')[0]
+	var link = address.split('/')
+	var db_link = link[link.length-1].replace(/-/g,'_')
+	date_written = link.slice(3, 6).join('/')
+	category = link.slice(6, link.length-1).join('/')
+	address = address + '.html'
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db('data')
+		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
+			if(err) throw err;
+			if(result){
+				console.log("already added")
+			}else{
+				console.log('new article scrape')
+				var options = {
+					url: 'https://mercury.postlight.com/parser?url=' + address,
+					headers: headers
+				};
+				request(options, function(error, response, body) {
+					if (!error && response.statusCode == 200) {
+						// need to text this function
+						var text = parse_body(body);
+						console.log(text)
+						console.log(db_link)
+						console.log(address)
+						console.log(text[0])
+						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category}, function(e, res){ if (e) throw e; })
+						db.close()
+					}else{
+						console.log('error: ' + error)
+					}
+				});
+			}
+		})
+	});
 }
 
 function test_article(address) {
