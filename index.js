@@ -92,7 +92,7 @@ function add_article(address) {
 						console.log(db_link)
 						console.log(address)
 						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, , 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; })
+						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; })
 						db.close()
 					}else{
 						console.log('error: ' + error)
@@ -232,7 +232,7 @@ app.post("/close_article", function(req,res){
 				'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 					if (e) throw e; 
 					dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
-									'endTime': data.time, 'session_id': data.db_link, 'version': data.version }, function(e, ress){ if (e) throw e; });
+									'endTime': data.time, 'session_id': data.db_link, 'version': data.version}, function(e, ress){ if (e) throw e; });
 				});
 			}else{
 				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
