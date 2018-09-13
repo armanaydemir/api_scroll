@@ -196,7 +196,7 @@ app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		var order = {_id: 0};
+		var order = {_id: -1};
 		dbd.collection('articles').find().sort(order).toArray(function(err, results){
 			if(err) throw err;
 			console.log(results)
