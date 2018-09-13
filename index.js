@@ -76,7 +76,6 @@ function add_article(address) {
 		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
 			if(result){
-				console.log("already added")
 			}else{
 				console.log('new article scrape')
 				var options = {
@@ -87,7 +86,6 @@ function add_article(address) {
 					if (!error && response.statusCode == 200) {
 						// need to text this function
 						var text = parse_body(body);
-						console.log(text)
 						console.log(address)
 						console.log(text[0])
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; })
@@ -290,7 +288,7 @@ var server = app.listen(22364, function () {
     console.log("Listening on port %s...", server.address().port);
 });
 
-setInterval(scrape_top, 10000)
+setInterval(scrape_top, 1000 * 60 * 60)
 
 
 
