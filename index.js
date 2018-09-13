@@ -67,14 +67,13 @@ function scrape_top() {
 function add_article(address) {
 	address = address.split('.html')[0]
 	var link = address.split('/')
-	var db_link = link[link.length-1].replace(/-/g,'_')
 	date_written = link.slice(3, 6).join('/')
 	category = link.slice(6, link.length-1).join('/')
 	address = address + '.html'
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
+		dbd.collection('articles').findOne({'address': address}, function(err, result){
 			if(err) throw err;
 			if(result){
 				console.log("already added")
