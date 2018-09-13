@@ -3,6 +3,8 @@ var url = "mongodb://localhost:27017/";
 var request = require('request');
 const cheerio = require('cheerio')
 
+const version = "v0.1.1"
+
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
@@ -14,15 +16,15 @@ var headers = {
 // db: data (contains everything but actual session data)
 // 		collection: articles (for now contains every article read, but can later add scraper to this)
 //			document: text - where we save the article text, db_link - version of title that is used in session db, article_link - link to article at nytimes.com,
-//					  title - normal title shown at top of article and in list of articles,
+//					  title - normal title shown at top of article and in list of articles, version
 //		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
 //			document: UDID - id for that specific phone, article_db_link - same as db_link in articles collection, startTime - when session started, endTime - when session closed,
-//					  session_db_link - link to this session's collection in the sessions db (see below)
+//					  session_db_link - link to this session's collection in the sessions db (see below), version
 // db: sessions (each collection holds scrolling data for specfic session)			  
-//		collection: UDID + article_db_link + startTime (each title of collection is combination of these, should be same as session_db_link above)
+//		collection: UDID + article_id + startTime (each title of collection is combination of these, should be same as session_db_link above)
 //			(new document every time a new last line appears)
 //			documents: UDID, last_line - what the new last line is, first_line - what the first line is right now, previous_last_line - what the previous last line is
-//					   content_offset - how much user has scrolled, article - same as article_link in articles collection, articleTitle - same as db_link in articles collection,
+//					   content_offset - how much user has scrolled, article_id - links to article in articles collection,
 //					   appeared - time when previous last line appeared, startTime - same as startTime in sessions collection, time - time when data was sent to server (given by phone),
 //
 // 
@@ -62,14 +64,13 @@ function parse_body(body) {
 function add_article(address) {
 	address = address.split('.html')[0]
 	var link = address.split('/')
-	var db_link = link[link.length-1].replace(/-/g,'_')
 	date_written = link.slice(3, 6).join('/')
 	category = link.slice(6, link.length-1).join('/')
 	address = address + '.html'
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
+		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
 			if(result){
 				console.log("already added")
@@ -87,7 +88,7 @@ function add_article(address) {
 						console.log(db_link)
 						console.log(address)
 						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category}, function(e, res){ if (e) throw e; })
+						dbd.collection('articles').insertOne({'version':version, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category}, function(e, res){ if (e) throw e; })
 						db.close()
 					}else{
 						console.log('error: ' + error)

@@ -16,9 +16,6 @@ const version = "v0.1.1"
 console.log('started at least')
 
 //TODO
-//change sessions db collection names and session_db_link to ID
-//no more article_db_link in session or db_link in articles collection, just article id
-//add version to article and sessions collections
 //keep pushing updates to hockey
 //
 //---------------------------------------------------------------------------------------------------------------
@@ -95,7 +92,7 @@ function add_article(address) {
 						console.log(db_link)
 						console.log(address)
 						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'db_link': db_link, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category}, function(e, res){ if (e) throw e; })
+						dbd.collection('articles').insertOne({'text': text, , 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; })
 						db.close()
 					}else{
 						console.log('error: ' + error)
@@ -158,16 +155,12 @@ function init_article(address, res) {
 	if(!address.includes("https://www.nytimes.com")){
 		print('isnt nytimes')
 	}
-	var l = address.split('.html')[0]
-	l = l.split('/')
-	var db_link = l[l.length-1].replace(/-/g,'_')
-
-	console.log(db_link)
+	address = address.split('.html')[0] + '.html'
 
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		dbd.collection('articles').findOne({'db_link': db_link}, function(err, result){
+		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
 			db.close()
 			if(!err && result){
@@ -203,7 +196,7 @@ app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		var order = {_id: 1};
+		var order = {_id: 0};
 		dbd.collection('articles').find().sort(order).toArray(function(err, results){
 			if(err) throw err;
 			console.log(results)
@@ -213,7 +206,7 @@ app.get('/articles', function(req, res){
 	});
 });
 
-
+//need db close
 app.post("/close_article", function(req,res){
 	var data = req.body
 	//article link and UDID stuffs
@@ -233,12 +226,18 @@ app.post("/close_article", function(req,res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_db_link': data.articleTitle, 'startTime': data.startTime, 
-									'endTime': data.time, 'session_db_link': data.db_link }, function(e, res){ if (e) throw e; });
 		dbd.collection('articles').findOne({'db_link': data.articleTitle}, function(err, result){
-			if(!result & !err) dbd.collection('articles').insertOne({'text': data.text, 'db_link': data.articleTitle, 'article_link':data.article_link, 'title': data.title,
-														'date_written': data.date_written, 'category': data.category}, function(e, res){ if (e) throw e; });
-			db.close()
+			if(!result & !err) {
+				dbd.collection('articles').insertOne({'text': data.text, 'article_link':data.article_link, 'title': data.title,
+				'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
+					if (e) throw e; 
+					dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
+									'endTime': data.time, 'session_id': data.db_link, 'version': data.version }, function(e, ress){ if (e) throw e; });
+				});
+			}else{
+				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
+									'endTime': data.time, 'session_id': data.db_link, 'version': data.version}, function(e, ress){ if (e) throw e; });
+			}
 		})
 	
 	});
