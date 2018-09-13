@@ -85,7 +85,6 @@ function add_article(address) {
 						// need to text this function
 						var text = parse_body(body);
 						console.log(text)
-						console.log(db_link)
 						console.log(address)
 						console.log(text[0])
 						dbd.collection('articles').insertOne({'version':version, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category}, function(e, res){ if (e) throw e; })
