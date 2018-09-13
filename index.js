@@ -211,7 +211,6 @@ app.post("/close_article", function(req,res){
 	data.article = data.article.split('.html')[0]
 	var link = data.article.split('/')
 	data.article_link = data.article + '.html'
-	data.articleTitle = link[link.length-1].replace(/-/g, '_');
 	data.UDID = data.UDID.replace(/-/g, '_');
 	data.date_written = link.slice(3, 6).join('/')
 	data.category = link.slice(6, link.length-1).join('/')
@@ -219,20 +218,22 @@ app.post("/close_article", function(req,res){
 	
 	console.log(data)
 
-	data.db_link = data.UDID + data.articleTitle + data.startTime
+	data.db_link = data.UDID + data.startTime
 
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		dbd.collection('articles').findOne({'db_link': data.articleTitle}, function(err, result){
+		dbd.collection('articles').findOne({'article_link': data.article_link}, function(err, result){
 			if(!result & !err) {
 				dbd.collection('articles').insertOne({'text': data.text, 'article_link':data.article_link, 'title': data.title,
 				'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 					if (e) throw e; 
+					console.log(res)
 					dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
 									'endTime': data.time, 'session_id': data.db_link, 'version': data.version}, function(e, ress){ if (e) throw e; });
 				});
 			}else{
+				console.log(result)
 				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': data.time, 'session_id': data.db_link, 'version': data.version}, function(e, ress){ if (e) throw e; });
 			}
@@ -258,7 +259,7 @@ app.post("/submit_data", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
-  		dbd.collection(data.UDID + data.articleTitle + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.UDID + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
