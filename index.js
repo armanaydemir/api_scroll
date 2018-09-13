@@ -6,7 +6,7 @@ var request = require('request');
 var fs = require('fs');
 var moment = require('moment')
 
-var nyt_key = "24d73377812a46e88fdaa3ecb8c0d935" // new york times api key for top stories
+var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
