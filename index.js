@@ -73,7 +73,7 @@ function add_article(address) {
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		dbd.collection('articles').findOne({'address': address}, function(err, result){
+		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
 			if(result){
 				console.log("already added")
