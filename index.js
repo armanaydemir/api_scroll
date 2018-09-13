@@ -58,7 +58,8 @@ function scrape_top() {
 	 	body = JSON.parse(body);
 	 	r = body.results
 	 	i = 0
-	 	while(r & i < r.length){
+	 	print(r)
+	 	while(r && i < r.length){
 	 		add_article(r[i].url)
 	 		i++
 	 	}
