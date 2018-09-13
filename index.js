@@ -15,15 +15,15 @@ const version = "v0.1.1"
 
 console.log('started at least')
 
-// keep pushing updates to hockey
+//TODO
+//change sessions db collection names and session_db_link to ID
+//no more article_db_link in session or db_link in articles collection, just article id
+//add version to article and sessions collections
+//keep pushing updates to hockey
 //
-//TODO add scraper for nytimes and politico that adds to article db, doensnt matter if some articles are messed up
-//versions
-//change article db_link to just id instead of title
 //---------------------------------------------------------------------------------------------------------------
 //just ignore links with /interactive (only good nytimes articles (check on init article))
 //add blank space to bottom so bottom line can be at the top
-//pause/cancel session when user leaves app
 //black screen when article is loading... add spinner
 //change the font to something better (same as nytimes??)
 //---------------------------------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		var order = {title: 1};
+		var order = {_id: 1};
 		dbd.collection('articles').find().sort(order).toArray(function(err, results){
 			if(err) throw err;
 			console.log(results)
