@@ -54,10 +54,11 @@ function scrape_top() {
 	    'api-key': nyt_key
 	  },
 	}, function(err, response, body) {
+		if(err) throw err;
 	 	body = JSON.parse(body);
 	 	r = body.results
 	 	i = 0
-	 	while(i < r.length){
+	 	while(r & i < r.length){
 	 		add_article(r[i].url)
 	 		i++
 	 	}
