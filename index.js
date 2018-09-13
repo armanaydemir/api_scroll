@@ -288,6 +288,7 @@ var server = app.listen(22364, function () {
     console.log("Listening on port %s...", server.address().port);
 });
 
+scrape_top()
 setInterval(scrape_top, 1000 * 60 * 60)
 
 
