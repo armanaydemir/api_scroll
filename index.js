@@ -11,12 +11,16 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.1.1"
+const version = "v0.2.0"
 
 console.log('started at least')
 
 //TODO
 //keep pushing updates to hockey
+//make tap to submit a centered button
+//make size of tableview cells bigger on starting screen
+//make sure all of database stuff is correct	
+//get a bunch of nyt_keys and switch between them
 //
 //---------------------------------------------------------------------------------------------------------------
 //just ignore links with /interactive (only good nytimes articles (check on init article))
@@ -25,6 +29,13 @@ console.log('started at least')
 //change the font to something better (same as nytimes??)
 //---------------------------------------------------------------------------------------------------------------
 
+//using matplotlib and pandas
+//amount of time line spends on screen
+//average time between scrolls
+//average amount time spent on article
+//make a frequency graph (hours of day on y and days of week on x, point whenever article is read) 
+//time spent on lines depending on line location in article
+//read up on natural language process
 
 //figure out how to translate time from CFAbsolute to normal (http://home.max-weller.de/test/cfabsolutetime/)
 
@@ -77,8 +88,7 @@ function add_article(address) {
 		var dbd = db.db('data')
 		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
-			if(result){
-			}else{
+			if(!result){
 				console.log('new article scrape')
 				var options = {
 					url: 'https://mercury.postlight.com/parser?url=' + address,
@@ -149,9 +159,10 @@ function parse_body(body) {
 }
 
 
-function init_article(address, res) {
+function init_article(data, res) {
+	var address = data.address
 	if(!address.includes("https://www.nytimes.com")){
-		print('isnt nytimes')
+		print('isnt nytimes, this should be fun lol')
 	}
 	address = address.split('.html')[0] + '.html'
 
@@ -162,6 +173,8 @@ function init_article(address, res) {
 			if(err) throw err;
 			db.close()
 			if(!err && result){
+				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
+									'endTime': '', 'session_id': data.db_link, 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ if (e) throw e; });
 				res.send(result.text)
 			}else{
 				console.log('new article scrape')
@@ -171,7 +184,13 @@ function init_article(address, res) {
 				};
 				request(options, function(error, response, body) {
 					if (!error && response.statusCode == 200) {
-						res.send(parse_body(body));
+						let text = parse_body(body);
+						res.send(text);
+						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
+							if (e) throw e; 
+							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
+								'endTime': '', 'session_id': data.db_link, 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ if (e) throw e; });
+						});
 					}else{
 						console.log('error: ' + error)
 						res.send(error);
@@ -183,11 +202,11 @@ function init_article(address, res) {
 }
 
 
-app.get("/", function(req, res) {
+app.get("/open_article", function(req, res) {
 	var data = req.query
 	data.article_link = data.articleLink.split('.html')[0] + '.html'
-	console.log(data.articleLink);
-    init_article(data.articleLink, res);
+	console.log(data.article_link);
+    init_article(data, res);
 });
 
 app.get('/articles', function(req, res){
@@ -218,27 +237,14 @@ app.post("/close_article", function(req,res){
 	
 	console.log(data)
 
-	data.db_link = data.UDID + data.startTime
-
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		dbd.collection('articles').findOne({'article_link': data.article_link}, function(err, result){
-			if(!result & !err) {
-				dbd.collection('articles').insertOne({'text': data.text, 'article_link':data.article_link, 'title': data.title,
-				'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
-					if (e) throw e; 
-					console.log(res)
-					dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
-									'endTime': data.time, 'session_id': data.db_link, 'version': data.version}, function(e, ress){ if (e) throw e; });
-				});
-			}else{
-				console.log(result)
-				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
-									'endTime': data.time, 'session_id': data.db_link, 'version': data.version}, function(e, ress){ if (e) throw e; });
-			}
-		})
-	
+		var nv = {$set: {"completed": true}}
+		dbd.collection('sessions').updateOne({'article_link': data.article_link, 'UDID': data.UDID}, nv, function(err, result){
+			if(err) throw err
+			db.close()
+		});
 	});
 
 	res.sendStatus(200)
@@ -248,13 +254,8 @@ app.post("/submit_data", function(req, res) {
 	var data = req.body
 
 	//article link and UDID stuffs
-	data.article = data.article.split('.html')[0]
-	var link = data.article.split('/')
-	data.article = data.article + '.html'
-	data.articleTitle = link[link.length-1].replace(/-/g, '_');
+	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-
-	console.log(data)
 	
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db

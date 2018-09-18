@@ -3,7 +3,7 @@ var url = "mongodb://localhost:27017/";
 var request = require('request');
 const cheerio = require('cheerio')
 
-const version = "v0.1.1"
+const version = "v0.2.0"
 
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
@@ -15,13 +15,13 @@ var headers = {
 // ---------------------------------------------------------------------------
 // db: data (contains everything but actual session data)
 // 		collection: articles (for now contains every article read, but can later add scraper to this)
-//			document: text - where we save the article text, db_link - version of title that is used in session db, article_link - link to article at nytimes.com,
-//					  title - normal title shown at top of article and in list of articles, version
+//			document: text - where we save the article text, article_link - link to article at nytimes.com, category, 
+//					  title - normal title shown at top of article and in list of articles, date_written - YYYY/MM/DD, version
 //		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
-//			document: UDID - id for that specific phone, article_db_link - same as db_link in articles collection, startTime - when session started, endTime - when session closed,
-//					  session_db_link - link to this session's collection in the sessions db (see below), version
+//			document: UDID - id for that specific phone, article_id - objectid of article in articles collection, startTime - when session started, type - what type of device was used for reading,
+// 					   endTime - when session closed, session_id - name of this session's collection in the sessions db, completed -if they tapped to submit yet or not, version
 // db: sessions (each collection holds scrolling data for specfic session)			  
-//		collection: UDID + article_id + startTime (each title of collection is combination of these, should be same as session_db_link above)
+//		collection: UDID + startTime (each title of collection is combination of these)
 //			(new document every time a new last line appears)
 //			documents: UDID, last_line - what the new last line is, first_line - what the first line is right now, previous_last_line - what the previous last line is
 //					   content_offset - how much user has scrolled, article_id - links to article in articles collection,
