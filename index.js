@@ -174,7 +174,7 @@ function init_article(data, res) {
 			if(err) throw err;
 			if(!err && result){
 				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
-									'endTime': '', 'session_id': data.db_link, 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ if (e) throw e; });
+									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ if (e) throw e; });
 				res.send(result.text)
 				db.close()
 			}else{
@@ -190,7 +190,7 @@ function init_article(data, res) {
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
 							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
-								'endTime': '', 'session_id': data.db_link, 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ if (e) throw e; });
+								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ if (e) throw e; });
 							db.close()
 						});
 					}else{

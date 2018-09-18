@@ -19,7 +19,7 @@ var headers = {
 //					  title - normal title shown at top of article and in list of articles, date_written - YYYY/MM/DD, version
 //		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
 //			document: UDID - id for that specific phone, article_id - objectid of article in articles collection, startTime - when session started, type - what type of device was used for reading,
-// 					   endTime - when session closed, session_id - name of this session's collection in the sessions db, completed -if they tapped to submit yet or not, version
+// 					   endTime - when session closed , completed -if they tapped to submit yet or not, version
 // db: sessions (each collection holds scrolling data for specfic session)			  
 //		collection: UDID + startTime (each title of collection is combination of these)
 //			(new document every time a new last line appears)
@@ -115,7 +115,7 @@ var export_data = function(){
 
 // purges all session data (deletes everything but the articles)
 var session_purge = function() {
-	console.log('session wipe')
+	console.log('session purge')
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
 		var dbd = db.db('data')
