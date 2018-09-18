@@ -230,11 +230,8 @@ app.post("/close_article", function(req,res){
 	var data = req.body
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0]
-	var link = data.article.split('/')
 	data.article_link = data.article + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-	data.date_written = link.slice(3, 6).join('/')
-	data.category = link.slice(6, link.length-1).join('/')
 
 	
 	console.log(data)
@@ -242,10 +239,10 @@ app.post("/close_article", function(req,res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		var nv = {$set: {"completed": true, "endTime": data.time}}
+		var nv = {"completed": true, "endTime": data.time}
 		dbd.collection('sessions').updateOne({'article_link': data.article_link, 'UDID': data.UDID}, nv, function(err, result){
-			console.log(result)
 			if(err) throw err
+			console.log('one updated')
 			db.close()
 		});
 	});
