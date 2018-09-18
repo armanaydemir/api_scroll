@@ -242,8 +242,9 @@ app.post("/close_article", function(req,res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		var nv = {$set: {"completed": true}}
+		var nv = {$set: {"completed": true, "endTime": data.time}}
 		dbd.collection('sessions').updateOne({'article_link': data.article_link, 'UDID': data.UDID}, nv, function(err, result){
+			console.log(result)
 			if(err) throw err
 			db.close()
 		});
