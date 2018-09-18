@@ -21,7 +21,7 @@ console.log('started at least')
 //make size of tableview cells bigger on starting screen
 //make sure all of database stuff is correct	
 //get a bunch of nyt_keys and switch between them
-//
+//paginate the articles bc its getting toooo big
 //---------------------------------------------------------------------------------------------------------------
 //just ignore links with /interactive (only good nytimes articles (check on init article))
 //add blank space to bottom so bottom line can be at the top
@@ -160,7 +160,7 @@ function parse_body(body) {
 
 
 function init_article(data, res) {
-	var address = data.address
+	var address = data.article_link
 	if(!address.includes("https://www.nytimes.com")){
 		print('isnt nytimes, this should be fun lol')
 	}
@@ -204,7 +204,7 @@ function init_article(data, res) {
 
 app.get("/open_article", function(req, res) {
 	var data = req.query
-	data.article_link = data.articleLink.split('.html')[0] + '.html'
+	data.article_link = data.article_link.split('.html')[0] + '.html'
 	console.log(data.article_link);
     init_article(data, res);
 });
