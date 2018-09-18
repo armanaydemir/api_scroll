@@ -184,7 +184,7 @@ function init_article(data, res) {
 				};
 				request(options, function(error, response, body) {
 					if (!error && response.statusCode == 200) {
-						let text = parse_body(body);
+						var text = parse_body(body);
 						res.send(text);
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
