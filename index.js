@@ -22,6 +22,7 @@ console.log('started at least')
 //make sure all of database stuff is correct	
 //get a bunch of nyt_keys and switch between them
 //paginate the articles bc its getting toooo big
+//add version_wipe
 //---------------------------------------------------------------------------------------------------------------
 //just ignore links with /interactive (only good nytimes articles (check on init article))
 //add blank space to bottom so bottom line can be at the top
@@ -171,11 +172,11 @@ function init_article(data, res) {
 		var dbd = db.db('data')
 		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
-			db.close()
 			if(!err && result){
 				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': '', 'session_id': data.db_link, 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ if (e) throw e; });
 				res.send(result.text)
+				db.close()
 			}else{
 				console.log('new article scrape')
 				var options = {
@@ -190,6 +191,7 @@ function init_article(data, res) {
 							if (e) throw e; 
 							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
 								'endTime': '', 'session_id': data.db_link, 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ if (e) throw e; });
+							db.close()
 						});
 					}else{
 						console.log('error: ' + error)

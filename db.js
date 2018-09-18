@@ -112,32 +112,6 @@ var export_data = function(){
 	})
 }
 
-// purges sessions that were never 'tapped to submit'
-// we need a db.close in here but im taking it out for debug
-var  purge_incomplete = function() {
-	console.log('purge')
-	MongoClient.connect(url, function(e, db){
-		var dbsessions = db.db('sessions')
-		var dbd = db.db('data')
-		if(e) throw e;
-		dbd.collection('sessions').find().toArray(function(error, c){
-			if(error) throw error;
-			const complete = c.map(x => x.session_db_link);	
-			dbsessions.listCollections().toArray(function(err, s){
-				if(err) throw err;
-				var sessions = s.map(x => x.name);
-				sessions = sessions.filter(id => complete.indexOf(id) == -1 || id != 'system.indexes') //filtering out the completed sessions
-				console.log(sessions)
-				sessions.forEach(function(e){ //deleting each incompete session
-					dbsessions.dropCollection(e, function(derr, del){
-						if(derr) throw derr
-						if(!del) console.log('unable to delete' + e)
-					})
-				});
-			});
-		});
-	})
-}
 
 // purges all session data (deletes everything but the articles)
 var session_wipe = function() {
@@ -148,12 +122,15 @@ var session_wipe = function() {
 		if(e) throw e;
 		dbsessions.dropDatabase(function(err, r){
 			if(err) throw err
-		})
-		dbd.dropCollection('sessions', function(err,r){
-			if(err) throw err
+			dbd.dropCollection('sessions', function(errr,r){
+				if(errr) throw errr
+				db.close()
+			})
 		})
 	})
 }
+
+//add version wipe too
 
 
 //wipes all data, complete restart... be carefullll need db close in here too
