@@ -114,7 +114,7 @@ var export_data = function(){
 
 
 // purges all session data (deletes everything but the articles)
-var session_wipe = function() {
+var session_purge = function() {
 	console.log('session wipe')
 	MongoClient.connect(url, function(e, db){
 		var dbsessions = db.db('sessions')
@@ -154,7 +154,7 @@ var complete_wipe = function() {
 
 
 // for calling functions from terminal (can call each function like "node db.js purge" or "node db.js wipe")
-module.exports = {'purge': purge_incomplete, 'wipe': complete_wipe, 'session_wipe': session_wipe, 'export': export_data, 'add_article': add_article}
+module.exports = {'wipe': complete_wipe, 'purge': session_purge, 'export': export_data, 'add_article': add_article}
 require('make-runnable');
 
 
