@@ -231,7 +231,8 @@ app.get('/articles', function(req, res){
 
 app.post("/open_article", function(req, res) {
 	console.log('open article')
-	var data = req.query
+	var data = req.body
+
 	data.article_link = data.article_link.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(typeof data.startTime)
