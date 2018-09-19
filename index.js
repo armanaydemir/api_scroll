@@ -265,6 +265,9 @@ app.post("/close_article", function(req,res){
 		var s = new ObjectId(data.session_id)
 		console.log(s)
 		var q = {'_id': s}
+		dbd.collection('sessions').findOne(q, function(err, r){
+			console.log(r)
+		})
 		var nv = {$set:{"completed": true, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
@@ -275,8 +278,6 @@ app.post("/close_article", function(req,res){
 
 	res.sendStatus(200)
 });
-
-
 
 
 
