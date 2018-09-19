@@ -229,7 +229,7 @@ app.get('/articles', function(req, res){
 	});
 });
 
-app.get("/open_article", function(req, res) {
+app.post("/open_article", function(req, res) {
 	console.log('open article')
 	var data = req.query
 	data.article_link = data.article_link.split('.html')[0] + '.html'
