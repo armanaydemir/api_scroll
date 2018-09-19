@@ -177,7 +177,7 @@ function init_article(data, res) {
 			if(err) throw err;
 			if(!err && result){
 				var text = result.text
-				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, "startTime": data.startTime, 
+				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
 					if (e) throw e; 
 					//console.log(ress.insertedId)
@@ -230,21 +230,24 @@ app.get('/articles', function(req, res){
 });
 
 app.get("/open_article", function(req, res) {
+	console.log('open article')
 	var data = req.query
 	data.article_link = data.article_link.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-
+	console.log(typeof data.startTime)
+	console.log(data.startTime
 	console.log(data.article_link);
     init_article(data, res);
 });
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-
+	console.log('submit data')
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-	
+	console.log(typeof data.startTime)
+	console.log(data.startTime)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
@@ -273,9 +276,6 @@ app.post("/close_article", function(req,res){
 
 	res.sendStatus(200)
 });
-
-
-
 
 
 
