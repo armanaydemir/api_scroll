@@ -262,9 +262,9 @@ app.post("/close_article", function(req,res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
-		data.session_id = new ObjectId(data.session_id)
-		console.log(data.session_id)
-		var q = {'_id': data.session_id}
+		var s = new ObjectId(data.session_id)
+		console.log(s)
+		var q = {'_id': s}
 		var nv = {$set:{"completed": true, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
