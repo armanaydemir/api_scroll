@@ -175,8 +175,11 @@ function init_article(data, res) {
 			if(!err && result){
 				var text = result.text
 				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
-									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ if (e) throw e; text.unshift(ress._id); res.send(text);});
-				
+									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
+					if (e) throw e; 
+					text.unshift(ress._id); 
+					res.send(text);
+				});
 				db.close()
 			}else{
 				console.log('new article scrape')
@@ -192,7 +195,11 @@ function init_article(data, res) {
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
 							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
-								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ if (e) throw e; text.unshift(ress._id); res.send(text);});
+								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
+								if (e) throw e;
+								text.unshift(ress._id); 
+								res.send(text);
+						    });
 							db.close()
 						});
 					}else{
@@ -222,7 +229,7 @@ app.get('/articles', function(req, res){
 		var order = {_id: -1};
 		dbd.collection('articles').find().sort(order).toArray(function(err, results){
 			if(err) throw err;
-			console.log(results)
+			//console.log(results)
 			res.send(results)
 			db.close()
 		});
