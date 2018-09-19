@@ -235,7 +235,7 @@ app.get("/open_article", function(req, res) {
 	data.article_link = data.article_link.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(typeof data.startTime)
-	console.log(data.startTime
+	console.log(data.startTime)
 	console.log(data.article_link);
     init_article(data, res);
 });
