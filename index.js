@@ -186,11 +186,12 @@ function init_article(data, res) {
 				request(options, function(error, response, body) {
 					if (!error && response.statusCode == 200) {
 						var text = parse_body(body);
-						res.send(text);
+						
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
 							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
 								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ if (e) throw e; });
+							res.send({'text':text, 'session_id': ress._id);
 							db.close()
 						});
 					}else{
@@ -230,12 +231,7 @@ app.get('/articles', function(req, res){
 //need db close
 app.post("/close_article", function(req,res){
 	var data = req.body
-	//article link and UDID stuffs
-	data.article = data.article.split('.html')[0]
-	data.article_link = data.article + '.html'
-	data.UDID = data.UDID.replace(/-/g, '_');
 
-	
 	console.log(data)
 
 	MongoClient.connect(url, function(err, db) {
@@ -243,7 +239,7 @@ app.post("/close_article", function(req,res){
 		if (err) throw err; 
 		console.log(data.article_link)
 		console.log(data.UDID)
-		var q = {'article_link': data.article_link, 'UDID':data.UDID}
+		var q = {'_id': data.session_id}
 		var nv = {$set:{"completed": true, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
