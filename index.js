@@ -207,6 +207,8 @@ function init_article(data, res) {
 app.get("/open_article", function(req, res) {
 	var data = req.query
 	data.article_link = data.article_link.split('.html')[0] + '.html'
+	data.UDID = data.UDID.replace(/-/g, '_');
+
 	console.log(data.article_link);
     init_article(data, res);
 });
