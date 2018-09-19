@@ -20,8 +20,10 @@ console.log('started at least')
 //keep pushing updates to hockey
 //make tap to submit a centered button
 //make size of tableview cells bigger on starting screen
-//make sure all of database stuff is correct	
-//get a bunch of nyt_keys and switch between them
+
+
+//make sure all of database stuff (and time stuff) is correct	
+//get a few back up nyt_keys and switch between them
 //paginate the articles bc its getting toooo big
 //add version_wipe
 //---------------------------------------------------------------------------------------------------------------
@@ -192,7 +194,6 @@ function init_article(data, res) {
 					if (!error && response.statusCode == 200) {
 						var text = parse_body(body);
 						
-						
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
 							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
@@ -262,6 +263,7 @@ app.post("/close_article", function(req,res){
 		var dbd = db.db('data')
 		if (err) throw err; 
 		data.session_id = new ObjectId(data.session_id)
+		console.log(data.session_id)
 		var q = {'_id': data.session_id}
 		var nv = {$set:{"completed": true, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
