@@ -264,11 +264,7 @@ app.post("/close_article", function(req,res){
 		var dbd = db.db('data')
 		if (err) throw err; 
 		var s = new ObjectId(data.session_id)
-		console.log(s)
-		var q = {'_id': data.session_id}
-		dbd.collection('sessions').findOne(q, function(err, r){
-			console.log(r)
-		})
+		var q = {'_id': s}
 		var nv = {$set:{"completed": true, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
