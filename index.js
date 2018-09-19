@@ -22,7 +22,7 @@ console.log('started at least')
 //make size of tableview cells bigger on starting screen
 
 
-//make sure all of database stuff (and time stuff) is correct	
+//fix the time stuff (start time in sessions collection is bad)	
 //get a few back up nyt_keys and switch between them
 //paginate the articles bc its getting toooo big
 //add version_wipe
@@ -180,7 +180,7 @@ function init_article(data, res) {
 				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
 					if (e) throw e; 
-					console.log(ress.insertedId)
+					//console.log(ress.insertedId)
 					text.unshift(ress.insertedId); 
 					res.send(text);
 				});
@@ -257,9 +257,7 @@ app.post("/submit_data", function(req, res) {
 
 app.post("/close_article", function(req,res){
 	var data = req.body
-
-	console.log(data)
-
+	
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
