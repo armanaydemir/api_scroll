@@ -177,7 +177,7 @@ function init_article(data, res) {
 			if(err) throw err;
 			if(!err && result){
 				var text = result.text
-				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
+				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, "startTime": data.startTime, 
 									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
 					if (e) throw e; 
 					//console.log(ress.insertedId)
@@ -257,7 +257,7 @@ app.post("/submit_data", function(req, res) {
 
 app.post("/close_article", function(req,res){
 	var data = req.body
-	
+
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db('data')
 		if (err) throw err; 
