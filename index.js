@@ -9,6 +9,7 @@ var moment = require('moment')
 var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mognodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
 const version = "v0.2.0"
@@ -179,8 +180,6 @@ function init_article(data, res) {
 					if (e) throw e; 
 					text.unshift(ress.insertedId); 
 					res.send(text);
-					console.log(ress)
-					console.log(text)
 				});
 				db.close()
 			}else{
@@ -199,7 +198,7 @@ function init_article(data, res) {
 							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
 								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
 								if (e) throw e;
-								text.unshift(ress._id); 
+								text.unshift(ress.insertedId); 
 								res.send(text);
 						    });
 							db.close()
@@ -213,16 +212,6 @@ function init_article(data, res) {
 		})
 	});
 }
-
-
-app.get("/open_article", function(req, res) {
-	var data = req.query
-	data.article_link = data.article_link.split('.html')[0] + '.html'
-	data.UDID = data.UDID.replace(/-/g, '_');
-
-	console.log(data.article_link);
-    init_article(data, res);
-});
 
 app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
@@ -238,27 +227,13 @@ app.get('/articles', function(req, res){
 	});
 });
 
-//need db close
-app.post("/close_article", function(req,res){
-	var data = req.body
+app.get("/open_article", function(req, res) {
+	var data = req.query
+	data.article_link = data.article_link.split('.html')[0] + '.html'
+	data.UDID = data.UDID.replace(/-/g, '_');
 
-	console.log(data)
-
-	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db('data')
-		if (err) throw err; 
-		console.log(data.article_link)
-		console.log(data.UDID)
-		var q = {'_id': data.session_id}
-		var nv = {$set:{"completed": true, "endTime": data.time}}
-		dbd.collection('sessions').updateOne(q, nv, function(err, result){
-			if(err) throw err
-			console.log('one updated')
-			db.close()
-		});
-	});
-
-	res.sendStatus(200)
+	console.log(data.article_link);
+    init_article(data, res);
 });
 
 app.post("/submit_data", function(req, res) {
@@ -278,7 +253,26 @@ app.post("/submit_data", function(req, res) {
 	res.sendStatus(200)
 });
 
+app.post("/close_article", function(req,res){
+	var data = req.body
 
+	console.log(data)
+
+	MongoClient.connect(url, function(err, db) {
+		var dbd = db.db('data')
+		if (err) throw err; 
+		data.session_id = new ObjectId(data.session_id)
+		var q = {'_id': data.session_id}
+		var nv = {$set:{"completed": true, "endTime": data.time}}
+		dbd.collection('sessions').updateOne(q, nv, function(err, result){
+			if(err) throw err
+			console.log('one updated')
+			db.close()
+		});
+	});
+
+	res.sendStatus(200)
+});
 
 
 
