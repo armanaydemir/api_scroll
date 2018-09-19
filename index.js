@@ -180,6 +180,7 @@ function init_article(data, res) {
 				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
 					if (e) throw e; 
+					console.log(ress.insertedId)
 					text.unshift(ress.insertedId); 
 					res.send(text);
 				});
