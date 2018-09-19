@@ -179,6 +179,7 @@ function init_article(data, res) {
 					if (e) throw e; 
 					text.unshift(ress._id); 
 					res.send(text);
+					console.log(text)
 				});
 				db.close()
 			}else{
