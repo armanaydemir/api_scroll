@@ -12,7 +12,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.0"
+const version = "v0.2.1"
 
 console.log('started at least')
 
@@ -25,7 +25,7 @@ console.log('started at least')
 //make tap to submit a centered button
 //make size of tableview cells bigger on starting screen
 
-
+//--------------------------------
 //get a few back up nyt_keys and switch between them
 //add camera to see if they are looking at screen
 //add finger positioning
@@ -44,91 +44,12 @@ console.log('started at least')
 
 //figure out how to translate time from CFAbsolute to normal (http://home.max-weller.de/test/cfabsolutetime/)
 
-// https://www.nytimes.com/2017/02/01/magazine/the-misunderstood-genius-of-russell-westbrook.html
-// https://www.nytimes.com/2017/11/22/us/politics/alliance-defending-freedom-gay-rights.html
-// https://www.nytimes.com/2017/11/21/technology/bitcoin-bitfinex-tether.html
-// https://www.nytimes.com/2018/08/12/movies/the-meg-surprise-box-office-monster.html
-// https://www.nytimes.com/2018/08/10/arts/design/tulsa-park-gathering-place.html
-// https://www.nytimes.com/2018/08/13/world/europe/erdogan-turkey-lira-crisis.html
-// https://www.nytimes.com/2018/08/16/technology/google-employees-protest-search-censored-china.html
-// https://www.nytimes.com/2018/08/18/business/west-democracy-turkey-erdogan-financial-crisis.html
-// https://www.nytimes.com/2018/08/25/business/elon-musk-tesla-private.html
-// https://www.nytimes.com/2018/09/02/arts/television/tv-writers-diversity.html
-// https://www.nytimes.com/2018/09/08/reader-center/anonymous-op-ed-trump.html
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
-
-function scrape_top() {
-	request.get({
-	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
-	  qs: {
-	    'api-key': nyt_key
-	  },
-	}, function(err, response, body) {
-		if(err) throw err;
-	 	body = JSON.parse(body);
-	 	r = body.results
-	 	i = 0
-	 	//console.log(r)
-	 	while(r && i < r.length){
-	 		add_article(r[i].url)
-	 		i++
-	 	}
-	})
-}
-
-function add_article(address) {
-	address = address.split('.html')[0]
-	var link = address.split('/')
-	date_written = link.slice(3, 6).join('/')
-	category = link.slice(6, link.length-1).join('/')
-	address = address + '.html'
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbd = db.db('data')
-		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
-			if(err) throw err;
-			if(!result){
-				console.log('new article scrape')
-				var options = {
-					url: 'https://mercury.postlight.com/parser?url=' + address,
-					headers: headers
-				};
-				request(options, function(error, response, body) {
-					if (!error && response.statusCode == 200) {
-						// need to text this function
-						var text = parse_body(body);
-						console.log(address)
-						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; })
-						db.close()
-					}else{
-						console.log('error: ' + error)
-					}
-				});
-			}
-		})
-	});
-}
-
-function test_article(address) {
-	var options = {
-    	url: 'https://mercury.postlight.com/parser?url=' + address,
-    	headers: headers
-	};
-    request(options, function(error, response, body) {
-		if (!error && response.statusCode == 200) {
-    		console.log(parse_body(body));
-    	}else{
-	    	console.log('error: ' + error)
-	    }
-	});
-}
 
 function parse_body(body) {
 	const title = JSON.parse(body).title
@@ -162,6 +83,65 @@ function parse_body(body) {
 	console.log(title);
 	return sections;
 }
+
+function scrape_top() {
+	
+}
+
+function add_article(address) {
+	address = address.split('.html')[0]
+	var link = address.split('/')
+	date_written = link.slice(3, 6).join('/')
+	category = link.slice(6, link.length-1).join('/')
+	address = address + '.html'
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db('data')
+		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
+			if(err) throw err;
+			if(!result){
+				console.log('new article scrape')
+				var options = {
+					url: 'https://mercury.postlight.com/parser?url=' + address,
+					headers: headers
+				};
+				request(options, function(error, response, body) {
+					if (!error && response.statusCode == 200) {
+						// need to text this function
+						var text = parse_body(body);
+						console.log(address)
+						console.log(text[0])
+						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ 
+							if (e) throw e; 
+							return res
+						})
+					}else{
+						console.log('error: ' + error)
+					}
+				});
+			}else{
+				db.close()
+				return result
+			}
+		})
+	});
+}
+
+function test_article(address) {
+	var options = {
+    	url: 'https://mercury.postlight.com/parser?url=' + address,
+    	headers: headers
+	};
+    request(options, function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+    		console.log(parse_body(body));
+    	}else{
+	    	console.log('error: ' + error)
+	    }
+	});
+}
+
+
 
 
 function init_article(data, res) {
@@ -216,18 +196,37 @@ function init_article(data, res) {
 	});
 }
 
-app.get('/articles', function(req, res){
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbd = db.db('data')
-		var order = {_id: -1};
-		dbd.collection('articles').find().sort(order).toArray(function(err, results){
-			if(err) throw err;
-			//console.log(results)
-			res.send(results)
-			db.close()
-		});
-	});
+//this has a small chance of sending the same article twice (potentially)
+app.get('articles', function(req, res){
+	request.get({
+	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+	  qs: {
+	    'api-key': nyt_key
+	  },
+	}, function(err, response, body) {
+		if(err) throw err;
+	 	body = JSON.parse(body);
+	 	r = body.results
+	 	i = 0
+	 	var tops = []
+	 	while(r && i < r.length){
+	 		tops.push(add_article(r[i].url))
+	 		i++
+	 	}
+	 	console.log(tops.length)
+	 	res.send(tops)
+	 	// 	MongoClient.connect(url, function(e, db) {
+		// 	if(e) throw e;
+		// 	var dbd = db.db('data')
+		// 	var order = {_id: -1};
+		// 	dbd.collection('articles').find().sort(order).toArray(function(err, results){
+		// 		if(err) throw err;
+		// 		//console.log(results)
+		// 		res.send(results)
+		// 		db.close()
+		// 	});
+		// });
+	})
 });
 
 app.post("/open_article", function(req, res) {
@@ -298,10 +297,6 @@ app.post("/close_article", function(req,res){
 var server = app.listen(22364, function () {
     console.log("Listening on port %s...", server.address().port);
 });
-
-scrape_top()
-setInterval(scrape_top, 1000 * 60 * 60)
-
 
 
 
