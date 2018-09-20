@@ -245,11 +245,11 @@ app.post("/submit_data", function(req, res) {
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-	data.startTime = data.toString.split('.')[0]
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
-  		dbd.collection(data.UDID + data.startTime).insertOne(data, function(e, res){ if (e) throw e; });
+		var s = data.startTime.toString().split('.')[0]
+  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
