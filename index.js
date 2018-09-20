@@ -12,7 +12,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.1"
+const version = "v0.2.0"
 
 console.log('started at least')
 
@@ -85,7 +85,22 @@ function parse_body(body) {
 }
 
 function scrape_top() {
-	
+	request.get({
+	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+	  qs: {
+	    'api-key': nyt_key
+	  },
+	}, function(err, response, body) {
+		if(err) throw err;
+	 	body = JSON.parse(body);
+	 	r = body.results
+	 	i = 0
+	 	//console.log(r)
+	 	while(r && i < r.length){
+	 		add_article(r[i].url)
+	 		i++
+	 	}
+	})
 }
 
 function add_article(address) {
@@ -111,17 +126,12 @@ function add_article(address) {
 						var text = parse_body(body);
 						console.log(address)
 						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ 
-							if (e) throw e; 
-							return res
-						})
+						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; })
+						db.close()
 					}else{
 						console.log('error: ' + error)
 					}
 				});
-			}else{
-				db.close()
-				return result
 			}
 		})
 	});
@@ -196,38 +206,19 @@ function init_article(data, res) {
 	});
 }
 
-//this has a small chance of sending the same article twice (potentially)
+//this ha
 app.get('articles', function(req, res){
-	console.log('we got hre')
-	// request.get({
-	//   url: "https://api.nytimes.com/svc/topstories/v2/home.json",
-	//   qs: {
-	//     'api-key': nyt_key
-	//   },
-	// }, function(err, response, body) {
-	// 	if(err) throw err;
-	//  	body = JSON.parse(body);
-	//  	r = body.results
-	//  	i = 0
-	//  	var tops = []
-	//  	while(r && i < r.length){
-	//  		tops.push(add_article(r[i].url))
-	//  		i++
-	//  	}
-	//  	console.log(tops)
-	//  	res.send(tops)
-	 	MongoClient.connect(url, function(e, db) {
-			if(e) throw e;
-			var dbd = db.db('data')
-			var order = {_id: -1};
-			dbd.collection('articles').find().sort(order).toArray(function(err, results){
-				if(err) throw err;
-				console.log(results)
-				res.send(results)
-				db.close()
-			});
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db('data')
+		var order = {_id: -1};
+		dbd.collection('articles').find().sort(order).toArray(function(err, results){
+			if(err) throw err;
+			//console.log(results)
+			res.send(results)
+			db.close()
 		});
-	//})
+	});
 });
 
 app.post("/open_article", function(req, res) {
