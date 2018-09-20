@@ -213,19 +213,19 @@ app.get('articles', function(req, res){
 	 		tops.push(add_article(r[i].url))
 	 		i++
 	 	}
-	 	console.log(tops.length)
+	 	console.log(tops)
 	 	res.send(tops)
-	 	// 	MongoClient.connect(url, function(e, db) {
-		// 	if(e) throw e;
-		// 	var dbd = db.db('data')
-		// 	var order = {_id: -1};
-		// 	dbd.collection('articles').find().sort(order).toArray(function(err, results){
-		// 		if(err) throw err;
-		// 		//console.log(results)
-		// 		res.send(results)
-		// 		db.close()
-		// 	});
-		// });
+	 	MongoClient.connect(url, function(e, db) {
+			if(e) throw e;
+			var dbd = db.db('data')
+			var order = {_id: -1};
+			dbd.collection('articles').find().sort(order).toArray(function(err, results){
+				if(err) throw err;
+				console.log(results)
+				//res.send(results)
+				db.close()
+			});
+		});
 	})
 });
 
