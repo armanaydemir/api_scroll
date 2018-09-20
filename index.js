@@ -17,8 +17,6 @@ const version = "v0.2.0"
 console.log('started at least')
 
 //TODO
-//fix the time stuff (start time in sessions collection is bad)	
-
 //organized in same fashion as nytimes / return in top stories sorting
 //paginate the articles bc its getting toooo big / black screen when article is loading... add spinner
 //starting vc pull up to refresh articles (also add timestamp of last refresh)
