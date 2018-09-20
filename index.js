@@ -268,14 +268,15 @@ app.post("/close_article", function(req,res){
 		var dbd = db.db('data')
 		if (err) throw err; 
 		var s = new ObjectId(data.session_id)
-		console.log(data.session_id + ' : ' + data.UDID);
-		console.log(data.startTime + ' : ' + data.time)
-		console.log('===========')
+
 		var q = {'_id': s}
 		var nv = {$set:{"completed": data.complete, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
 			console.log('one updated')
+			console.log(data.session_id + ' : ' + data.UDID);
+			console.log(data.startTime + ' : ' + data.time)
+			console.log('===========')
 			db.close()
 		});
 	});
