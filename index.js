@@ -17,21 +17,22 @@ const version = "v0.2.0"
 console.log('started at least')
 
 //TODO
-//keep pushing updates to hockey
+//fix the time stuff (start time in sessions collection is bad)	
+
+//organized in same fashion as nytimes / return in top stories sorting
+//paginate the articles bc its getting toooo big / black screen when article is loading... add spinner
+//starting vc pull up to refresh articles (also add timestamp of last refresh)
+
+//add blank space to bottom so bottom line can be at the top
 //make tap to submit a centered button
 //make size of tableview cells bigger on starting screen
 
 
-//fix the time stuff (start time in sessions collection is bad)	
 //get a few back up nyt_keys and switch between them
-//paginate the articles bc its getting toooo big
+//add camera to see if they are looking at screen
+//add finger positioning
 //add version_wipe
-//---------------------------------------------------------------------------------------------------------------
-//just ignore links with /interactive (only good nytimes articles (check on init article))
-//add blank space to bottom so bottom line can be at the top
-//black screen when article is loading... add spinner
-//change the font to something better (same as nytimes??)
-//---------------------------------------------------------------------------------------------------------------
+
 
 //using matplotlib and pandas
 //amount of time line spends on screen
@@ -40,6 +41,8 @@ console.log('started at least')
 //make a frequency graph (hours of day on y and days of week on x, point whenever article is read) 
 //time spent on lines depending on line location in article
 //read up on natural language process
+
+//add politico/other news sites scrapers (npr, cnn)
 
 //figure out how to translate time from CFAbsolute to normal (http://home.max-weller.de/test/cfabsolutetime/)
 
@@ -241,7 +244,7 @@ app.post("/open_article", function(req, res) {
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-	console.log('submit data')
+	//console.log('submit data')
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
