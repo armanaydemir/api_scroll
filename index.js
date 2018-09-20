@@ -249,6 +249,7 @@ app.post("/submit_data", function(req, res) {
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(typeof data.startTime)
 	console.log(data.startTime)
+	data.startTime = data.toString.split('.')[0]
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
