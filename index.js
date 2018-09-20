@@ -198,6 +198,7 @@ function init_article(data, res) {
 
 //this has a small chance of sending the same article twice (potentially)
 app.get('articles', function(req, res){
+	console.log('we got hre')
 	request.get({
 	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
 	  qs: {
