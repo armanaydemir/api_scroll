@@ -3,11 +3,12 @@ var url = "mongodb://localhost:27017/";
 var request = require('request');
 const cheerio = require('cheerio')
 
-const version = "v0.2.0"
+const version = "v0.2.1"
 
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
+var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 
 //"schema" for this db 
@@ -30,6 +31,15 @@ var headers = {
 // 
 // ----------------------------------------------------------------------------
 
+//node js
+//0.1.0 -> initial
+//0.2.0 -> major updates to db and how we are storing sessions
+//0.2.1 -> changing order and way we are sending articles (adding pagination)
+
+//xcode
+//0.1.0 -> initial
+//0.2.0 -> updates mainly to api calls to reflect updates
+//0.2.1 -> adding pagination adn pull down to refresh to starting vc
 
 
 //two of the exact same functions in index.js and db.js, should condense and call it from the other one
@@ -149,12 +159,33 @@ var complete_wipe = function() {
 	})
 }
 
+var test_top = function() {
+	request.get({
+	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+	  qs: {
+	    'api-key': nyt_key
+	  },
+	}, function(err, response, body) {
+		if(err) throw err;
+	 	body = JSON.parse(body);
+	 	r = body.results
+	 	i = 0
+	 	var tops = []
+	 	while(r && i < r.length){
+	 		tops.push(add_article(r[i].url))
+	 		i++
+	 	}
+	 	console.log(tops.length)
+	 	console.log(tops[0])
+	})
+}
+
 
 
 
 
 // for calling functions from terminal (can call each function like "node db.js purge" or "node db.js wipe")
-module.exports = {'wipe': complete_wipe, 'purge': session_purge, 'export': export_data, 'add_article': add_article}
+module.exports = {'wipe': complete_wipe, 'purge': session_purge, 'export': export_data, 'add_article': add_article, 'test': test_top}
 require('make-runnable');
 
 
