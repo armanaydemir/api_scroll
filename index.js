@@ -235,9 +235,7 @@ app.post("/open_article", function(req, res) {
 
 	data.article_link = data.article_link.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(typeof data.startTime)
-	console.log(data.startTime)
-	console.log(data.article_link);
+	console.log(data.article_link + ' : ' + data.UDID);
     init_article(data, res);
 });
 
@@ -247,8 +245,6 @@ app.post("/submit_data", function(req, res) {
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(typeof data.startTime)
-	console.log(data.startTime)
 	data.startTime = data.toString.split('.')[0]
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
@@ -268,7 +264,7 @@ app.post("/close_article", function(req,res){
 		if (err) throw err; 
 		var s = new ObjectId(data.session_id)
 		var q = {'_id': s}
-		var nv = {$set:{"completed": true, "endTime": data.time}}
+		var nv = {$set:{"completed": data.complete, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
 			console.log('one updated')
