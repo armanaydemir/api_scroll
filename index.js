@@ -199,23 +199,23 @@ function init_article(data, res) {
 //this has a small chance of sending the same article twice (potentially)
 app.get('articles', function(req, res){
 	console.log('we got hre')
-	request.get({
-	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
-	  qs: {
-	    'api-key': nyt_key
-	  },
-	}, function(err, response, body) {
-		if(err) throw err;
-	 	body = JSON.parse(body);
-	 	r = body.results
-	 	i = 0
-	 	var tops = []
-	 	while(r && i < r.length){
-	 		tops.push(add_article(r[i].url))
-	 		i++
-	 	}
-	 	console.log(tops)
-	 	res.send(tops)
+	// request.get({
+	//   url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+	//   qs: {
+	//     'api-key': nyt_key
+	//   },
+	// }, function(err, response, body) {
+	// 	if(err) throw err;
+	//  	body = JSON.parse(body);
+	//  	r = body.results
+	//  	i = 0
+	//  	var tops = []
+	//  	while(r && i < r.length){
+	//  		tops.push(add_article(r[i].url))
+	//  		i++
+	//  	}
+	//  	console.log(tops)
+	//  	res.send(tops)
 	 	MongoClient.connect(url, function(e, db) {
 			if(e) throw e;
 			var dbd = db.db('data')
@@ -223,11 +223,11 @@ app.get('articles', function(req, res){
 			dbd.collection('articles').find().sort(order).toArray(function(err, results){
 				if(err) throw err;
 				console.log(results)
-				//res.send(results)
+				res.send(results)
 				db.close()
 			});
 		});
-	})
+	//})
 });
 
 app.post("/open_article", function(req, res) {
