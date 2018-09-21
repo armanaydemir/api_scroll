@@ -207,7 +207,7 @@ function init_article(data, res) {
 }
 
 //this ha
-app.get('articles', function(req, res){
+app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
