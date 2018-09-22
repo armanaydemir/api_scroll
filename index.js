@@ -239,8 +239,8 @@ app.get('/articles', function(req, res){
 				});
 	 			i++
 	 		}
+	 		db.close()
 	 	});
-	 	db.close()
 	 	print(tops)
 	 	res.send(tops)
 	})
