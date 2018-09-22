@@ -231,11 +231,11 @@ app.get('/articles', function(req, res){
 		 		add_article(r[i].url)
 		 		if(e) throw e;
 				
-				
+				console.log(r[i].url)
 				var q = {article_link: r[i].url};
 				dbd.collection('articles').findOne(q, function(err, result){
 					if(err) throw err;
-					//console.log(result)
+					console.log(result)
 					tops.push(result)
 					
 				});
