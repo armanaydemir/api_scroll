@@ -218,20 +218,6 @@ function init_article(data, res) {
 }
 
 
-function articles_helper(a){
-	console.log('callback')
-	tops.push(a)	
-	if(i < r.length){
-		add_article(r[i].url, articles_helper)
-			i++
-	}else{
-		console.log('end of it')
-			console.log(tops)
-			res.send(tops)
-	}
-}
-
-
 app.get('/articles', function(req, res){
 	
 	request.get({
@@ -245,10 +231,50 @@ app.get('/articles', function(req, res){
 	 	r = body.results
 	 	i = 0
 	 	var tops = []
-	 	r.forEach( async a => {
-	 		var pp = await add_article(a)
-	 		tops.push(pp)
-	 	}).then(console.log(tops))
+	 	r.forEach((address) => {
+		 	address = address.split('.html')[0]
+			var link = address.split('/')
+			date_written = link.slice(3, 6).join('/')
+			category = link.slice(6, link.length-1).join('/')
+			address = address + '.html'
+			console.log('add_Article')
+			MongoClient.connect(url, function(e, db) {
+				if(e) throw e;
+				var dbd = db.db('data')
+				dbd.collection('articles').findOne({'article_link': address}, function(err, result){
+					if(err) throw(err);
+					if(!result){
+						console.log('new article scrape')
+						var options = {
+							url: 'https://mercury.postlight.com/parser?url=' + address,
+							headers: headers
+						};
+						request(options, function(error, response, body) { if(error) reject(error);
+							if (!error && response.statusCode == 200) {
+								// need to text this function
+								var text = parse_body(body);
+								console.log(address)
+								console.log(text[0])
+								dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
+									db.close()
+									console.log(res)
+									tops.push(res)
+								})
+								
+							}else{
+								console.log('error: ' + error)
+							}
+						});
+					}else{
+						db.close()
+						console.log(result)
+						top.push(result)
+					}
+				})
+				//console.log(top)
+			})
+		})
+		console.log(tops)
 	})
 });
 
