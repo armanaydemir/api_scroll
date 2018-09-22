@@ -121,7 +121,7 @@ function add_article(address, callback) {
 					url: 'https://mercury.postlight.com/parser?url=' + address,
 					headers: headers
 				};
-				request(options, function(error, response, body) { if(error) reject(error);
+				request(options, function(error, response, body) { if(error) throw(error);
 					if (!error && response.statusCode == 200) {
 						// need to text this function
 						var text = parse_body(body);
@@ -239,7 +239,7 @@ app.get('/articles', function(req, res){
 			category = link.slice(6, link.length-1).join('/')
 			address = address + '.html'
 			console.log('add_Article')
-			MongoClient.connect(url, function(e, db) {
+				MongoClient.connect(url, function(e, db) {
 				if(e) throw e;
 				var dbd = db.db('data')
 				dbd.collection('articles').findOne({'article_link': address}, function(err, result){
@@ -259,7 +259,12 @@ app.get('/articles', function(req, res){
 								dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 									db.close()
 									//console.log(res)
+									i++
 									tops.push(res)
+									if(i === r.length){
+										console.log(tops)
+										res.send(tops)
+									}
 								})
 								
 							}else{
@@ -268,14 +273,18 @@ app.get('/articles', function(req, res){
 						});
 					}else{
 						db.close()
-						console.log(result)
+						//console.log(result)
+						i++
 						tops.push(result)
+						if(i === r.length){
+							console.log(tops)
+							res.send(tops)
+						}
 					}
 				})
 				console.log(tops)
 			})
-		}).then(() => {console.log(tops);res.send(tops)})
-		
+		})
 	})
 });
 
