@@ -232,7 +232,7 @@ app.get('/articles', function(req, res){
 	 		var tops = []
 	 		var dbd = db.db('data')
 	 		while(r && i < r.length){
-		 		tops.push(add_article(r[i].url))
+		 		tops.push(await add_article(r[i].url))
 				
 				console.log(r[i].url)
 	 			i++
