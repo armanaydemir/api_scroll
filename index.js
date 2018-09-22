@@ -229,7 +229,7 @@ app.get('/articles', function(req, res){
 	 	i = 0
 	 	var tops = []
 	 	while(r && i < r.length){
-		 	let a = await add_article(r[i].url)
+		 	var a = await add_article(r[i].url)
 			tops.push(a)	
 			console.log(r[i].url)
 	 		i++
