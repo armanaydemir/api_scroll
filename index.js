@@ -12,7 +12,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.0"
+const version = "v0.2.1"
 
 console.log('started at least')
 
@@ -219,7 +219,6 @@ function init_article(data, res) {
 
 
 app.get('/articles', function(req, res){
-	
 	request.get({
 	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
 	  qs: {
