@@ -103,7 +103,7 @@ function scrape_top() {
 	})
 }
 
-function add_article(address) {
+var add_article = async function(address) {
 	address = address.split('.html')[0]
 	var link = address.split('/')
 	date_written = link.slice(3, 6).join('/')
@@ -229,7 +229,7 @@ app.get('/articles', function(req, res){
 	 	i = 0
 	 	var tops = []
 	 	while(r && i < r.length){
-		 	tops.push(await add_article(r[i].url))
+		 	let a = await add_article(r[i].url)
 				
 			console.log(r[i].url)
 	 		i++
