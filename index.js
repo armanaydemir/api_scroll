@@ -213,7 +213,7 @@ function init_article(data, res) {
 
 //this ha
 app.get('/articles', function(req, res){
-	var tops = []
+	
 	request.get({
 	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
 	  qs: {
@@ -226,6 +226,7 @@ app.get('/articles', function(req, res){
 	 	i = 0
 	 	//console.log(r)
 	 	MongoClient.connect(url, function(e, db) {
+	 		var tops = []
 	 		var dbd = db.db('data')
 	 		while(r && i < r.length){
 		 		add_article(r[i].url)
