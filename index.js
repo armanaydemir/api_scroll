@@ -241,7 +241,7 @@ app.get('/articles', function(req, res){
 	 		}
 	 		db.close()
 	 	});
-	 	print(tops)
+	 	console.log(tops)
 	 	res.send(tops)
 	})
 });
