@@ -128,6 +128,7 @@ function add_article(address) {
 						console.log(text[0])
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 							db.close()
+							console.log(res)
 							return res
 						})
 						
@@ -137,6 +138,7 @@ function add_article(address) {
 				});
 			}else{
 				db.close()
+				console.log(result)
 				return result
 			}
 		})
