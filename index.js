@@ -243,10 +243,11 @@ app.get('/articles', function(req, res){
 	 			i++
 	 		}
 	 		db.close()
+	 		console.log('end of it')
+	 		console.log(tops)
+	 		res.send(tops)
 	 	});
-	 	console.log('end of it')
-	 	console.log(tops)
-	 	res.send(tops)
+	 	
 	})
 });
 
