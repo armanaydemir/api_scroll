@@ -245,7 +245,7 @@ app.get('/articles', function(req, res){
 	 	r = body.results
 	 	i = 0
 	 	var tops = []
-	 	r.forEach(async (a) => {
+	 	r.forEach( async (a) => {
 	 		var pp = await add_article(a)
 	 		tops.push(pp)
 	 	}).then(console.log(tops))
