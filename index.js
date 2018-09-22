@@ -226,13 +226,16 @@ app.get('/articles', function(req, res){
 	 	i = 0
 	 	//console.log(r)
 	 	MongoClient.connect(url, function(e, db) {
+	 		var dbd = db.db('data')
 	 		while(r && i < r.length){
 		 		add_article(r[i].url)
 		 		if(e) throw e;
-				var dbd = db.db('data')
+				
+				console.log(r[i].url)
 				var q = {article_link: r[i].url};
 				dbd.collection('articles').find(q, function(err, result){
 					if(err) throw err;
+					console.log('hey we in here?')
 					//console.log(results)
 					tops.push(result)
 					
