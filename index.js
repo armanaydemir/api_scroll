@@ -126,12 +126,17 @@ function add_article(address) {
 						var text = parse_body(body);
 						console.log(address)
 						console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; })
-						db.close()
+						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
+							db.close()
+						})
+						
 					}else{
 						console.log('error: ' + error)
 					}
 				});
+			}else{
+				db.close()
+				return result
 			}
 		})
 	});
@@ -208,17 +213,37 @@ function init_article(data, res) {
 
 //this ha
 app.get('/articles', function(req, res){
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbd = db.db('data')
-		var order = {_id: -1};
-		dbd.collection('articles').find().sort(order).toArray(function(err, results){
-			if(err) throw err;
-			//console.log(results)
-			res.send(results)
-			db.close()
-		});
-	});
+	var tops = []
+	request.get({
+	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+	  qs: {
+	    'api-key': nyt_key
+	  },
+	}, function(err, response, body) {
+		if(err) throw err;
+	 	body = JSON.parse(body);
+	 	r = body.results
+	 	i = 0
+	 	//console.log(r)
+	 	MongoClient.connect(url, function(e, db) {
+	 		while(r && i < r.length){
+		 		add_article(r[i].url)
+		 		if(e) throw e;
+				var dbd = db.db('data')
+				var q = {article_link: r[i].url};
+				dbd.collection('articles').find(q, function(err, result){
+					if(err) throw err;
+					//console.log(results)
+					tops.push(result)
+					
+				});
+	 			i++
+	 		}
+	 	});
+	 	db.close()
+	 	print(tops)
+	 	res.send(tops)
+	})
 });
 
 app.post("/open_article", function(req, res) {
