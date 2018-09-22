@@ -225,7 +225,7 @@ app.get('/articles', function(req, res){
 	  qs: {
 	    'api-key': nyt_key
 	  },
-	}, function(err, response, body) {
+	}, async function(err, response, body) {
 		if(err) throw err;
 	 	body = JSON.parse(body);
 	 	r = body.results
