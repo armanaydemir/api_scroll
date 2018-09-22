@@ -254,11 +254,11 @@ app.get('/articles', function(req, res){
 							if (!error && response.statusCode == 200) {
 								// need to text this function
 								var text = parse_body(body);
-								console.log(address)
-								console.log(text[0])
+								//console.log(address)
+								//console.log(text[0])
 								dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 									db.close()
-									console.log(res)
+									//console.log(res)
 									tops.push(res)
 								})
 								
@@ -268,7 +268,7 @@ app.get('/articles', function(req, res){
 						});
 					}else{
 						db.close()
-						console.log(result)
+						//console.log(result)
 						tops.push(result)
 					}
 				})
