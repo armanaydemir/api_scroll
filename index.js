@@ -217,7 +217,21 @@ function init_article(data, res) {
 	});
 }
 
-//this ha
+
+function articles_helper(a){
+	console.log('callback')
+	tops.push(a)	
+	if(i < r.length){
+		add_article(r[i].url, articles_helper)
+			i++
+	}else{
+		console.log('end of it')
+			console.log(tops)
+			res.send(tops)
+	}
+}
+
+
 app.get('/articles', function(req, res){
 	
 	request.get({
@@ -231,6 +245,18 @@ app.get('/articles', function(req, res){
 	 	r = body.results
 	 	i = 0
 	 	var tops = []
+	 	var callback = function(a){
+	 		console.log('callback')
+	 		tops.push(a)	
+			if(i < r.length){
+				add_article(r[i].url, callback)
+	 			i++
+			}else{
+				console.log('end of it')
+ 				console.log(tops)
+ 				res.send(tops)
+			}
+	 	}
 	 	add_article(r[i].url, function(a){
 	 		console.log('callback')
 	 		tops.push(a)	
