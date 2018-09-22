@@ -276,6 +276,7 @@ app.get('/articles', function(req, res){
 			})
 		})
 		console.log(tops)
+		res.send(tops)
 	})
 });
 
