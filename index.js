@@ -237,7 +237,7 @@ app.get('/articles', function(req, res){
 					if(err) throw err;
 					//console.log(result)
 					tops.push(result)
-					
+					console.log(tops)
 				});
 	 			i++
 	 		}
