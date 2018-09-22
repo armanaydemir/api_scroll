@@ -162,7 +162,7 @@ function test_article(address) {
 
 
 
-function init_article(data, res) {
+async function init_article(data, res) {
 	var address = data.article_link
 	if(!address.includes("https://www.nytimes.com")){
 		print('isnt nytimes, this should be fun lol')
@@ -227,21 +227,18 @@ app.get('/articles', function(req, res){
 	 	body = JSON.parse(body);
 	 	r = body.results
 	 	i = 0
-	 	//console.log(r)
-	 	MongoClient.connect(url, function(e, db) {
-	 		var tops = []
-	 		var dbd = db.db('data')
-	 		while(r && i < r.length){
-		 		tops.push(await add_article(r[i].url))
+	 	var tops = []
+	 	while(r && i < r.length){
+		 	tops.push(await add_article(r[i].url))
 				
-				console.log(r[i].url)
-	 			i++
-	 		}
-	 		db.close()
-	 		console.log('end of it')
-	 		console.log(tops)
-	 		res.send(tops)
-	 	});
+			console.log(r[i].url)
+	 		i++
+	 	}
+	 	//console.log(r)
+	 	
+ 		console.log('end of it')
+ 		console.log(tops)
+ 		res.send(tops)
 	 	
 	})
 });
