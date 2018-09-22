@@ -274,9 +274,8 @@ app.get('/articles', function(req, res){
 				})
 				console.log(tops)
 			})
-		})
-		console.log(tops)
-		res.send(tops)
+		}).then(() => {console.log(tops);res.send(tops)})
+		
 	})
 });
 
