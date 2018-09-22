@@ -235,7 +235,7 @@ app.get('/articles', function(req, res){
 	 		console.log('callback')
 	 		tops.push(a)	
 			if(i < r.length){
-				add_article[r[i].url]
+				add_article(r[i].url)
 	 			i++
 			}else{
 				console.log('end of it')
