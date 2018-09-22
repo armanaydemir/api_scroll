@@ -244,7 +244,7 @@ app.get('/articles', function(req, res){
 	 		}
 	 		db.close()
 	 	});
-	 	consle.log('end of it')
+	 	console.log('end of it')
 	 	console.log(tops)
 	 	res.send(tops)
 	})
