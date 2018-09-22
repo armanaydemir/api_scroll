@@ -236,16 +236,12 @@ app.get('/articles', function(req, res){
 			if(i < r.length){
 				add_article[r[i].url]
 	 			i++
+			}else{
+				console.log('end of it')
+ 				console.log(tops)
+ 				res.send(tops)
 			}
 	 	})
-			
-	 	
-	 	//console.log(r)
-	 	
- 		console.log('end of it')
- 		console.log(tops)
- 		res.send(tops)
-	 	
 	})
 });
 
