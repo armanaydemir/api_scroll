@@ -269,7 +269,7 @@ app.get('/articles', function(req, res){
 					}else{
 						db.close()
 						console.log(result)
-						top.push(result)
+						tops.push(result)
 					}
 				})
 				//console.log(top)
