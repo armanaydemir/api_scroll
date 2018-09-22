@@ -231,7 +231,8 @@ app.get('/articles', function(req, res){
 	 	r = body.results
 	 	i = 0
 	 	var tops = []
-	 	r.forEach((address) => {
+	 	r.forEach((article) => {
+	 		var address = article.url
 		 	address = address.split('.html')[0]
 			var link = address.split('/')
 			date_written = link.slice(3, 6).join('/')
