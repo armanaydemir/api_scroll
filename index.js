@@ -103,47 +103,47 @@ function scrape_top() {
 	})
 }
 
-function add_article(address) {
+function add_article(address, callback) {
 	address = address.split('.html')[0]
 	var link = address.split('/')
 	date_written = link.slice(3, 6).join('/')
 	category = link.slice(6, link.length-1).join('/')
 	address = address + '.html'
-	return new Promise(function(resolve, reject){
-		MongoClient.connect(url, function(e, db) {
-			if(e) reject(e);
-			var dbd = db.db('data')
-			dbd.collection('articles').findOne({'article_link': address}, function(err, result){
-				if(err) reject(err);
-				if(!result){
-					console.log('new article scrape')
-					var options = {
-						url: 'https://mercury.postlight.com/parser?url=' + address,
-						headers: headers
-					};
-					request(options, function(error, response, body) { if(error) reject(error);
-						if (!error && response.statusCode == 200) {
-							// need to text this function
-							var text = parse_body(body);
-							console.log(address)
-							console.log(text[0])
-							dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) reject(e); 
-								db.close()
-								console.log(res)
-								resolve(res)
-							})
-							
-						}else{
-							console.log('error: ' + error)
-						}
-					});
-				}else{
-					db.close()
-					console.log(result)
-					resolve(result)
-				}
-			})
-		});
+
+	MongoClient.connect(url, function(e, db) {
+		if(e) reject(e_;
+		var dbd = db.db('data')
+		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
+			if(err) throw(err);
+			if(!result){
+				console.log('new article scrape')
+				var options = {
+					url: 'https://mercury.postlight.com/parser?url=' + address,
+					headers: headers
+				};
+				request(options, function(error, response, body) { if(error) reject(error);
+					if (!error && response.statusCode == 200) {
+						// need to text this function
+						var text = parse_body(body);
+						console.log(address)
+						console.log(text[0])
+						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
+							db.close()
+							console.log(res)
+							callback(res)
+						})
+						
+					}else{
+						console.log('error: ' + error)
+					}
+				});
+			}else{
+				db.close()
+				console.log(result)
+				callback(result)
+			}
+		})
+	
 	})
 	
 }
@@ -225,18 +225,21 @@ app.get('/articles', function(req, res){
 	  qs: {
 	    'api-key': nyt_key
 	  },
-	}, async function(err, response, body) {
+	}, function(err, response, body) {
 		if(err) throw err;
 	 	body = JSON.parse(body);
 	 	r = body.results
 	 	i = 0
 	 	var tops = []
-	 	while(r && i < r.length){
-		 	var a = await add_article(r[i].url)
-			tops.push(a)	
-			console.log(r[i].url)
-	 		i++
-	 	}
+	 	add_article(r[i].url, function(a){
+	 		tops.push(a)	
+			if(i < r.length){
+				add_article[r[i].url]
+	 			i++
+			}
+	 	})
+			
+	 	
 	 	//console.log(r)
 	 	
  		console.log('end of it')
