@@ -128,6 +128,7 @@ function add_article(address) {
 						console.log(text[0])
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 							db.close()
+							return res
 						})
 						
 					}else{
@@ -225,18 +226,13 @@ app.get('/articles', function(req, res){
 	 	r = body.results
 	 	i = 0
 	 	//console.log(r)
-	 	MongoClient.connect(url, async function(e, db) {
+	 	MongoClient.connect(url, function(e, db) {
 	 		var tops = []
 	 		var dbd = db.db('data')
 	 		while(r && i < r.length){
-		 		add_article(r[i].url)
-		 		if(e) throw e;
+		 		tops.push(add_article(r[i].url))
 				
 				console.log(r[i].url)
-				var q = {article_link: r[i].url};
-				var result = await dbd.collection('articles').findOne(q)
-				console.log(result)
-				tops.push(result)
 	 			i++
 	 		}
 	 		db.close()
