@@ -111,7 +111,7 @@ function add_article(address, callback) {
 	address = address + '.html'
 
 	MongoClient.connect(url, function(e, db) {
-		if(e) reject(e_;
+		if(e) throw e;
 		var dbd = db.db('data')
 		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw(err);
