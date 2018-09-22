@@ -235,7 +235,7 @@ app.get('/articles', function(req, res){
 				var q = {article_link: r[i].url};
 				dbd.collection('articles').findOne(q, function(err, result){
 					if(err) throw err;
-					console.log(result)
+					//console.log(result)
 					tops.push(result)
 					
 				});
