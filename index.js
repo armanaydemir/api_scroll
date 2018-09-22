@@ -245,30 +245,10 @@ app.get('/articles', function(req, res){
 	 	r = body.results
 	 	i = 0
 	 	var tops = []
-	 	var callback = function(a){
-	 		console.log('callback')
-	 		tops.push(a)	
-			if(i < r.length){
-				add_article(r[i].url, callback)
-	 			i++
-			}else{
-				console.log('end of it')
- 				console.log(tops)
- 				res.send(tops)
-			}
-	 	}
-	 	add_article(r[i].url, function(a){
-	 		console.log('callback')
-	 		tops.push(a)	
-			if(i < r.length){
-				add_article(r[i].url)
-	 			i++
-			}else{
-				console.log('end of it')
- 				console.log(tops)
- 				res.send(tops)
-			}
-	 	})
+	 	r.forEach(async(a) => {
+	 		var pp = await add_article(a)
+	 		tops.push(pp)
+	 	}).then(console.log(tops))
 	})
 });
 
