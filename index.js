@@ -212,7 +212,7 @@ function init_article(data, res) {
 }
 
 //this ha
-app.get('/articles', function(req, res){
+app.get('/articles', async function(req, res){
 	
 	request.get({
 	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
