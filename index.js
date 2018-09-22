@@ -231,11 +231,11 @@ app.get('/articles', function(req, res){
 		 		add_article(r[i].url)
 		 		if(e) throw e;
 				
-				console.log(r[i].url)
+				
 				var q = {article_link: r[i].url};
 				dbd.collection('articles').find(q, function(err, result){
 					if(err) throw err;
-					console.log('hey we in here?')
+					console.log(r[i].url)
 					//console.log(results)
 					tops.push(result)
 					
@@ -244,6 +244,7 @@ app.get('/articles', function(req, res){
 	 		}
 	 		db.close()
 	 	});
+	 	consle.log('end of it')
 	 	console.log(tops)
 	 	res.send(tops)
 	})
