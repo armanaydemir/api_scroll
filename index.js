@@ -162,7 +162,7 @@ function test_article(address) {
 
 
 
-async function init_article(data, res) {
+function init_article(data, res) {
 	var address = data.article_link
 	if(!address.includes("https://www.nytimes.com")){
 		print('isnt nytimes, this should be fun lol')
