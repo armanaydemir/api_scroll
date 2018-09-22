@@ -250,7 +250,7 @@ app.get('/articles', function(req, res){
 							url: 'https://mercury.postlight.com/parser?url=' + address,
 							headers: headers
 						};
-						request(options, function(error, response, body) { if(error) reject(error);
+						request(options, function(error, response, body) { if(error) throw(error);
 							if (!error && response.statusCode == 200) {
 								// need to text this function
 								var text = parse_body(body);
@@ -268,11 +268,11 @@ app.get('/articles', function(req, res){
 						});
 					}else{
 						db.close()
-						//console.log(result)
+						console.log(result)
 						tops.push(result)
 					}
 				})
-				//console.log(top)
+				console.log(tops)
 			})
 		})
 		console.log(tops)
