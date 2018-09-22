@@ -109,7 +109,7 @@ function add_article(address, callback) {
 	date_written = link.slice(3, 6).join('/')
 	category = link.slice(6, link.length-1).join('/')
 	address = address + '.html'
-
+	console.log('add_Article')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
@@ -232,6 +232,7 @@ app.get('/articles', function(req, res){
 	 	i = 0
 	 	var tops = []
 	 	add_article(r[i].url, function(a){
+	 		console.log('callback')
 	 		tops.push(a)	
 			if(i < r.length){
 				add_article[r[i].url]
