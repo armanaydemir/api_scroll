@@ -225,6 +225,7 @@ app.get('/articles', function(req, res){
 		if(err) throw err;
 	 	body = JSON.parse(body);
 	 	r = body.results
+	 	i = 0
 	 	var tops = []
 	 	r.forEach((article) => {
 	 		var address = article.url
@@ -252,10 +253,15 @@ app.get('/articles', function(req, res){
 								var text = parse_body(body);
 								//console.log(address)
 								//console.log(text[0])
-								dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
+								dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, red){ if (e) throw e; 
 									db.close()
-									console.log(res)
-									tops.push(res)
+									//console.log(res)
+									i++
+									tops.push(red)
+									if(i === r.length){
+										console.log(tops)
+										res.send(tops)
+									}
 								})
 								
 							}else{
@@ -264,16 +270,18 @@ app.get('/articles', function(req, res){
 						});
 					}else{
 						db.close()
-						console.log(result)
+						//console.log(result)
+						i++
 						tops.push(result)
+						if(i === r.length){
+							console.log(tops)
+							res.send(tops)
+						}
 					}
 				})
 				//console.log(tops)
 			})
 		})
-		console.log(tops)
-		res.send(tops)
-
 		console.log('after r loop')
 	})
 });
