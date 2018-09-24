@@ -12,12 +12,12 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.1"
+const version = "v0.2.2"
 
 console.log('started at least')
 
 //TODO
-//organized in same fashion as nytimes / return in top stories sorting
+//add seperate db with just info from nytimes (author, images, excerpts)
 //paginate the articles bc its getting toooo big / black screen when article is loading... add spinner
 //starting vc pull up to refresh articles (also add timestamp of last refresh)
 
@@ -163,8 +163,6 @@ function test_article(address) {
 }
 
 
-
-
 function init_article(data, res) {
 	var address = data.article_link
 	if(!address.includes("https://www.nytimes.com")){
@@ -196,7 +194,6 @@ function init_article(data, res) {
 				request(options, function(error, response, body) {
 					if (!error && response.statusCode == 200) {
 						var text = parse_body(body);
-						
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
 							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
@@ -244,6 +241,7 @@ app.get('/articles', function(req, res){
 				dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 					if(err) throw(err);
 					if(!result){
+						dbd.collection('nytimes_lib').insertOne(article, function(err, res){if(err) throw err;})
 						console.log('new article scrape')
 						var options = {
 							url: 'https://mercury.postlight.com/parser?url=' + address,
