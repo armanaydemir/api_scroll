@@ -279,7 +279,7 @@ app.get('/articles', function(req, res){
 						}
 					}
 				})
-				console.log(tops)
+				//console.log(tops)
 			})
 		})
 		console.log('after r loop')
