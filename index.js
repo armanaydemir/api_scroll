@@ -17,13 +17,12 @@ const version = "v0.2.3"
 console.log('started at least')
 
 //TODO
-//add seperate db with just info from nytimes (author, images, excerpts)
-//paginate the articles bc its getting toooo big / black screen when article is loading... add spinner
-//starting vc pull up to refresh articles (also add timestamp of last refresh)
+//figure out order and how to paginate articles ... cache?
 
+//black screen when article is loading... add spinner
 //add blank space to bottom so bottom line can be at the top
 //make tap to submit a centered button
-//make size of tableview cells bigger on starting screen
+//make size of tableview cells bigger on starting screen //provide abstract in addition to title in starting vc
 
 //--------------------------------
 //get a few back up nyt_keys and switch between them
@@ -257,7 +256,7 @@ app.get('/articles', function(req, res){
 									db.close()
 									//console.log(res)
 									i++
-									tops.push(red)
+									if(red.title != null){tops.push(red)}
 									if(i === r.length){
 										console.log(tops)
 										res.send(tops)
@@ -271,8 +270,9 @@ app.get('/articles', function(req, res){
 					}else{
 						db.close()
 						//console.log(result)
+						if(result.title != null){tops.push(result)}
 						i++
-						tops.push(result)
+						
 						if(i === r.length){
 							console.log(tops)
 							res.send(tops)
