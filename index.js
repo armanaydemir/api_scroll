@@ -241,7 +241,7 @@ app.get('/articles', function(req, res){
 				dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 					if(err) throw(err);
 					if(!result){
-						//dbd.collection('nytimes_lib').insertOne(article, function(err, res){if(err) throw err;})
+						dbd.collection('nytimes_lib').insertOne(article, function(err, res){if(err) throw err;})
 						console.log('new article scrape')
 						var options = {
 							url: 'https://mercury.postlight.com/parser?url=' + address,
