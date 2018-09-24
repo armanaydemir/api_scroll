@@ -254,7 +254,7 @@ app.get('/articles', function(req, res){
 								//console.log(text[0])
 								dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 									db.close()
-									//console.log(res)
+									console.log(res)
 									tops.push(res)
 								})
 								
@@ -271,6 +271,7 @@ app.get('/articles', function(req, res){
 				//console.log(tops)
 			})
 		})
+		console.log(tops)
 		res.send(tops)
 
 		console.log('after r loop')
