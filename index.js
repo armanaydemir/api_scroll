@@ -270,7 +270,8 @@ app.get('/articles', function(req, res){
 				})
 				//console.log(tops)
 			})
-		}).then(() => res.send(tops))
+		})
+		res.send(tops)
 
 		console.log('after r loop')
 	})
