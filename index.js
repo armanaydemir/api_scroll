@@ -264,7 +264,7 @@ app.get('/articles', function(req, res){
 						});
 					}else{
 						db.close()
-						//console.log(result)
+						console.log(result)
 						tops.push(result)
 					}
 				})
