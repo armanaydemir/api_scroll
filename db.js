@@ -3,7 +3,7 @@ var url = "mongodb://localhost:27017/";
 var request = require('request');
 const cheerio = require('cheerio')
 
-const version = "v0.2.1"
+const version = "v0.2.3"
 
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
@@ -34,12 +34,13 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 //node js
 //0.1.0 -> initial
 //0.2.0 -> major updates to db and how we are storing sessions
-//0.2.1 -> changing order and way we are sending articles (adding pagination)
+//0.2.2 -> changing order to just be top stories
+//0.2.4 -> pagination, adding ny_times db
 
 //xcode
 //0.1.0 -> initial
 //0.2.0 -> updates mainly to api calls to reflect updates
-//0.2.1 -> adding pagination adn pull down to refresh to starting vc
+//0.2.4 -> adding pagination adn pull down to refresh to starting vc
 
 
 //two of the exact same functions in index.js and db.js, should condense and call it from the other one
