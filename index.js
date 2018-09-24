@@ -80,7 +80,7 @@ function parse_body(body) {
 		sections.push(subsections.join(''));
 		i ++;
 	}
-	console.log(title);
+	//console.log(title);
 	return sections;
 }
 
