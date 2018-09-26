@@ -253,7 +253,7 @@ app.get('/articles', function(req, res){
 								var text = parse_body(body);
 								//console.log(address)
 								//console.log(text[0])
-								dbd.collection('articles').insertOne({'text': text, 'abstract': abstract, article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, red){ if (e) throw e; 
+								dbd.collection('articles').insertOne({'text': text, 'abstract': abstract, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, red){ if (e) throw e; 
 									db.close()
 									i++
 									if(red.title != null){tops.push(red)}
