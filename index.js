@@ -17,9 +17,9 @@ const version = "v0.2.3"
 console.log('started at least')
 
 //TODO
+//news 'briefings' broke the scraper ... thats why we added the title checker before we serve up articles
 //figure out order and how to paginate articles ... cache?
 
-//black screen when article is loading... add spinner
 //add blank space to bottom so bottom line can be at the top
 //make tap to submit a centered button
 //make size of tableview cells bigger on starting screen //provide abstract in addition to title in starting vc
@@ -227,6 +227,7 @@ app.get('/articles', function(req, res){
 	 	i = 0
 	 	var tops = []
 	 	r.forEach((article) => {
+	 		var abstract = article.abstract
 	 		var address = article.url
 		 	address = address.split('.html')[0]
 			var link = address.split('/')
@@ -252,9 +253,8 @@ app.get('/articles', function(req, res){
 								var text = parse_body(body);
 								//console.log(address)
 								//console.log(text[0])
-								dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, red){ if (e) throw e; 
+								dbd.collection('articles').insertOne({'text': text, 'abstract': abstract, article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, red){ if (e) throw e; 
 									db.close()
-									//console.log(res)
 									i++
 									if(red.title != null){tops.push(red)}
 									if(i === r.length){
@@ -269,17 +269,14 @@ app.get('/articles', function(req, res){
 						});
 					}else{
 						db.close()
-						//console.log(result)
-						if(result.title != null){tops.push(result)}
 						i++
-						
+						if(result.title != null){tops.push(result)}
 						if(i === r.length){
 							console.log(tops)
 							res.send(tops)
 						}
 					}
 				})
-				//console.log(tops)
 			})
 		})
 		console.log('after r loop')
