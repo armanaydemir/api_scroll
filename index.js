@@ -16,17 +16,13 @@ const version = "v0.2.3"
 
 console.log('started at least')
 
-//TODO
-//news 'briefings' broke the scraper ... thats why we added the title checker before we serve up articles
-//figure out order and how to paginate articles ... cache?
+//fix title to only go to reading guidlines
+// pick something about data, come up with a vis to show something from each db. 
+//add camera to see if they are looking at screen if its easy enough
 
-//add blank space to bottom so bottom line can be at the top
-//make tap to submit a centered button
-//make size of tableview cells bigger on starting screen //provide abstract in addition to title in starting vc
 
 //--------------------------------
 //get a few back up nyt_keys and switch between them
-//add camera to see if they are looking at screen
 //add finger positioning
 //add version_wipe
 
@@ -165,7 +161,7 @@ function test_article(address) {
 function init_article(data, res) {
 	var address = data.article_link
 	if(!address.includes("https://www.nytimes.com")){
-		print('isnt nytimes, this should be fun lol')
+		console.log('isnt nytimes, this should be fun lol')
 	}
 	address = address.split('.html')[0] + '.html'
 
