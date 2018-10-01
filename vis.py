@@ -27,7 +27,7 @@ def printcol(c):
 
 def averageperline(c):
 	mycol = sessions[c]
-	times = [0]*len(mycol)
+	times = [0]*mycol.count()
 	for row in mycol.find():
 		for i in range(int(row["first_line"]), int(row["last_line"])):
 			times[i] += row["time"] - row["appeared"]
