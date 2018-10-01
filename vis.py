@@ -34,11 +34,8 @@ def averageperline(c):
 	return times
 
 
-sessions = findcompletedsessions()
-print sessions
-printcol(sessions[sessions[0]])
-#printcol(sessions[c])
-print averageperline(sessions[0])
+d = findcompletedsessions()
+print averageperline(d[0])
 
 
 
