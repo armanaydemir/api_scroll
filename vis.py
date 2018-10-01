@@ -4,8 +4,8 @@ import decimal
 def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float-to-string-without-scientific-notation-and-false-precision
 	ctx = decimal.Context()
 	ctx.prec = 20
-    d1 = ctx.create_decimal(repr(f))
-    return format(d1, 'f')
+	d1 = ctx.create_decimal(repr(f))
+	return format(d1, 'f')
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 sessions = myclient["sessions"]
