@@ -1,7 +1,7 @@
 import pymongo
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["data"]
+mydb = myclient["sessions"]
 
 def printcol(c):
 	mycol = mydb[c]
