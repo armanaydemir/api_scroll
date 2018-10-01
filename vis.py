@@ -6,7 +6,7 @@ data = myclient["data"]
 
 def firstcompletedsession():
 	mycol = data["sessions"]
-	for x in mycol.find()
+	for x in mycol.find():
 		if(x.completed):
 			print x
 
