@@ -23,7 +23,7 @@ def firstcompletedsession():
 	mycol = data["sessions"]
 	for x in mycol.find():
 		if(x["completed"]):
-			print(x['UDID'] + float_to_str(x['startTime']))
+			printcol(x['UDID'] + float_to_str(x['startTime']))
 
 
 def printcol(c):
