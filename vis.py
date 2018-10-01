@@ -29,7 +29,7 @@ def averageperline(c):
 	times = [None]*1000
 	mycol = sessions[c]
 	for row in mycol.find():
-		for i in range(int(row["first_line"]), int(row["last_line"]))
+		for i in range(int(row["first_line"]), int(row["last_line"])):
 			times[i] += row["time"] - row["appeared"]
 	return times
 
