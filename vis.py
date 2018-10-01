@@ -26,7 +26,7 @@ def printcol(c):
 		print(x)
 
 def averageperline(c):
-	times = [None]*1000
+	times = [0]*1000
 	mycol = sessions[c]
 	for row in mycol.find():
 		for i in range(int(row["first_line"]), int(row["last_line"])):
