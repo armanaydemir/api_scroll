@@ -8,7 +8,7 @@ def firstcompletedsession():
 	mycol = data["sessions"]
 	for x in mycol.find():
 		if(x["completed"]):
-			print x['UDID'] + x['startTime']
+			print(x['UDID'] + str(x['startTime']))
 
 
 def printcol(c):
