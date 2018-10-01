@@ -36,7 +36,7 @@ def averageperline(c):
 
 sessions = findcompletedsessions()
 print sessions
-printcol(sessions[c])
+printcol(sessions[sessions[0]])
 #printcol(sessions[c])
 print averageperline(sessions[0])
 
