@@ -1,4 +1,7 @@
 import pymongo
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 import decimal
 
 def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float-to-string-without-scientific-notation-and-false-precision
@@ -37,7 +40,12 @@ def averageperline(c):
 
 
 d = findcompletedsessions()
-print averageperline(d[0])
+times = averageperline(d[0])
+data = {}
+cur = times[0]
+df3 = pd.DataFrame(times, columns=['B']).cumsum
+df3['A'] = pd.Series(list(range(len(df))))
+df3.plot(x='A', y='B')
 
 
 
