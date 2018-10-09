@@ -3,7 +3,7 @@ var url = "mongodb://localhost:27017/";
 var request = require('request');
 const cheerio = require('cheerio')
 
-const version = "v0.2.3"
+const version = "v0.2.4"
 
 var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
@@ -16,7 +16,7 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 // ---------------------------------------------------------------------------
 // db: data (contains everything but actual session data)
 // 		collection: articles (for now contains every article read, but can later add scraper to this)
-//			document: text - where we save the article text, article_link - link to article at nytimes.com, category, 
+//			document: text - where we save the article text, article_link - link to article at nytimes.com, category, abstract, 
 //					  title - normal title shown at top of article and in list of articles, date_written - YYYY/MM/DD, version
 //		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
 //			document: UDID - id for that specific phone, article_id - objectid of article in articles collection, startTime - when session started, type - what type of device was used for reading,
@@ -35,12 +35,14 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 //0.1.0 -> initial
 //0.2.0 -> major updates to db and how we are storing sessions
 //0.2.2 -> changing order to just be top stories
-//0.2.4 -> pagination, adding ny_times db
+//0.2.4 -> adding ny_times db
+//0.2.5 -> adding line splits to close article and 
 
 //xcode
 //0.1.0 -> initial
 //0.2.0 -> updates mainly to api calls to reflect updates
 //0.2.4 -> adding pagination adn pull down to refresh to starting vc
+//0.2.5 -> updates to how and what data we are submitting
 
 
 //two of the exact same functions in index.js and db.js, should condense and call it from the other one
@@ -109,7 +111,7 @@ function add_article(address) {
 	});
 }
 
-//need to finish this ... export to csv??
+//need to finish this ... export 
 var export_data = function(){
 	MongoClient.connect(url, function(e, db){
 		var dbd = db.db('data')

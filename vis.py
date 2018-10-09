@@ -14,12 +14,15 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 sessions = myclient["sessions"]
 data = myclient["data"]
 
+
+acceptable_versions = ['v0.2.5']
+
 def findcompletedsessions():
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if(x["completed"]):
-			completed.append(x['UDID'] + float_to_str(x['startTime']))
+		if(acceptable_versions.contains(x["version"]) and x["completed"] == True):
+			completed.append(x)
 	return completed
 
 
@@ -28,25 +31,52 @@ def printcol(c):
 	for x in mycol.find():
 		print(x)
 
-def averageperline(c):
+def timeAsLastLine(c):
+	mycol = sessions[c]
+	times = [0]*(99999)
+	max = 0
+	prev = 0
+	for row in mycol.find():
+		i = int(row["last_word"])
+		if(max < int(row["last_word"])):
+				max = int(row["last_word"])
+		print(i)
+		if(prev == 0):
+			prev = row["startTime"]
+		times[i] = (row["appeared"] - prev)
+	#print(times)
+	print(max)
+	return times[:max:]
+
+
+
+def timeOnScreenPerLine(c):
 	mycol = sessions[c]
 	print(mycol.count())
-	times = [0]*1197
+	times = [0]*99999
+	max = 0
 	for row in mycol.find():
-		for i in range(int(row["first_line"]), int(row["last_line"])):
-			print(i)
-			times[i] += row["time"] - row["appeared"]
-	return times
+		print(row)
+		if(row["previous_first_word"]):
+			row["previous_last_word"] = row["previous_last_word"]
+			for i in range(int(row["previous_first_word"]), int(row["previous_last_word"])):
+				if(max < int(row["previous_last_word"])):
+					max = int(row["previous_last_word"])
+				times[i] += row["appeared"] - row["previous_appeared"]
+	print(max)
+	return times[:int(max):]
 
 
-d = findcompletedsessions()
-times = averageperline(d[0])
+# data_to_graph = [""]
+
+comp = findcompletedsessions()
+x = comp[len(comp)-1]
+times = timeAsLastLine(x['UDID'] + float_to_str(x['startTime']))
 data = {}
-cur = times[0]
-df3 = pd.DataFrame(times, columns=['B']).cumsum
-df3['A'] = pd.Series(list(range(len(df))))
-df3.plot(x='A', y='B')
-
+print(x)
+plt.plot(times)
+plt.show()
+#print(findcompletedsessions())
 
 
 #printcol("2D61165D_CDA0_42BF_9A88_F2E2C384F33455995508133834600")

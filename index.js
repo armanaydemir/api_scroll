@@ -6,25 +6,33 @@ var request = require('request');
 var fs = require('fs');
 var moment = require('moment')
 
+var politico_api = "eacb0f942382464a9193148875c93431"
 var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.3"
+const version = "v0.2.5"
 
 console.log('started at least')
 
-//fix title to only go to reading guidlines
-// pick something about data, come up with a vis to show something from each db. 
+
+//fix title to only go as wide as article
+//make sure phone can't change anything
+//changing times new roman
+//keep line splits
+//making text size bigger, making ipad more equivalent to iphone reading content, lock 
+//focus line 
+//number of times words or certain strings repeat
+//exponential average
+
 //add camera to see if they are looking at screen if its easy enough
 
 
 //--------------------------------
 //get a few back up nyt_keys and switch between them
 //add finger positioning
-//add version_wipe
 
 
 //using matplotlib and pandas
@@ -317,7 +325,7 @@ app.post("/close_article", function(req,res){
 		var s = new ObjectId(data.session_id)
 
 		var q = {'_id': s}
-		var nv = {$set:{"completed": data.complete, "endTime": data.time}}
+		var nv = {$set:{"line_splits": data.line_splits, "completed": data.complete, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
 			console.log('one updated')
