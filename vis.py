@@ -15,70 +15,79 @@ sessions = myclient["sessions"]
 data = myclient["data"]
 
 
-acceptable_versions = ['v0.2.5']
+acceptable_versions = ['v0.2.6']
 
-def findcompletedsessions():
+#returns article data given the id in the mongo db
+def getArticle(id):
+	mycol = data["articles"]
+	article = mycol.find_one({'_id': id})
+	return article
+
+#find all completed sessions in the acceptable versions
+def findCompletedSessions():
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if(acceptable_versions.contains(x["version"]) and x["completed"] == True):
+		if(x["version"] in acceptable_versions and x["completed"] == True):
+			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
 
-
+#basic tool to pretty print session collections
 def printcol(c):
 	mycol = sessions[c]
 	for x in mycol.find():
 		print(x)
 
-def timeAsLastLine(c):
-	mycol = sessions[c]
-	times = [0]*(99999)
-	max = 0
+#shows time each line spends as row
+def timeAsRow(data, row_num):
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime'])]
+	print data["line_splits"]
+	times = [0]*len(data["line_splits"])
 	prev = 0
 	for row in mycol.find():
-		i = int(row["last_word"])
-		if(max < int(row["last_word"])):
-				max = int(row["last_word"])
-		print(i)
 		if(prev == 0):
 			prev = row["startTime"]
-		times[i] = (row["appeared"] - prev)
-	#print(times)
-	print(max)
-	return times[:max:]
+		times[data["line_splits"].index(int(row["first_word"]))+row_num] = (row["appeared"] - prev)
+	return times
 
 
-
-def timeOnScreenPerLine(c):
-	mycol = sessions[c]
-	print(mycol.count())
-	times = [0]*99999
-	max = 0
+#shows time each line spends between rows
+def timeBetweenRows(data, first, end):
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime'])]
+	print((data["line_splits"]))
+	times = [0]*len(data["line_splits"])
+	prev = 0
 	for row in mycol.find():
-		print(row)
-		if(row["previous_first_word"]):
-			row["previous_last_word"] = row["previous_last_word"]
-			for i in range(int(row["previous_first_word"]), int(row["previous_last_word"])):
-				if(max < int(row["previous_last_word"])):
-					max = int(row["previous_last_word"])
-				times[i] += row["appeared"] - row["previous_appeared"]
-	print(max)
-	return times[:int(max):]
+		if(prev == 0):
+			prev = row["startTime"]
+		for t in range(data["line_splits"].index(int(row["first_word"]))+first, data["line_splits"].index(int(row["first_word"]))+end):
+			#print t
+			if(t < len(data["line_splits"])):
+				times[t] += (row["appeared"] - prev)
+	return times
 
 
-# data_to_graph = [""]
+def graphSession(x, call):
+	x["line_splits"] = map(int, x["line_splits"])
+	sizeofrange = 20
+	i = 0
+	while(i+sizeofrange < len(x["line_splits"])):
+		times = call(x, i, (i+sizeofrange))
+		plt.plot(times)
+		i += 1
+	plt.show()
 
-comp = findcompletedsessions()
+
+
+comp = findCompletedSessions()
 x = comp[len(comp)-1]
-times = timeAsLastLine(x['UDID'] + float_to_str(x['startTime']))
-data = {}
-print(x)
-plt.plot(times)
-plt.show()
+print(len(comp))
+graphSession(x, timeBetweenRows)
+
+
+
 #print(findcompletedsessions())
-
-
 #printcol("2D61165D_CDA0_42BF_9A88_F2E2C384F33455995508133834600")
 
 

@@ -13,15 +13,14 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.5"
+const version = "v0.2.6"
 
 console.log('started at least')
 
-
+//fix stuff for spacer lines in line_splits
 //fix title to only go as wide as article
 //make sure phone can't change anything
 //changing times new roman
-//keep line splits
 //making text size bigger, making ipad more equivalent to iphone reading content, lock 
 //focus line 
 //number of times words or certain strings repeat
@@ -297,6 +296,7 @@ app.post("/open_article", function(req, res) {
 	console.log(': ' + data.startTime + ' :')
 	console.log('----------')
     init_article(data, res);
+    res.sendStatus(200)
 });
 
 app.post("/submit_data", function(req, res) {

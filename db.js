@@ -1,16 +1,13 @@
+var request = require('request');
+const cheerio = require('cheerio');
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
-var request = require('request');
-const cheerio = require('cheerio')
-
-const version = "v0.2.4"
-
-var headers = {
-    'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
-};
+var headers = { 'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY' };
 var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 
+const version = "v0.2.6"
 //"schema" for this db 
 // add version to sessions collection 
 // ---------------------------------------------------------------------------
@@ -31,18 +28,21 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 // 
 // ----------------------------------------------------------------------------
 
-//node js
+//node js - (no changes to scraper since v0.1.0)
 //0.1.0 -> initial
 //0.2.0 -> major updates to db and how we are storing sessions
 //0.2.2 -> changing order to just be top stories
 //0.2.4 -> adding ny_times db
-//0.2.5 -> adding line splits to close article and 
+//0.2.5 -> adding line splits to close article 
+//0.2.6 -> line instead of word indexes
+
 
 //xcode
 //0.1.0 -> initial
 //0.2.0 -> updates mainly to api calls to reflect updates
 //0.2.4 -> adding pagination adn pull down to refresh to starting vc
 //0.2.5 -> updates to how and what data we are submitting
+//0.2.6 -> and sending line instead of word indexes
 
 
 //two of the exact same functions in index.js and db.js, should condense and call it from the other one
