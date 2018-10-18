@@ -296,7 +296,6 @@ app.post("/open_article", function(req, res) {
 	console.log(': ' + data.startTime + ' :')
 	console.log('----------')
     init_article(data, res);
-    res.sendStatus(200)
 });
 
 app.post("/submit_data", function(req, res) {
