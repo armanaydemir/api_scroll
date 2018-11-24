@@ -13,9 +13,11 @@ def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 sessions = myclient["sessions"]
 data = myclient["data"]
+global max_lines_on_screen
+max_lines_on_screen = 0
 
 
-acceptable_versions = ['v0.2.6']
+acceptable_versions = ['v0.2.5']
 
 #returns article data given the id in the mongo db
 def getArticle(id):
@@ -39,54 +41,78 @@ def printcol(c):
 	for x in mycol.find():
 		print(x)
 
-#shows time each line spends as row
-def timeAsRow(data, row_num):
-	mycol = sessions[data['UDID'] + float_to_str(data['startTime'])]
-	print data["line_splits"]
+def timeAsLastCell(data):
+	global max_lines_on_screen
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
+	#print((data["line_splits"]))
 	times = [0]*len(data["line_splits"])
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
 			prev = row["startTime"]
-		times[data["line_splits"].index(int(row["first_word"]))+row_num] = (row["appeared"] - prev)
+		print row
+		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
+			#print(row["first_cell"])
+			#print(max_lines_on_screen)
+			max_lines_on_screen = int(row["last_cell"]) - int(row["first_cell"]) 
+		times[row["last_cell"]] += (row["appeared"] - prev) * 30
 	return times
 
-
-#shows time each line spends between rows
-def timeBetweenRows(data, first, end):
-	mycol = sessions[data['UDID'] + float_to_str(data['startTime'])]
-	print((data["line_splits"]))
+def timeAsFirstCell(data):
+	global max_lines_on_screen
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
+	#print((data["line_splits"]))
 	times = [0]*len(data["line_splits"])
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
 			prev = row["startTime"]
-		for t in range(data["line_splits"].index(int(row["first_word"]))+first, data["line_splits"].index(int(row["first_word"]))+end):
-			#print t
-			if(t < len(data["line_splits"])):
-				times[t] += (row["appeared"] - prev)
+		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
+			#print(row["first_cell"])
+			#print(max_lines_on_screen)
+			max_lines_on_screen = int(row["last_cell"]) - int(row["first_cell"]) 
+		times[row["first_cell"]] += (row["appeared"] - prev) * 30
 	return times
 
-
-def graphSession(x, call):
-	x["line_splits"] = map(int, x["line_splits"])
-	sizeofrange = 20
-	i = 0
-	while(i+sizeofrange < len(x["line_splits"])):
-		times = call(x, i, (i+sizeofrange))
-		plt.plot(times)
-		i += 1
-	plt.show()
+def timeOnScreen(data):
+	global max_lines_on_screen
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
+	#print((data["line_splits"]))
+	times = [0]*len(data["line_splits"])
+	prev = 0
+	for row in mycol.find():
+		if(prev == 0):
+			prev = row["startTime"]
+		print row
+		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
+			#print(row["first_cell"])
+			#print(max_lines_on_screen)
+			max_lines_on_screen = int(row["last_cell"]) - int(row["first_cell"])
+		for i in range(int(row["first_cell"])-1, int(row["last_cell"])):
+			times[i] += (row["appeared"] - prev)
+	return times
 
 
 
 comp = findCompletedSessions()
-x = comp[len(comp)-1]
 print(len(comp))
-graphSession(x, timeBetweenRows)
+x = comp[len(comp)-1]
+#y = comp[len(comp)-4]
 
+#print(y['article_data']['article_link'])
+print(x['article_data']['article_link'])
+f = plt.figure()
+plt.plot(timeAsFirstCell(x))
 
+f.savefig("foo.pdf", bbox_inches='tight')
+#plt.plot(timeAsFirstCell(y))
+# for i in timeAsFirstCell(x):
+# 	if(i == 0):
+# 		print 'uh oh'
+plt.show()
+#graphSession(x, timeBetweenRows)
 
+#print(max_lines_on_screen)
 #print(findcompletedsessions())
 #printcol("2D61165D_CDA0_42BF_9A88_F2E2C384F33455995508133834600")
 
