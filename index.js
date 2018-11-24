@@ -17,21 +17,23 @@ const version = "v0.2.6"
 
 console.log('started at least')
 
+//making text size bigger, making ipad more equivalent to iphone reading content, lock oriention
 //fix stuff for spacer lines in line_splits
+//graph with avg word length vs time spent on line
+
+//no more time offset?
 //fix title to only go as wide as article
-//make sure phone can't change anything
+
 //changing times new roman
-//making text size bigger, making ipad more equivalent to iphone reading content, lock 
-//focus line 
-//number of times words or certain strings repeat
-//exponential average
 
+
+//keep track of scrolling velocity
 //add camera to see if they are looking at screen if its easy enough
-
+//add finger positioning
 
 //--------------------------------
 //get a few back up nyt_keys and switch between them
-//add finger positioning
+
 
 
 //using matplotlib and pandas
@@ -42,7 +44,7 @@ console.log('started at least')
 //time spent on lines depending on line location in article
 //read up on natural language process
 
-//add politico/other news sites scrapers (npr, cnn)
+//add politico/other news sites scrapers (npr, cnn) , apple news api
 
 //figure out how to translate time from CFAbsolute to normal (http://home.max-weller.de/test/cfabsolutetime/)
 
@@ -300,7 +302,7 @@ app.post("/open_article", function(req, res) {
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-	//console.log('submit data')
+	console.log('submit data')
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
@@ -308,6 +310,7 @@ app.post("/submit_data", function(req, res) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
+		print(data.UDID + s)
   		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
