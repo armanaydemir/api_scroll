@@ -310,7 +310,7 @@ app.post("/submit_data", function(req, res) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
-		print(data.UDID + s)
+		console.log(data.UDID + s)
   		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
