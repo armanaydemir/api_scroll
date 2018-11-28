@@ -13,37 +13,18 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.6"
+const version = "v0.2.7"
 
 console.log('started at least')
 
-//making text size bigger, making ipad more equivalent to iphone reading content, lock oriention
-//fix stuff for spacer lines in line_splits
-//graph with avg word length vs time spent on line
-
-//no more time offset?
 //fix title to only go as wide as article
+//batch requests
+//make updates to backend with all this new refactoring
+//test with graphs
+//dont do dynamic sizing computation every time
 
-//changing times new roman
-
-
-//keep track of scrolling velocity
 //add camera to see if they are looking at screen if its easy enough
 //add finger positioning
-
-//--------------------------------
-//get a few back up nyt_keys and switch between them
-
-
-
-//using matplotlib and pandas
-//amount of time line spends on screen
-//average time between scrolls
-//average amount time spent on article
-//make a frequency graph (hours of day on y and days of week on x, point whenever article is read) 
-//time spent on lines depending on line location in article
-//read up on natural language process
-
 //add politico/other news sites scrapers (npr, cnn) , apple news api
 
 //figure out how to translate time from CFAbsolute to normal (http://home.max-weller.de/test/cfabsolutetime/)
@@ -327,7 +308,7 @@ app.post("/close_article", function(req,res){
 		var s = new ObjectId(data.session_id)
 
 		var q = {'_id': s}
-		var nv = {$set:{"line_splits": data.line_splits, "completed": data.complete, "endTime": data.time}}
+		var nv = {$set:{"word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
 			console.log('one updated')
