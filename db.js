@@ -7,7 +7,7 @@ var headers = { 'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY' };
 var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 
-const version = "v0.2.6"
+const version = "v0.2.7"
 //"schema" for this db 
 // add version to sessions collection 
 // ---------------------------------------------------------------------------
@@ -35,6 +35,7 @@ const version = "v0.2.6"
 //0.2.4 -> adding ny_times db
 //0.2.5 -> adding line splits to close article 
 //0.2.6 -> line instead of word indexes
+//0.2.7 -> adding word and character splits
 
 
 //xcode

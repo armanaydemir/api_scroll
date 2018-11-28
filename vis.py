@@ -50,10 +50,7 @@ def timeAsLastCell(data):
 	for row in mycol.find():
 		if(prev == 0):
 			prev = row["startTime"]
-		print row
 		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
-			#print(row["first_cell"])
-			#print(max_lines_on_screen)
 			max_lines_on_screen = int(row["last_cell"]) - int(row["first_cell"]) 
 		times[row["last_cell"]] += (row["appeared"] - prev) * 30
 	return times
@@ -74,6 +71,24 @@ def timeAsFirstCell(data):
 		times[row["first_cell"]] += (row["appeared"] - prev) * 30
 	return times
 
+def smoothed_timeAsFirstCell(data):
+	global max_lines_on_screen
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
+	#print((data["line_splits"]))
+	times = [0]*len(data["line_splits"])
+	prev = 0
+	for row in mycol.find():
+		if(prev == 0):
+			prev = row["startTime"]
+		else:
+			for i in range(min(int(row["first_cell"]), int(row["previous_first_cell"])), max(int(row["first_cell"]), int(row["previous_first_cell"]))):
+				times[i] += ((row["appeared"] - prev) * 30)/abs(int(row["first_cell"]) - int(row["previous_first_cell"]))
+		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
+			#print(row["first_cell"])
+			#print(max_lines_on_screen)
+			max_lines_on_screen = int(row["last_cell"]) - int(row["first_cell"]) 
+	return times
+
 def timeOnScreen(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
@@ -92,6 +107,16 @@ def timeOnScreen(data):
 			times[i] += (row["appeared"] - prev)
 	return times
 
+def timeVersusProgress(data, plt):
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
+	times = []
+	lines = []
+	for row in mycol.find():
+		times.append(row["appeared"])
+		lines.append(int(row["first_cell"]))
+	plt.plot(times,lines)
+	print times
+	print lines
 
 
 comp = findCompletedSessions()
@@ -102,13 +127,23 @@ x = comp[len(comp)-1]
 #print(y['article_data']['article_link'])
 print(x['article_data']['article_link'])
 f = plt.figure()
-plt.plot(timeAsFirstCell(x))
+
+timeVersusProgress(x, plt)
+
+#plt.plot(timeAsFirstCell(y))
+#timeVersusProgress(x, plt)
 
 f.savefig("foo.pdf", bbox_inches='tight')
 #plt.plot(timeAsFirstCell(y))
-# for i in timeAsFirstCell(x):
-# 	if(i == 0):
-# 		print 'uh oh'
+
+# for i in timeAsFirstCell(y):
+#  	if(i == 0):
+#  		ynum += 1
+
+plt.show()
+
+plt.plot(timeAsFirstCell(x))
+plt.plot(smoothed_timeAsFirstCell(x))
 plt.show()
 #graphSession(x, timeBetweenRows)
 
