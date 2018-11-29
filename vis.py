@@ -76,7 +76,7 @@ def smoothed_timeAsFirstCell(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	#print((data["line_splits"]))
-	times = [0]*(220)
+	times = [0]*(225)
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
