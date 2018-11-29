@@ -308,7 +308,7 @@ app.post("/close_article", function(req,res){
 		var s = new ObjectId(data.session_id)
 
 		var q = {'_id': s}
-		var nv = {$set:{"word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
+		var nv = {$set:{"content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
 			console.log('one updated')

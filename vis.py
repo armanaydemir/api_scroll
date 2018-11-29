@@ -17,7 +17,7 @@ global max_lines_on_screen
 max_lines_on_screen = 0
 
 
-acceptable_versions = ['v0.2.5']
+acceptable_versions = ['v0.2.7']
 
 #returns article data given the id in the mongo db
 def getArticle(id):
@@ -30,7 +30,7 @@ def findCompletedSessions():
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if(x["version"] in acceptable_versions and x["completed"] == True):
+		if(x["version"] in acceptable_versions): #and x["completed"] == True):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
@@ -45,7 +45,7 @@ def timeAsLastCell(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	#print((data["line_splits"]))
-	times = [0]*len(data["line_splits"])
+	times = [0]*len(data["content"])
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
@@ -59,7 +59,8 @@ def timeAsFirstCell(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	#print((data["line_splits"]))
-	times = [0]*len(data["line_splits"])
+	print data
+	times = [0]*len(data["content"])
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
@@ -75,13 +76,15 @@ def smoothed_timeAsFirstCell(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	#print((data["line_splits"]))
-	times = [0]*len(data["line_splits"])
+	times = [0]*(220)
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
 			prev = row["startTime"]
 		else:
 			for i in range(min(int(row["first_cell"]), int(row["previous_first_cell"])), max(int(row["first_cell"]), int(row["previous_first_cell"]))):
+				print(i)
+				print(len(times))
 				times[i] += ((row["appeared"] - prev) * 30)/abs(int(row["first_cell"]) - int(row["previous_first_cell"]))
 		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
 			#print(row["first_cell"])
@@ -93,7 +96,8 @@ def timeOnScreen(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	#print((data["line_splits"]))
-	times = [0]*len(data["line_splits"])
+
+	times = [0]*len(data["content"]) 
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
@@ -111,6 +115,7 @@ def timeVersusProgress(data, plt):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = []
 	lines = []
+	print(data)
 	for row in mycol.find():
 		times.append(row["appeared"])
 		lines.append(int(row["first_cell"]))
@@ -142,7 +147,7 @@ f.savefig("foo.pdf", bbox_inches='tight')
 
 plt.show()
 
-plt.plot(timeAsFirstCell(x))
+#plt.plot(timeAsFirstCell(x))
 plt.plot(smoothed_timeAsFirstCell(x))
 plt.show()
 #graphSession(x, timeBetweenRows)
