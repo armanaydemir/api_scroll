@@ -101,14 +101,14 @@ function add_article(address, callback) {
 	date_written = link.slice(3, 6).join('/')
 	category = link.slice(6, link.length-1).join('/')
 	address = address + '.html'
-	console.log('add_Article')
+	//console.log('add_Article')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
 		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
-				console.log('new article scrape')
+				//console.log('new article scrape')
 				var options = {
 					url: 'https://mercury.postlight.com/parser?url=' + address,
 					headers: headers
@@ -117,8 +117,8 @@ function add_article(address, callback) {
 					if (!error && response.statusCode == 200) {
 						// need to text this function
 						var text = parse_body(body);
-						console.log(address)
-						console.log(text[0])
+						//console.log(address)
+						//console.log(text[0])
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 							db.close()
 							console.log(res)
@@ -131,7 +131,7 @@ function add_article(address, callback) {
 				});
 			}else{
 				db.close()
-				console.log(result)
+				//console.log(result)
 				callback(result)
 			}
 		})
@@ -178,7 +178,7 @@ function init_article(data, res) {
 				});
 				db.close()
 			}else{
-				console.log('new article scrape')
+				//console.log('new article scrape')
 				var options = {
 					url: 'https://mercury.postlight.com/parser?url=' + address,
 					headers: headers
@@ -227,7 +227,7 @@ app.get('/articles', function(req, res){
 			date_written = link.slice(3, 6).join('/')
 			category = link.slice(6, link.length-1).join('/')
 			address = address + '.html'
-			console.log('add_Article')
+			//console.log('add_Article')
 				MongoClient.connect(url, function(e, db) {
 				if(e) throw e;
 				var dbd = db.db('data')
@@ -235,7 +235,7 @@ app.get('/articles', function(req, res){
 					if(err) throw(err);
 					if(!result){
 						dbd.collection('nytimes_lib').insertOne(article, function(err, res){if(err) throw err;})
-						console.log('new article scrape')
+						//console.log('new article scrape')
 						var options = {
 							url: 'https://mercury.postlight.com/parser?url=' + address,
 							headers: headers
@@ -272,25 +272,24 @@ app.get('/articles', function(req, res){
 				})
 			})
 		})
-		console.log('after r loop')
 	})
 });
 
 app.post("/open_article", function(req, res) {
-	console.log('open article')
+	//console.log('open article')
 	var data = req.body
 
 	data.article_link = data.article_link.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(data.article_link + ' : ' + data.UDID);
-	console.log(': ' + data.startTime + ' :')
-	console.log('----------')
+	// console.log(data.article_link + ' : ' + data.UDID);
+	// console.log(': ' + data.startTime + ' :')
+	// console.log('----------')
     init_article(data, res);
 });
 
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-	console.log('submit data')
+	//console.log('submit data')
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
@@ -298,7 +297,7 @@ app.post("/submit_data", function(req, res) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
-		console.log(data.UDID + s)
+		//console.log(data.UDID + s)
   		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
@@ -315,14 +314,14 @@ app.post("/close_article", function(req,res){
 		var s = new ObjectId(data.session_id)
 
 		var q = {'_id': s}
-		console.log(data.content)
-		var nv = {$set:{"orientation": data.orientation, "content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
+		//console.log(data.content)
+		var nv = {$set:{"portait": data.portrait, "content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
-			console.log('one updated')
-			console.log(data.session_id + ' : ' + data.UDID);
-			console.log(data.startTime + ' : ' + data.time)
-			console.log('===========')
+			// console.log('one updated')
+			// console.log(data.session_id + ' : ' + data.UDID);
+			// console.log(data.startTime + ' : ' + data.time)
+			// console.log('===========')
 			db.close()
 		});
 	});
