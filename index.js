@@ -13,16 +13,23 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
-const version = "v0.2.7"
+const version = "v0.3.1"
 
 console.log('started at least')
 
-//fix title to only go as wide as article
+
+//things to do
+//test real quick then push to users
+//email mike about viss and new updates
+
+
+
+//better practices
 //batch requests
-//make updates to backend with all this new refactoring
-//test with graphs
 //dont do dynamic sizing computation every time
 
+
+//data sources we can add
 //add camera to see if they are looking at screen if its easy enough
 //add finger positioning
 //add politico/other news sites scrapers (npr, cnn) , apple news api
@@ -309,7 +316,7 @@ app.post("/close_article", function(req,res){
 
 		var q = {'_id': s}
 		console.log(data.content)
-		var nv = {$set:{"content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
+		var nv = {$set:{"orientation": data.orientation, "content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
 		dbd.collection('sessions').updateOne(q, nv, function(err, result){
 			if(err) throw err
 			console.log('one updated')

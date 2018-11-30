@@ -60,7 +60,7 @@ def timeAsFirstCell(data):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	#print((data["line_splits"]))
 	print data
-	times = [0]*len(data["content"])
+	times = [0]*(len(data["content"])+1)
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
@@ -76,7 +76,7 @@ def smoothed_timeAsFirstCell(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	#print((data["line_splits"]))
-	times = [0]*(225)
+	times = [0]*(len(data["content"])+1)
 	prev = 0
 	for row in mycol.find():
 		if(prev == 0):
@@ -86,10 +86,22 @@ def smoothed_timeAsFirstCell(data):
 				print(i)
 				print(len(times))
 				times[i] += ((row["appeared"] - prev) * 30)/abs(int(row["first_cell"]) - int(row["previous_first_cell"]))
-		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
-			#print(row["first_cell"])
-			#print(max_lines_on_screen)
-			max_lines_on_screen = int(row["last_cell"]) - int(row["first_cell"]) 
+	return times
+
+def smoothed_timeAsLastCell(data):
+	global max_lines_on_screen
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
+	#print((data["line_splits"]))
+	times = [0]*len(data["content"])
+	prev = 0
+	for row in mycol.find():
+		if(prev == 0):
+			prev = row["startTime"]
+		else:
+			for i in range(min(int(row["last_cell"]), int(row["previous_last_cell"])), max(int(row["last_cell"]), int(row["previous_last_cell"]))):
+				print(i)
+				print(len(times))
+				times[i] += ((row["appeared"] - prev) * 30)/abs(int(row["last_cell"]) - int(row["previous_last_cell"]))
 	return times
 
 def timeOnScreen(data):
@@ -126,7 +138,7 @@ def timeVersusProgress(data, plt):
 
 comp = findCompletedSessions()
 print(len(comp))
-x = comp[len(comp)-1]
+x = comp[len(comp)-2]
 #y = comp[len(comp)-4]
 
 #print(y['article_data']['article_link'])
@@ -148,8 +160,9 @@ f.savefig("foo.pdf", bbox_inches='tight')
 plt.show()
 
 #plt.plot(timeAsFirstCell(x))
-plt.plot(smoothed_timeAsFirstCell(x))
-plt.show()
+# plt.plot(smoothed_timeAsFirstCell(x))
+# plt.plot(smoothed_timeAsLastCell(x))
+# plt.show()
 #graphSession(x, timeBetweenRows)
 
 #print(max_lines_on_screen)

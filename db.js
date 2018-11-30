@@ -7,7 +7,7 @@ var headers = { 'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY' };
 var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 
-const version = "v0.2.7"
+const version = "v0.3.1"
 //"schema" for this db 
 // add version to sessions collection 
 // ---------------------------------------------------------------------------
@@ -17,11 +17,12 @@ const version = "v0.2.7"
 //					  title - normal title shown at top of article and in list of articles, date_written - YYYY/MM/DD, version
 //		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
 //			document: UDID - id for that specific phone, article_id - objectid of article in articles collection, startTime - when session started, type - what type of device was used for reading,
-// 					   endTime - when session closed , completed -if they tapped to submit yet or not, version
+// 					   endTime - when session closed , completed -if they tapped to submit yet or not, version, 
+//						content - word, character, text, and more info for each cell, portrait - if device was portait or not during reading
 // db: sessions (each collection holds scrolling data for specfic session)			  
 //		collection: UDID + startTime (each title of collection is combination of these)
 //			(new document every time a new last line appears)
-//			documents: UDID, last_line - what the new last line is, first_line - what the first line is right now, previous_last_line - what the previous last line is
+//			documents: UDID, last_cell - what the new last line is, first_cell - what the first line is right now, previous_last_cell - what the previous last line is, previous_first_cell
 //					   content_offset - how much user has scrolled, article_id - links to article in articles collection,
 //					   appeared - time when previous last line appeared, startTime - same as startTime in sessions collection, time - time when data was sent to server (given by phone),
 //
@@ -36,6 +37,7 @@ const version = "v0.2.7"
 //0.2.5 -> adding line splits to close article 
 //0.2.6 -> line instead of word indexes
 //0.2.7 -> adding word and character splits
+//0.3.1 -> final changes for production (orientation) ... 0.3.2 will be official release
 
 
 //xcode
@@ -44,6 +46,8 @@ const version = "v0.2.7"
 //0.2.4 -> adding pagination adn pull down to refresh to starting vc
 //0.2.5 -> updates to how and what data we are submitting
 //0.2.6 -> and sending line instead of word indexes
+//0.2.7 -> maaaany ui changes and a whole refactore, also sending word, character, and content splits now
+//0.3.1 -> final changes for production (orientation and nicer button)
 
 
 //two of the exact same functions in index.js and db.js, should condense and call it from the other one
