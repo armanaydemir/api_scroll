@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import decimal
 
+#make this pass arguments for what kind of graphs n stuff
+
+
 def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float-to-string-without-scientific-notation-and-false-precision
 	ctx = decimal.Context()
 	ctx.prec = 20
@@ -17,7 +20,7 @@ global max_lines_on_screen
 max_lines_on_screen = 0
 
 
-acceptable_versions = ['v0.2.7']
+acceptable_versions = ['v0.3.1']
 
 #returns article data given the id in the mongo db
 def getArticle(id):
@@ -25,21 +28,22 @@ def getArticle(id):
 	article = mycol.find_one({'_id': id})
 	return article
 
-#find all completed sessions in the acceptable versions
-def findCompletedSessions():
-	mycol = data["sessions"]
-	completed = []
-	for x in mycol.find():
-		if(x["version"] in acceptable_versions): #and x["completed"] == True):
-			x["article_data"] = getArticle(x["article_id"])
-			completed.append(x)
-	return completed
-
 #basic tool to pretty print session collections
 def printcol(c):
 	mycol = sessions[c]
 	for x in mycol.find():
 		print(x)
+
+#find all completed sessions in the acceptable versions
+def findCompletedSessions():
+	mycol = data["sessions"]
+	completed = []
+	for x in mycol.find():
+		if(x["version"] in acceptable_versions and x["completed"] == True and x["type"] != "x86_64"):
+			x["article_data"] = getArticle(x["article_id"])
+			completed.append(x)
+	return completed
+
 
 def timeAsLastCell(data):
 	global max_lines_on_screen
@@ -91,7 +95,6 @@ def smoothed_timeAsFirstCell(data):
 def smoothed_timeAsLastCell(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
-	#print((data["line_splits"]))
 	times = [0]*len(data["content"])
 	prev = 0
 	for row in mycol.find():
@@ -107,7 +110,6 @@ def smoothed_timeAsLastCell(data):
 def timeOnScreen(data):
 	global max_lines_on_screen
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
-	#print((data["line_splits"]))
 
 	times = [0]*len(data["content"]) 
 	prev = 0
@@ -116,8 +118,6 @@ def timeOnScreen(data):
 			prev = row["startTime"]
 		print row
 		if(int(row["last_cell"]) - int(row["first_cell"]) > max_lines_on_screen):
-			#print(row["first_cell"])
-			#print(max_lines_on_screen)
 			max_lines_on_screen = int(row["last_cell"]) - int(row["first_cell"])
 		for i in range(int(row["first_cell"])-1, int(row["last_cell"])):
 			times[i] += (row["appeared"] - prev)
@@ -127,37 +127,40 @@ def timeVersusProgress(data, plt):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = []
 	lines = []
-	print(data)
 	for row in mycol.find():
 		times.append(row["appeared"])
 		lines.append(int(row["first_cell"]))
 	plt.plot(times,lines)
-	print times
-	print lines
 
 
 comp = findCompletedSessions()
-print(len(comp))
 x = comp[len(comp)-2]
-#y = comp[len(comp)-4]
-
-#print(y['article_data']['article_link'])
-print(x['article_data']['article_link'])
-f = plt.figure()
-
+print x
+print len(comp)
 timeVersusProgress(x, plt)
-
-#plt.plot(timeAsFirstCell(y))
-#timeVersusProgress(x, plt)
-
-f.savefig("foo.pdf", bbox_inches='tight')
-#plt.plot(timeAsFirstCell(y))
-
-# for i in timeAsFirstCell(y):
-#  	if(i == 0):
-#  		ynum += 1
-
 plt.show()
+
+# print(len(comp))
+# x = comp[len(comp)-2]
+# #y = comp[len(comp)-4]
+
+# #print(y['article_data']['article_link'])
+# print(x['article_data']['article_link'])
+# f = plt.figure()
+
+# timeVersusProgress(x, plt)
+
+# #plt.plot(timeAsFirstCell(y))
+# #timeVersusProgress(x, plt)
+
+# f.savefig("foo.pdf", bbox_inches='tight')
+# #plt.plot(timeAsFirstCell(y))
+
+# # for i in timeAsFirstCell(y):
+# #  	if(i == 0):
+# #  		ynum += 1
+
+# plt.show()
 
 #plt.plot(timeAsFirstCell(x))
 # plt.plot(smoothed_timeAsFirstCell(x))
