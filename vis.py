@@ -1,8 +1,6 @@
 import pymongo
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import decimal
 
@@ -134,14 +132,16 @@ def timeVersusProgress(data, plt):
 		lines.append(int(row["first_cell"]))
 	plt.plot(times,lines)
 
+	
+
 
 comp = findCompletedSessions()
 x = comp[len(comp)-2]
 print x
 print len(comp)
 timeVersusProgress(x, plt)
-f = plt.figure()
-f.savefig("foo.pdf", bbox_inches='tight')
+plt.savefig("foo.pdf", bbox_inches='tight')
+
 
 # print(len(comp))
 # x = comp[len(comp)-2]
