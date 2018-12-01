@@ -251,7 +251,7 @@ app.get('/articles', function(req, res){
 									i++
 									if(red.title != null){tops.push(red)}
 									if(i === r.length){
-										console.log(tops)
+										//console.log(tops)
 										res.send(tops)
 									}
 								})
