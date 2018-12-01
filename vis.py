@@ -140,7 +140,8 @@ x = comp[len(comp)-2]
 print x
 print len(comp)
 timeVersusProgress(x, plt)
-plt.show()
+f = plt.figure()
+f.savefig("foo.pdf", bbox_inches='tight')
 
 # print(len(comp))
 # x = comp[len(comp)-2]
