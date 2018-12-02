@@ -122,7 +122,7 @@ def timeVersusLastCell(data):
 
 
 num = 1
-comp = findSessions(acceptable_versions, False, )
+comp = findSessions(acceptable_versions, True)
 x = comp[len(comp)-num]
 timeVersusLastCell(x)
 timeVersusFirstCell(x)
