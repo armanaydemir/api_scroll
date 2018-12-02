@@ -38,11 +38,11 @@ def printcol(c):
 		print(x)
 
 #find all completed sessions in the acceptable versions
-def findSessions(acceptable, non_complete):
+def findSessions(acceptable, non_complete, sim):
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if(x["version"] in acceptable and (x["completed"] or non_complete) and x["type"] != "x86_64"):
+		if(x["version"] in acceptable and (x["completed"] or non_complete)):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
@@ -122,7 +122,7 @@ def timeVersusLastCell(data):
 
 
 num = 1
-comp = findSessions(acceptable_versions, False)
+comp = findSessions(acceptable_versions, False, )
 x = comp[len(comp)-num]
 timeVersusLastCell(x)
 timeVersusFirstCell(x)
