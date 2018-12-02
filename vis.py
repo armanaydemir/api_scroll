@@ -38,7 +38,7 @@ def printcol(c):
 		print(x)
 
 #find all completed sessions in the acceptable versions
-def findSessions(acceptable, non_complete, sim):
+def findSessions(acceptable, non_complete):
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
