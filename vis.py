@@ -7,7 +7,9 @@ import matplotlib.pyplot as plt
 import decimal
 import sys
 
-#make this pass arguments for what kind of graphs n stuff
+#comp means only completed articles
+#incomp means all articles, including incomplete (not tapped to submit)
+
 
 
 def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float-to-string-without-scientific-notation-and-false-precision
@@ -120,34 +122,35 @@ def timeVersusLastCell(data):
 	plt.savefig("timeVersusLastCell.pdf", bbox_inches='tight')
 	plt.clf()
 
-if(sys.argv[1] == "num_comp"):
+
+if(sys.argv[1] == 'c'):
 	comp = findSessions(acceptable_versions, True)
-	print len(comp)
-elif(sys.argv[1] == "num_incomp"):
+else:
 	comp = findSessions(acceptable_versions, False)
-	print len(comp)
-elif(sys.argv[1] == "comp_data"):
-	comp = findSessions(acceptable_versions, True)
+
+
+if(sys.argv[2] == 'n'):
+	print(len(comp))
+elif(sys.argv[2] == 'd'):
 	for i in comp:
 		print str(i["_id"]) + " - " + str(i["article_data"]["article_link"]) + " - " + str(i['UDID'])
-elif(sys.argv[1] == 'comp_udid'):
-	comp = findSessions(acceptable_versions, True)
-	udid_count = {}
+elif(sys.argv[2] == 'udid'):
+	count = {}
 	for i in comp:
-		if(str(i['UDID']) in udid_count):
-			udid_count[str(i['UDID'])] += 1
+		if(str(i['UDID']) in count):
+			count[str(i['UDID'])] += 1
 		else:
-			udid_count[str(i['UDID'])] = 1
-	print udid_count
-elif(sys.argv[1] == 'incomp_udid'):
-	comp = findSessions(acceptable_versions, False)
-	udid_count = {}
+			count[str(i['UDID'])] = 1
+	print count
+elif(sys.argv[2] == 'article'):
+	count = {}
 	for i in comp:
-		if(str(i['UDID']) in udid_count):
-			udid_count[str(i['UDID'])] += 1
+		if(str(i['article_data']["article_link"]) in count):
+			count[str(i["article_data"]["article_link"])] += 1
 		else:
-			udid_count[str(i['UDID'])] = 1
-	print udid_count
+			count[str(i["article_data"]["article_link"])] = 1
+	print count
+
 num = 1
 
 # x = comp[len(comp)-num]
