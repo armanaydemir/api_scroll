@@ -17,24 +17,28 @@ const version = "v0.3.1"
 
 console.log('started at least')
 
+/*
+things to do
+------------------
+look into CFAbsoluteTime vs Date()
+	- maybe just have both???
+improve vis.py and make it take arguments
+fix top articles loading to wait for everything
+email mike about viss and new updates
+add politico/other news sites scrapers (npr, cnn) , apple news api
 
-//things to do
-//test real quick then push to users
-//email mike about viss and new updates
+
+better practices
+-------------------
+batch requests
+dont do dynamic sizing computation every time
 
 
-
-//better practices
-//batch requests
-//dont do dynamic sizing computation every time
-
-
-//data sources we can add
-//add camera to see if they are looking at screen if its easy enough
-//add finger positioning
-//add politico/other news sites scrapers (npr, cnn) , apple news api
-
-//figure out how to translate time from CFAbsolute to normal (http://home.max-weller.de/test/cfabsolutetime/)
+data sources we can add
+--------------------
+add camera to see if they are looking at screen if its easy enough
+add finger positioning
+*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

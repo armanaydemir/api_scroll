@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import decimal
+import sys
 
 #make this pass arguments for what kind of graphs n stuff
 
@@ -120,15 +121,17 @@ def timeVersusLastCell(data):
 	plt.clf()
 
 
-
+if(sys.argv[0] == 'l'):
+	comp = findSessions(acceptable_versions, True)
+	print comp
 num = 1
-comp = findSessions(acceptable_versions, True)
-x = comp[len(comp)-num]
-timeVersusLastCell(x)
-timeVersusFirstCell(x)
-timeOnScreen(x)
-smoothed_timeAsFirstCell(x)
-smoothed_timeAsLastCell(x)
+
+# x = comp[len(comp)-num]
+# timeVersusLastCell(x)
+# timeVersusFirstCell(x)
+# timeOnScreen(x)
+# smoothed_timeAsFirstCell(x)
+# smoothed_timeAsLastCell(x)
 
 
 # print(len(comp))
