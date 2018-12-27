@@ -120,10 +120,12 @@ def timeVersusLastCell(data):
 	plt.savefig("timeVersusLastCell.pdf", bbox_inches='tight')
 	plt.clf()
 
-
-if(sys.argv[0] == 'l'):
+if(sys.argv[1] == "num_sessions"):
 	comp = findSessions(acceptable_versions, True)
-	print comp
+	print len(comp)
+elif(sys.argv[1] == "num_all_sessions"):
+	comp = findSessions(acceptable_versions, False)
+	print len(comp)
 num = 1
 
 # x = comp[len(comp)-num]
