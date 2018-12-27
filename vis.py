@@ -130,6 +130,15 @@ elif(sys.argv[1] == "comp_data"):
 	comp = findSessions(acceptable_versions, False)
 	for i in comp:
 		print str(i["_id"]) + " - " + str(i["article_data"]["article_link"]) + " - " + str(i['UDID'])
+elif(sys.argv[1] == 'comp_udid'):
+	comp = findSessions(acceptable_versions, False)
+	udid_count = {}
+	for i in comp:
+		if(str(i['UDID']) in udid_count):
+			udid_count[str(i['UDID'])] += 1
+		else:
+			udid_count[str(i['UDID'])] = 1
+	print udid_count
 num = 1
 
 # x = comp[len(comp)-num]
