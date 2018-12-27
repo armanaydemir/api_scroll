@@ -129,7 +129,7 @@ elif(sys.argv[1] == "num_all"):
 elif(sys.argv[1] == "comp_data"):
 	comp = findSessions(acceptable_versions, False)
 	for i in comp:
-		print i["_id"] + " - " + i["article_data"]["article_link"] + " - " + i['UDID']
+		print str(i["_id"]) + " - " + str(i["article_data"]["article_link"]) + " - " + str(i['UDID'])
 num = 1
 
 # x = comp[len(comp)-num]
