@@ -43,7 +43,7 @@ def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if(x["version"] in acceptable and (x["completed"] or !incl_incomplete) and x["type"] != "x86_64"):
+		if(x["version"] in acceptable and (x["completed"] or not incl_incomplete) and x["type"] != "x86_64"):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
