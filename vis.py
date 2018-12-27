@@ -39,11 +39,11 @@ def printcol(c):
 		print(x)
 
 #find all completed sessions in the acceptable versions
-def findSessions(acceptable, non_complete):
+def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if(x["version"] in acceptable and (x["completed"] or non_complete) and x["type"] != "x86_64"):
+		if(x["version"] in acceptable and (x["completed"] or !incl_incomplete) and x["type"] != "x86_64"):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
@@ -120,12 +120,16 @@ def timeVersusLastCell(data):
 	plt.savefig("timeVersusLastCell.pdf", bbox_inches='tight')
 	plt.clf()
 
-if(sys.argv[1] == "num_sessions"):
-	comp = findSessions(acceptable_versions, True)
-	print len(comp)
-elif(sys.argv[1] == "num_all_sessions"):
+if(sys.argv[1] == "num_comp"):
 	comp = findSessions(acceptable_versions, False)
 	print len(comp)
+elif(sys.argv[1] == "num_all"):
+	comp = findSessions(acceptable_versions, True)
+	print len(comp)
+elif(sys.argv[1] == "comp_data"):
+	comp = findSessions(acceptable_versions, False)
+	for i in comp:
+		print i["_id"] + " - " + i["article_data"]["article_link"] + " - " + i['UDID']
 num = 1
 
 # x = comp[len(comp)-num]
@@ -151,18 +155,6 @@ num = 1
 
 # f.savefig("foo.pdf", bbox_inches='tight')
 # #plt.plot(timeAsFirstCell(y))
-
-# # for i in timeAsFirstCell(y):
-# #  	if(i == 0):
-# #  		ynum += 1
-
-# plt.show()
-
-#plt.plot(timeAsFirstCell(x))
-# plt.plot(smoothed_timeAsFirstCell(x))
-# plt.plot(smoothed_timeAsLastCell(x))
-# plt.show()
-#graphSession(x, timeBetweenRows)
 
 #print(max_lines_on_screen)
 #print(findcompletedsessions())
