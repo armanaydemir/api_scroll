@@ -147,7 +147,7 @@ elif(sys.argv[2] == 'article'):
 		else:
 			count[str(i["article_data"]["article_link"])] = 1
 	print count
-elif(sys.argv[2] == 'graph')
+elif(sys.argv[2] == 'graph'):
 	num = int(sys.argv[3])
 
 	x = ses[len(ses)-num]
