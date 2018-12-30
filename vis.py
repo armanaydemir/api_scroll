@@ -159,7 +159,7 @@ elif(sys.argv[2] == 'graph'):
 elif(sys.argv[2] == 'graphby'):
 	if(sys.argv[3] == 'article'):
 		for x in ses:
-			if(i["article_data"]["article_link"] == sys.argv[4]):
+			if(x["article_data"]["article_link"] == sys.argv[4]):
 				timeVersusLastCell(x)
 				timeVersusFirstCell(x)
 				timeOnScreen(x)
