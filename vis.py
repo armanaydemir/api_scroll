@@ -150,15 +150,17 @@ elif(sys.argv[2] == 'article'):
 		else:
 			count[str(i["article_data"]["article_link"])] = 1
 	print count
+elif(sys.argv[2] == 'graph')
+	num = int(sys.argv[3])
 
-num = 1
+	x = comp[len(comp)-num]
+	timeVersusLastCell(x)
+	timeVersusFirstCell(x)
+	timeOnScreen(x)
+	smoothed_timeAsFirstCell(x)
+	smoothed_timeAsLastCell(x)
 
-# x = comp[len(comp)-num]
-# timeVersusLastCell(x)
-# timeVersusFirstCell(x)
-# timeOnScreen(x)
-# smoothed_timeAsFirstCell(x)
-# smoothed_timeAsLastCell(x)
+
 
 
 # print(len(comp))
