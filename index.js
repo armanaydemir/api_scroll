@@ -93,14 +93,14 @@ function scrape_top(callback) {
 	 	i = 0
 	 	syncer = 0
 	 	var tops = []
-	 	//console.log(r)
+	 	
 	 	while(r && i < r.length){
 	 		add_article(r[i].url, function(a){
+	 			syncer ++
 	 			if(a){tops.push(a)}
 	 			if(!(syncer < r.length)){
 	 				callback(tops);
 	 			}
-	 			syncer ++
 	 		})
 	 		i++
 	 	}
@@ -209,7 +209,7 @@ function init_article(data, res) {
 
 app.get('/articles', function(req, res){
 	scrape_top(function(tops){
-		console.log(tops)
+		//console.log(tops)
 		res.send(tops)
 	})
 });
@@ -220,7 +220,7 @@ app.post("/open_article", function(req, res) {
 
 	data.article_link = data.article_link.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
-	// console.log(data.article_link + ' : ' + data.UDID);
+	// console.log(data.article_link + ' : ' + data.UDID);s
 	// console.log(': ' + data.startTime + ' :')
 	// console.log('----------')
     init_article(data, res);
