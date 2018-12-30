@@ -65,7 +65,7 @@ def smoothed_timeAsFirstCell(data):
 	plt.xlabel("cells on device")
 	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
 	smoothed_helper(data, "first_cell")
-	plt.savefig("smoothed_timeAsFirstCell.pdf", bbox_inches='tight')
+	plt.savefig(str(x["startTime"]/time_offset) +"smoothed_timeAsFirstCell.pdf", bbox_inches='tight')
 	plt.clf()
 
 def smoothed_timeAsLastCell(data):
@@ -73,7 +73,7 @@ def smoothed_timeAsLastCell(data):
 	plt.xlabel("cells on device")
 	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
 	smoothed_helper(data, "last_cell")
-	plt.savefig("smoothed_timeAsLastCell.pdf", bbox_inches='tight')
+	plt.savefig(str(x["startTime"]/time_offset) +"smoothed_timeAsLastCell.pdf", bbox_inches='tight')
 	plt.clf()
 
 def timeOnScreen_helper(data):
@@ -91,7 +91,7 @@ def timeOnScreen(data):
 	plt.xlabel("cells on device")
 	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
 	timeOnScreen_helper(data)
-	plt.savefig("timeOnScreen.pdf", bbox_inches='tight')
+	plt.savefig(str(x["startTime"]/time_offset) +"timeOnScreen.pdf", bbox_inches='tight')
 	plt.clf()
 
 def timeVersusProgress_helper(data, cell_string):
@@ -108,7 +108,7 @@ def timeVersusFirstCell(data):
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
 	timeVersusProgress_helper(x, "first_cell")
-	plt.savefig("timeVersusFirstCell.pdf", bbox_inches='tight')
+	plt.savefig(str(x["startTime"]/time_offset) + "timeVersusFirstCell.pdf", bbox_inches='tight')
 	plt.clf()
 
 def timeVersusLastCell(data):
@@ -116,7 +116,7 @@ def timeVersusLastCell(data):
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
 	timeVersusProgress_helper(x, "last_cell")
-	plt.savefig("timeVersusLastCell.pdf", bbox_inches='tight')
+	plt.savefig(str(x["startTime"]/time_offset) + "timeVersusLastCell.pdf", bbox_inches='tight')
 	plt.clf()
 
 
@@ -156,6 +156,15 @@ elif(sys.argv[2] == 'graph'):
 	timeOnScreen(x)
 	smoothed_timeAsFirstCell(x)
 	smoothed_timeAsLastCell(x)
+elif(sys.argv[2] == 'graphby'):
+	if(sys.argv[3] == 'article'):
+		for x in ses:
+			if(i["article_data"]["article_link"] == sys.argv[4]):
+				timeVersusLastCell(x)
+				timeVersusFirstCell(x)
+				timeOnScreen(x)
+				smoothed_timeAsFirstCell(x)
+				smoothed_timeAsLastCell(x)
 
 
 
