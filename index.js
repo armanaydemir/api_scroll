@@ -133,7 +133,7 @@ function add_article(address, callback) {
 						//console.log(text[0])
 						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 							db.close()
-							console.log(res)
+							//console.log(res)
 							callback(res)
 						})
 						
@@ -208,7 +208,9 @@ function init_article(data, res) {
 
 
 app.get('/articles', function(req, res){
-	res.send(scrape_top())
+	tops = scrape_top()
+	console.log(tops)
+	res.send(tops)
 });
 
 app.post("/open_article", function(req, res) {
