@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 import decimal
 import sys
 
-#comp means only completed articles
-#incomp means all articles, including incomplete (not tapped to submit)
-
 
 
 def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float-to-string-without-scientific-notation-and-false-precision
@@ -124,19 +121,19 @@ def timeVersusLastCell(data):
 
 
 if(sys.argv[1] == 'c'):
-	comp = findSessions(acceptable_versions, True)
+	ses = findSessions(acceptable_versions, True)
 else:
-	comp = findSessions(acceptable_versions, False)
+	ses = findSessions(acceptable_versions, False)
 
 
 if(sys.argv[2] == 'n'):
-	print(len(comp))
+	print(len(ses))
 elif(sys.argv[2] == 'd'):
-	for i in comp:
+	for i in ses:
 		print str(i["_id"]) + " - " + str(i["article_data"]["article_link"]) + " - " + str(i['UDID'])
 elif(sys.argv[2] == 'udid'):
 	count = {}
-	for i in comp:
+	for i in ses:
 		if(str(i['UDID']) in count):
 			count[str(i['UDID'])] += 1
 		else:
@@ -144,7 +141,7 @@ elif(sys.argv[2] == 'udid'):
 	print count
 elif(sys.argv[2] == 'article'):
 	count = {}
-	for i in comp:
+	for i in ses:
 		if(str(i['article_data']["article_link"]) in count):
 			count[str(i["article_data"]["article_link"])] += 1
 		else:
@@ -153,7 +150,7 @@ elif(sys.argv[2] == 'article'):
 elif(sys.argv[2] == 'graph')
 	num = int(sys.argv[3])
 
-	x = comp[len(comp)-num]
+	x = ses[len(ses)-num]
 	timeVersusLastCell(x)
 	timeVersusFirstCell(x)
 	timeOnScreen(x)
