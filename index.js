@@ -98,7 +98,7 @@ function scrape_top(callback) {
 	 		add_article(r[i].url, function(a){
 	 			if(a){tops.push(a)}
 	 			if(!(syncer < r.length)){
-	 				return tops;
+	 				callback(tops);
 	 			}
 	 			syncer ++
 	 		})
@@ -208,9 +208,10 @@ function init_article(data, res) {
 
 
 app.get('/articles', function(req, res){
-	tops = scrape_top()
-	console.log(tops)
-	res.send(tops)
+	scrape_top(function(tops){
+		console.log(tops)
+		res.send(tops)
+	})
 });
 
 app.post("/open_article", function(req, res) {
