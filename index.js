@@ -97,9 +97,9 @@ function scrape_top(callback) {
 	 	while(r && i < r.length){
 	 		add_article(r[i].url, function(a){
 	 			if(a){tops.push(a)}
-	 			if(!(syncer < r.length){
+	 			if(!(syncer < r.length)){
 	 				return tops;
-	 			})
+	 			}
 	 			syncer ++
 	 		})
 	 		i++
