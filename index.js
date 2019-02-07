@@ -97,9 +97,9 @@ function scrape_top(callback) {
 	 	var tops = []
 	 	
 	 	while(r && i < r.length){
-	 		console.log(r[i])
-	 		add_article( Object.assign(r[i]), function(a){
-	 			if(syncer == 4){
+	 		console.log(r[i].title)
+	 		add_article(r[i] , function(a){
+	 			if(syncer == 1){
 	 				console.log(tops)
 	 			}
 	 			syncer ++
@@ -115,6 +115,9 @@ function scrape_top(callback) {
 }
 
 function add_article(data, callback) {
+	console.log('within article add')
+	console.log(data)
+	console.log('=====')
 	abstract = data.abstract
 	address = data.url
 	address = address.split('.html')[0]
