@@ -12,8 +12,8 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
-var sessionsCollection = 'sessions0.3.3'
-var articlesCollection = 'articles0.3.3'
+var sessionsCollection = 'testing_sessions0.3.3'
+var articlesCollection = 'testing_articles0.3.3'
 
 const version = "v0.3.3"
 
@@ -132,6 +132,7 @@ function add_article(data, callback) {
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
+		console.log(address)
 		dbd.collection(articlesCollection).findOne({'article_link': address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
