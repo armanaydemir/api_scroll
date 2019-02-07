@@ -12,8 +12,8 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
-var sessionsCollection = 'testing_sessions0.3.3'
-var articlesCollection = 'testing_articles0.3.3'
+var sessionsCollection = 'ts01'
+var articlesCollection = 'ta01'
 
 const version = "v0.3.3"
 
