@@ -95,7 +95,7 @@ function scrape_top(callback) {
 	 	i = 0
 	 	syncer = 0
 	 	var tops = []
-	 	
+	 	console.log(r)
 	 	while(r && i < r.length){
 	 		add_article(r[i], function(a){
 	 			syncer ++
