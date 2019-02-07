@@ -12,6 +12,8 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
+var sessionsCollection = 'sessions0.3.3'
+var articlesCollection = 'articles0.3.3'
 
 const version = "v0.3.3"
 
@@ -119,7 +121,7 @@ function add_article(data, callback) {
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
+		dbd.collection(articlesCollection).findOne({'article_link': address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
 				//console.log('new article scrape')
@@ -129,14 +131,14 @@ function add_article(data, callback) {
 				};
 				request(options, function(error, response, body) { if(error) throw(error);
 					if (!error && response.statusCode == 200) {
-						// need to text this function
+						
+						// need to test this function
 						var text = parse_body(body);
-						//console.log(address)
-						//console.log(text[0])
-						dbd.collection('articles').insertOne({'abstract': abstract, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
+
+
+						dbd.collection(articlesCollection).insertOne({'abstract': abstract, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, resu){ if (e) throw e; 
 							db.close()
-							//console.log(res)
-							callback(res)
+							callback(resu)
 						})
 						
 					}else{
@@ -167,11 +169,11 @@ function init_article(data, res) {
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		dbd.collection('articles').findOne({'article_link': address}, function(err, result){
+		dbd.collection(articlesCollection).findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
 			if(!err && result){
 				var text = result.text
-				dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
+				dbd.collection(articlesCollection).insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
 					if (e) throw e; 
 					//console.log(ress.insertedId)
@@ -188,9 +190,9 @@ function init_article(data, res) {
 				request(options, function(error, response, body) {
 					if (!error && response.statusCode == 200) {
 						var text = parse_body(body);
-						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
+						dbd.collection(articlesCollection).insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
-							dbd.collection('sessions').insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
+							dbd.collection(sessionsCollection).insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
 								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
 								if (e) throw e;
 								text.unshift(ress.insertedId); 
@@ -257,7 +259,7 @@ app.post("/close_article", function(req,res){
 		var q = {'_id': s}
 		//console.log(data.content)
 		var nv = {$set:{"portait": data.portrait, "content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
-		dbd.collection('sessions').updateOne(q, nv, function(err, result){
+		dbd.collection(sessionsCollection).updateOne(q, nv, function(err, result){
 			if(err) throw err
 			// console.log('one updated')
 			// console.log(data.session_id + ' : ' + data.UDID);
