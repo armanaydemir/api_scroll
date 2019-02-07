@@ -118,7 +118,7 @@ function add_article(data, callback) {
 	
 	if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
 		console.log('begin article add')
-		console.log(data)
+		console.log(data.title)
 		console.log('=====')
 	}
 	abstract = data.abstract
@@ -148,7 +148,8 @@ function add_article(data, callback) {
 
 						if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
 							console.log('end article add')
-							console.log(data)
+							console.log(data.title)
+							console.log(text[0])
 							console.log('=====')
 						}
 						dbd.collection(articlesCollection).insertOne({'abstract': abstract, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, resu){ if (e) throw e; 
@@ -163,8 +164,9 @@ function add_article(data, callback) {
 				});
 			}else{
 				if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
-					console.log('end article add')
-					console.log(data)
+					console.log('otehr end article add')
+					console.log(data.title)
+					console.log(result.title)
 					console.log('=====')
 				}
 				db.close()
