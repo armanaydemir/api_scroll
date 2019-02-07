@@ -97,11 +97,11 @@ function scrape_top(callback) {
 	 	var tops = []
 	 	
 	 	while(r && i < r.length){
-	 		console.log(r[i].title)
+//	 		console.log(r[i].title)
 	 		add_article(r[i] , function(a){
-	 			if(syncer == 1){
-	 				console.log(tops)
-	 			}
+	 			// if(syncer == 1){
+	 			// 	console.log(tops)
+	 			// }
 	 			syncer ++
 	 			if(a){tops.push(a)}
 	 			if(!(syncer < r.length)){
@@ -115,9 +115,12 @@ function scrape_top(callback) {
 }
 
 function add_article(data, callback) {
-	console.log('within article add')
-	console.log(data)
-	console.log('=====')
+	
+	if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
+		console.log('begin article add')
+		console.log(data)
+		console.log('=====')
+	}
 	abstract = data.abstract
 	address = data.url
 	address = address.split('.html')[0]
@@ -143,7 +146,11 @@ function add_article(data, callback) {
 						// need to test this function
 						var text = parse_body(body);
 
-
+						if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
+							console.log('end article add')
+							console.log(data)
+							console.log('=====')
+						}
 						dbd.collection(articlesCollection).insertOne({'abstract': abstract, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, resu){ if (e) throw e; 
 							db.close()
 							callback(resu)
@@ -155,6 +162,11 @@ function add_article(data, callback) {
 					}
 				});
 			}else{
+				if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
+					console.log('end article add')
+					console.log(data)
+					console.log('=====')
+				}
 				db.close()
 				//console.log(result)
 				callback(result)
