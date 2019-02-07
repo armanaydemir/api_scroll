@@ -98,10 +98,13 @@ function scrape_top(callback) {
 	 	
 	 	while(r && i < r.length){
 	 		add_article(r[i], function(a){
+	 			if(syncer == 4){
+	 				console.log(tops)
+	 			}
 	 			syncer ++
 	 			if(a){tops.push(a)}
 	 			if(!(syncer < r.length)){
-	 				console.log(tops)
+	 				
 	 				callback(tops);
 	 			}
 	 		})
