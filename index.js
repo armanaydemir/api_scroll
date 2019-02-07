@@ -95,7 +95,7 @@ function scrape_top(callback) {
 	 	var tops = []
 	 	
 	 	while(r && i < r.length){
-	 		add_article(r[i].url, function(a){
+	 		add_article(r[i], function(a){
 	 			syncer ++
 	 			if(a){tops.push(a)}
 	 			if(!(syncer < r.length)){
@@ -107,7 +107,9 @@ function scrape_top(callback) {
 	})
 }
 
-function add_article(address, callback) {
+function add_article(data, callback) {
+	abstract = data.abstract
+	address = data.url
 	address = address.split('.html')[0]
 	var link = address.split('/')
 	date_written = link.slice(3, 6).join('/')
@@ -131,7 +133,7 @@ function add_article(address, callback) {
 						var text = parse_body(body);
 						//console.log(address)
 						//console.log(text[0])
-						dbd.collection('articles').insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
+						dbd.collection('articles').insertOne({'abstract': abstract, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, res){ if (e) throw e; 
 							db.close()
 							//console.log(res)
 							callback(res)
