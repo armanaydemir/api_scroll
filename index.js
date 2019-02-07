@@ -133,6 +133,7 @@ function add_article(data, callback) {
 		if(e) throw e;
 		var dbd = db.db('data')
 		console.log(address)
+		console.log(data.url)
 		dbd.collection(articlesCollection).findOne({'article_link': address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
