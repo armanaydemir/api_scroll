@@ -122,19 +122,17 @@ function add_article(data, callback) {
 		console.log('=====')
 	}
 	abstract = data.abstract
-	address = data.url
-	address = address.split('.html')[0]
-	var link = address.split('/')
-	date_written = link.slice(3, 6).join('/')
-	category = link.slice(6, link.length-1).join('/')
-	address = address + '.html'
+	data.address = data.url
+	data.address = data.address.split('.html')[0]
+	var link = data.address.split('/')
+	data.date_written = link.slice(3, 6).join('/')
+	data.category = link.slice(6, link.length-1).join('/')
+	data.address = address + '.html'
 	//console.log('add_Article')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db('data')
-		console.log(address)
-		console.log(data.url)
-		dbd.collection(articlesCollection).findOne({'article_link': address}, function(err, result){
+		dbd.collection(articlesCollection).findOne({'article_link': data.address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
 				//console.log('new article scrape')
@@ -154,7 +152,7 @@ function add_article(data, callback) {
 							console.log(text[0])
 							console.log('=====')
 						}
-						dbd.collection(articlesCollection).insertOne({'abstract': abstract, 'text': text, 'article_link':address, 'title': text[0], 'date_written': date_written, "category": category, "version":version}, function(e, resu){ if (e) throw e; 
+						dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
 							db.close()
 							callback(resu)
 						})
