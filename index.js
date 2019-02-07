@@ -127,7 +127,7 @@ function add_article(data, callback) {
 	var link = data.address.split('/')
 	data.date_written = link.slice(3, 6).join('/')
 	data.category = link.slice(6, link.length-1).join('/')
-	data.address = address + '.html'
+	data.address = data.address + '.html'
 	//console.log('add_Article')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
