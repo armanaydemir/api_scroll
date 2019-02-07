@@ -137,7 +137,7 @@ function add_article(data, callback) {
 			if(!result){
 				//console.log('new article scrape')
 				var options = {
-					url: 'https://mercury.postlight.com/parser?url=' + address,
+					url: 'https://mercury.postlight.com/parser?url=' + data.address,
 					headers: headers
 				};
 				request(options, function(error, response, body) { if(error) throw(error);
