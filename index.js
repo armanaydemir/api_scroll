@@ -12,8 +12,9 @@ var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for t
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
-var sessionsCollection = 'ts01'
-var articlesCollection = 'ta01'
+var sessionsCollection = 'sessions01'
+var articlesCollection = 'articles01'
+var database = 'data01'
 
 const version = "v0.3.3"
 
@@ -25,7 +26,6 @@ things to do
 look into CFAbsoluteTime vs Date()
 	- maybe just have both???
 improve vis.py and make it take arguments
-fix top articles loading to wait for everything
 email mike about viss and new updates
 add politico/other news sites scrapers (npr, cnn) , apple news api
 
@@ -115,12 +115,6 @@ function scrape_top(callback) {
 }
 
 function add_article(data, callback) {
-	
-	if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
-		console.log('begin article add')
-		console.log(data.title)
-		console.log('=====')
-	}
 	abstract = data.abstract
 	data.address = data.url
 	data.address = data.address.split('.html')[0]
@@ -131,7 +125,7 @@ function add_article(data, callback) {
 	//console.log('add_Article')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
-		var dbd = db.db('data')
+		var dbd = db.db(database)
 		dbd.collection(articlesCollection).findOne({'article_link': data.address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
@@ -146,12 +140,6 @@ function add_article(data, callback) {
 						// need to test this function
 						var text = parse_body(body);
 
-						if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
-							console.log('end article add')
-							console.log(data.title)
-							console.log(text[0])
-							console.log('=====')
-						}
 						dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
 							db.close()
 							callback(resu)
@@ -163,12 +151,6 @@ function add_article(data, callback) {
 					}
 				});
 			}else{
-				if(data.title == "Review: ‘PEN15’ Goes Crudely, Sweetly Back to School"){
-					console.log('otehr end article add')
-					console.log(data.title)
-					console.log(result.title)
-					console.log('=====')
-				}
 				db.close()
 				//console.log(result)
 				callback(result)
@@ -190,7 +172,7 @@ function init_article(data, res) {
 
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
-		var dbd = db.db('data')
+		var dbd = db.db(database)
 		dbd.collection(articlesCollection).findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
 			if(!err && result){
@@ -274,7 +256,7 @@ app.post("/close_article", function(req,res){
 	var data = req.body
 
 	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db('data')
+		var dbd = db.db(database)
 		if (err) throw err; 
 		var s = new ObjectId(data.session_id)
 
