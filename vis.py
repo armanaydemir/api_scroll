@@ -7,6 +7,27 @@ import matplotlib.pyplot as plt
 import decimal
 import sys
 
+#by work length and sentence length, take a look at young mikes stuff
+#by word frequency
+
+#                Data to be collected per section
+# (1-3) number of phrases
+# (4-6) number of total words
+# (7-9) words per phrase (2/1)
+# (10-12) number of non-function words
+# (13-15) non-function words per phrase (4/1)
+# (16-18) mean of total words
+# (19-21) std. dev. of total words
+# (22-24) mean of non-function words
+# (25-27) std. dev. of non-function words
+# (28-30) mean of ln(word frequency) (total words)
+# (31-33) std. dev. of ln(word frequency) (total words)
+# (34-36) mean of ln(word frequency) (non-function words)
+# (37-39) std. dev. of ln(word frequency) (non-function words)
+# (40) constant term = 1
+# (41) scroll time for the current page based on a gamma dist.
+#--------------------------------------------------------------
+
 
 
 def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float-to-string-without-scientific-notation-and-false-precision
@@ -22,7 +43,7 @@ global max_lines_on_screen
 max_lines_on_screen = 0
 
 
-acceptable_versions = ['v0.3.1'] # 100000000
+acceptable_versions = ['v0.3.3'] # 100000000
 time_offset = 100000000
 
 #returns article data given the id in the mongo db
@@ -42,7 +63,7 @@ def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if(x["version"] in acceptable and (x["completed"] or not incl_incomplete) and x["type"] != "x86_64"):
+		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64"):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
@@ -124,7 +145,6 @@ if(sys.argv[1] == 'c'):
 	ses = findSessions(acceptable_versions, True)
 else:
 	ses = findSessions(acceptable_versions, False)
-
 
 if(sys.argv[2] == 'n'):
 	print(len(ses))
