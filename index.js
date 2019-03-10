@@ -196,6 +196,8 @@ function init_article(data, res) {
 						var text = parse_body(body);
 						dbd.collection(articlesCollection).insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
+							console.log('woah')
+							console.log(sessionsCollection)
 							dbd.collection(sessionsCollection).insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
 								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
 								if (e) throw e;
