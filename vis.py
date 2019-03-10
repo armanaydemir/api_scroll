@@ -43,7 +43,7 @@ global max_lines_on_screen
 max_lines_on_screen = 0
 
 
-acceptable_versions = ['v0.3.3'] # 100000000
+acceptable_versions = ['v0.3.1', 'v0.2.7'] # 100000000
 time_offset = 100000000
 
 #returns article data given the id in the mongo db
@@ -84,7 +84,7 @@ def smoothed_helper(data, cell_string):
 def smoothed_timeAsFirstCell(data):
 	plt.ylabel("# seconds spent as First Cell")
 	plt.xlabel("cells on device")
-	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
+	plt.suptitle(str(x["startTime"]/time_ofset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
 	smoothed_helper(data, "first_cell")
 	plt.savefig(str(x["startTime"]/time_offset) +"smoothed_timeAsFirstCell.pdf", bbox_inches='tight')
 	plt.clf()
@@ -106,14 +106,16 @@ def timeOnScreen_helper(data):
 			times[i] += (row["appeared"] - prev)/time_offset
 		prev = row["appeared"]
 	plt.plot(times)
+	return times
 
 def timeOnScreen(data):
 	plt.ylabel("# seconds spent on screen")
 	plt.xlabel("cells on device")
 	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
-	timeOnScreen_helper(data)
+	times = timeOnScreen_helper(data)
 	plt.savefig(str(x["startTime"]/time_offset) +"timeOnScreen.pdf", bbox_inches='tight')
 	plt.clf()
+	return times
 
 def timeVersusProgress_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
@@ -141,50 +143,66 @@ def timeVersusLastCell(data):
 	plt.clf()
 
 
-if(sys.argv[1] == 'c'):
+def new_arg_func(session_data, func):
+	print(session_data['content'])
+
+
+def old_arg_func(ses):
+	if(sys.argv[2] == 'n'):
+		print(len(ses))
+	elif(sys.argv[2] == 'd'):
+		for i in ses:
+			print str(i["_id"]) + " - " + str(i["article_data"]["article_link"]) + " - " + str(i['UDID'])
+	elif(sys.argv[2] == 'udid'):
+		count = {}
+		for i in ses:
+			if(str(i['UDID']) in count):
+				count[str(i['UDID'])] += 1
+			else:
+				count[str(i['UDID'])] = 1
+		print count
+	elif(sys.argv[2] == 'article'):
+		count = {}
+		for i in ses:
+			if(str(i['article_data']["article_link"]) in count):
+				count[str(i["article_data"]["article_link"])] += 1
+			else:
+				count[str(i["article_data"]["article_link"])] = 1
+		print count
+	elif(sys.argv[2] == 'graph'):
+		num = int(sys.argv[3])
+
+		
+		timeVersusLastCell(x)
+		timeVersusFirstCell(x)
+		timeOnScreen(x)
+		smoothed_timeAsFirstCell(x)
+		smoothed_timeAsLastCell(x)
+	elif(sys.argv[2] == 'graphby'):
+		if(sys.argv[3] == 'article'):
+			for x in ses:
+				if(x["article_data"]["article_link"] == sys.argv[4]):
+					timeVersusLastCell(x)
+					timeVersusFirstCell(x)
+					timeOnScreen(x)
+					smoothed_timeAsFirstCell(x)
+					smoothed_timeAsLastCell(x)
+
+
+if(sys.argv[1] == 'c' ):
 	ses = findSessions(acceptable_versions, True)
-else:
+	old_arg_func(ses)
+elif(sys.argv[1] == 'n'):
 	ses = findSessions(acceptable_versions, False)
+	old_arg_func(ses)
+else:
+	ses = findSessions(acceptable_versions, True)
+	new_arg_func(ses[len(ses)-1], 'num_words')
 
-if(sys.argv[2] == 'n'):
-	print(len(ses))
-elif(sys.argv[2] == 'd'):
-	for i in ses:
-		print str(i["_id"]) + " - " + str(i["article_data"]["article_link"]) + " - " + str(i['UDID'])
-elif(sys.argv[2] == 'udid'):
-	count = {}
-	for i in ses:
-		if(str(i['UDID']) in count):
-			count[str(i['UDID'])] += 1
-		else:
-			count[str(i['UDID'])] = 1
-	print count
-elif(sys.argv[2] == 'article'):
-	count = {}
-	for i in ses:
-		if(str(i['article_data']["article_link"]) in count):
-			count[str(i["article_data"]["article_link"])] += 1
-		else:
-			count[str(i["article_data"]["article_link"])] = 1
-	print count
-elif(sys.argv[2] == 'graph'):
-	num = int(sys.argv[3])
 
-	x = ses[len(ses)-num]
-	timeVersusLastCell(x)
-	timeVersusFirstCell(x)
-	timeOnScreen(x)
-	smoothed_timeAsFirstCell(x)
-	smoothed_timeAsLastCell(x)
-elif(sys.argv[2] == 'graphby'):
-	if(sys.argv[3] == 'article'):
-		for x in ses:
-			if(x["article_data"]["article_link"] == sys.argv[4]):
-				timeVersusLastCell(x)
-				timeVersusFirstCell(x)
-				timeOnScreen(x)
-				smoothed_timeAsFirstCell(x)
-				smoothed_timeAsLastCell(x)
+
+
+
 
 
 
