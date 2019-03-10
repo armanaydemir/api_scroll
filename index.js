@@ -177,7 +177,7 @@ function init_article(data, res) {
 			if(err) throw err;
 			if(!err && result){
 				var text = result.text
-				dbd.collection(articlesCollection).insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
+				dbd.collection(sessionsCollection).insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
 					if (e) throw e; 
 					//console.log(ress.insertedId)
