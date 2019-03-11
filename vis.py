@@ -278,6 +278,7 @@ else:
 	words = []
 	for x in ses:
 		if(x['UDID'] == "828296DD_6B30_43B8_8986_8E12A13CD9F2"):
+			print('hihihi')
 			(t, s, phrases) = timePerArticleVWords(x)
 			times.append(t)
 			words.append(s)
