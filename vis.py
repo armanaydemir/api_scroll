@@ -6,6 +6,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import decimal
 import sys
+import re
 
 #by work length and sentence length, take a look at young mikes stuff
 #by word frequency
@@ -28,6 +29,12 @@ import sys
 # (41) scroll time for the current page based on a gamma dist.
 #--------------------------------------------------------------
 
+# function_word_list = []
+# with open('../../word_classification/text_files/function_word_list.txt', mode='r') as READ_FILE:
+#     for _ in READ_FILE:
+#         _ = re.sub("\n", '', _)
+#         function_word_list.append(_)
+# READ_FILE.close()
 
 
 def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float-to-string-without-scientific-notation-and-false-precision
@@ -109,6 +116,7 @@ def timeOnScreen_helper(data):
 	return times
 
 def timeOnScreen(data):
+	x = data
 	plt.ylabel("# seconds spent on screen")
 	plt.xlabel("cells on device")
 	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
@@ -143,8 +151,63 @@ def timeVersusLastCell(data):
 	plt.clf()
 
 
-def new_arg_func(session_data, func):
-	print(session_data['content'])
+def analyse_text(session_data, func):
+	x = session_data
+	plt.ylabel("# seconds spent on screen")
+	plt.xlabel("words per paragraph")
+	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
+	times = new_arg_func_helper(session_data)
+	plt.savefig(str(x["startTime"]/time_offset) +"timeOnScreenPerParagraph.pdf", bbox_inches='tight')
+	plt.clf()
+	#print(session_data['content'])
+
+def clean_text(file_text):
+	file_text = file_text.lower()
+	file_text = re.sub("mr\.", "mr", file_text)
+	file_text = re.sub("mrs\.", "mrs", file_text)
+	file_text = re.sub("dr\.", "dr", file_text)
+	file_text = re.sub("sr\.", "sr", file_text)
+	file_text = re.sub(",", "", file_text)
+	file_text = re.sub("\"", "", file_text)
+	file_text = re.sub("-", "", file_text)
+	file_text = re.sub("\'", "", file_text)
+	file_text = re.sub("\s+", ' ', file_text)
+	return file_text
+
+def analyse_text_helper(session_data):
+	t = timeOnScreen(session_data)
+	tmax = 0.0
+	total = 0.0
+	c = 0
+	num_words = 0
+	phrases = 0
+
+	times = []
+	words = []
+	p = []
+	for i in range(0, len(session_data['content'])):
+		if(not session_data['content'][i]['spacer']):
+			if(t[i] > tmax):
+				tmax = t[i]
+			total += t[i]
+			c += 1
+			ctext = clean_text(session_data['content'][i]['text'])
+			num_words += len(ctext.split())
+			for word in ctext.split():
+				if('.' in word or ';' in word or ':' in word or "?" in word or "!" in word):
+					phrases += 1
+		else:
+			times.append(tmax)
+			words.append(num_words)
+			p.append((tmax, num_words, total/c, phrases))
+			tmax = 0.0
+			total = 0.0
+			c = 0
+			num_words = 0
+			phrases = 0
+	plt.plot(p)
+
+
 
 
 def old_arg_func(ses):
@@ -172,7 +235,7 @@ def old_arg_func(ses):
 	elif(sys.argv[2] == 'graph'):
 		num = int(sys.argv[3])
 
-		
+		x = ses[len(ses)-num]
 		timeVersusLastCell(x)
 		timeVersusFirstCell(x)
 		timeOnScreen(x)
@@ -189,6 +252,16 @@ def old_arg_func(ses):
 					smoothed_timeAsLastCell(x)
 
 
+def timePerArticleVWords(x):
+	time = x['endTime'] - x['startTime']
+	print(x['article_data'])
+	words = 0
+	for line in x['article_data']['text']:
+		words += len(line.split()) 
+	print(time)
+	return (time, words)
+
+
 if(sys.argv[1] == 'c' ):
 	ses = findSessions(acceptable_versions, True)
 	old_arg_func(ses)
@@ -197,7 +270,18 @@ elif(sys.argv[1] == 'n'):
 	old_arg_func(ses)
 else:
 	ses = findSessions(acceptable_versions, True)
-	new_arg_func(ses[len(ses)-1], 'num_words')
+	a = []
+	times = []
+	words = []
+	for x in ses:
+		(t, s) = timePerArticleVWords(x)
+		times.append(t)
+		words.append(s)
+		a.append((t/time_offset,s))
+	plt.plot(a)
+	plt.savefig("timePerArticleVWords.pdf", bbox_inches='tight')
+	#analyse_text(ses[len(ses)-2 ], 'num_words')
+
 
 
 
