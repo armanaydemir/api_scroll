@@ -255,12 +255,12 @@ def old_arg_func(ses):
 def timePerArticleVWords(x):
 	time = x['endTime'] - x['startTime']
 	print(x['article_data'])
-	text = clean_text(x['article_data']['text'])
 	phrases = 0
 	words = 0
-	for line in text:
+	for line in x['article_data']['text']:
 		words += len(line.split()) 
-		for word in line.split():
+		l = clean_text(line)
+		for word in l.split():
 			if ('.' in word or ';' in word or ':' in word or "?" in word or "!" in word):
 				phrases += 1
 	print(time)
