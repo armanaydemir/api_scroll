@@ -274,14 +274,12 @@ else:
 	times = []
 	words = []
 	for x in ses:
-		if(x['UDID'] == "A48F157C_4768_44C9_86BF_6978C67BB756"):
-			(t, s) = timePerArticleVWords(x)
-			times.append(t)
-			words.append(s)
-			a.append((t/time_offset,s))
-	print(a)
+		(t, s) = timePerArticleVWords(x)
+		times.append(t)
+		words.append(s)
+		a.append((t/time_offset,s))
 	plt.plot(a)
-	plt.savefig("A48F157C_4768_44C9_86BF_6978C67BB756_timePerArticleVWords.pdf", bbox_inches='tight')
+	plt.savefig("hi.pdf", bbox_inches='tight')
 	#analyse_text(ses[len(ses)-2 ], 'num_words')
 
 
