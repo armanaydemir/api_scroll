@@ -254,7 +254,6 @@ def old_arg_func(ses):
 
 def timePerArticleVWords(x):
 	time = x['endTime'] - x['startTime']
-	print(x['article_data'])
 	phrases = 0
 	words = 0
 	for line in x['article_data']['text']:
@@ -263,7 +262,6 @@ def timePerArticleVWords(x):
 		for word in l.split():
 			if ('.' in word or ';' in word or ':' in word or "?" in word or "!" in word):
 				phrases += 1
-	print(time)
 	return (time, words, phrases)
 
 
@@ -279,12 +277,13 @@ else:
 	times = []
 	words = []
 	for x in ses:
-		(t, s, phrases) = timePerArticleVWords(x)
-		times.append(t)
-		words.append(s)
-		a.append((t/time_offset,s,phrases))
+		if(x['UDID'] == "828296DD_6B30_43B8_8986_8E12A13CD9F2"):
+			(t, s, phrases) = timePerArticleVWords(x)
+			times.append(t)
+			words.append(s)
+			a.append((t/time_offset,s,phrases))
 	plt.plot(a)
-	plt.savefig("timePerArticleVWords.pdf", bbox_inches='tight')
+	plt.savefig("828296DD_6B30_43B8_8986_8E12A13CD9F2timePerArticleVWords.pdf", bbox_inches='tight')
 	#analyse_text(ses[len(ses)-2 ], 'num_words')
 
 
