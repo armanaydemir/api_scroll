@@ -255,11 +255,16 @@ def old_arg_func(ses):
 def timePerArticleVWords(x):
 	time = x['endTime'] - x['startTime']
 	print(x['article_data'])
+	text = clean_text(x['article_data']['text'])
+	phrases = 0
 	words = 0
-	for line in x['article_data']['text']:
+	for line in text:
 		words += len(line.split()) 
+		for word in line.split():
+			if ('.' in word or ';' in word or ':' in word or "?" in word or "!" in word):
+				phrases += 1
 	print(time)
-	return (time, words)
+	return (time, words, phrases)
 
 
 if(sys.argv[1] == 'c' ):
@@ -274,12 +279,12 @@ else:
 	times = []
 	words = []
 	for x in ses:
-		(t, s) = timePerArticleVWords(x)
+		(t, s, phrases) = timePerArticleVWords(x)
 		times.append(t)
 		words.append(s)
-		a.append((t/time_offset,s))
+		a.append((t/time_offset,s,phrases))
 	plt.plot(a)
-	plt.savefig("hi.pdf", bbox_inches='tight')
+	plt.savefig("timePerArticleVWords.pdf", bbox_inches='tight')
 	#analyse_text(ses[len(ses)-2 ], 'num_words')
 
 
