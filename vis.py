@@ -70,7 +70,7 @@ def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
 	for x in mycol.find():
-		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64" and x["version"] in acceptable_versions):
+		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64" ): #and x["version"] in acceptable_versions):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
@@ -91,17 +91,17 @@ def smoothed_helper(data, cell_string):
 def smoothed_timeAsFirstCell(data):
 	plt.ylabel("# seconds spent as First Cell")
 	plt.xlabel("cells on device")
-	plt.suptitle(str(x["startTime"]/time_ofset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
+	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
 	smoothed_helper(data, "first_cell")
-	plt.savefig(str(x["startTime"]/time_offset) +"smoothed_timeAsFirstCell.pdf", bbox_inches='tight')
+	plt.savefig(str(data["startTime"]/time_offset) +"smoothed_timeAsFirstCell.pdf", bbox_inches='tight')
 	plt.clf()
 
 def smoothed_timeAsLastCell(data):
 	plt.ylabel("# seconds spent as Last Cell")
 	plt.xlabel("cells on device")
-	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
+	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
 	smoothed_helper(data, "last_cell")
-	plt.savefig(str(x["startTime"]/time_offset) +"smoothed_timeAsLastCell.pdf", bbox_inches='tight')
+	plt.savefig(str(data["startTime"]/time_offset) +"smoothed_timeAsLastCell.pdf", bbox_inches='tight')
 	plt.clf()
 
 def timeOnScreen_helper(data):
@@ -116,12 +116,11 @@ def timeOnScreen_helper(data):
 	return times
 
 def timeOnScreen(data):
-	x = data
 	plt.ylabel("# seconds spent on screen")
 	plt.xlabel("cells on device")
-	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
+	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
 	times = timeOnScreen_helper(data)
-	plt.savefig(str(x["startTime"]/time_offset) +"timeOnScreen.pdf", bbox_inches='tight')
+	plt.savefig(str(data["startTime"]/time_offset) +"timeOnScreen.pdf", bbox_inches='tight')
 	plt.clf()
 	return times
 
@@ -130,24 +129,46 @@ def timeVersusProgress_helper(data, cell_string):
 	times = []
 	lines = []
 	for row in mycol.find():
-		times.append((row["appeared"] - x["startTime"])/time_offset)
+		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
 	plt.plot(times,lines)
 
 def timeVersusFirstCell(data):
 	plt.ylabel("First cell # on user's screen")
 	plt.xlabel("seconds since start of reading session")
-	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
-	timeVersusProgress_helper(x, "first_cell")
-	plt.savefig(str(x["startTime"]/time_offset) + "timeVersusFirstCell.pdf", bbox_inches='tight')
+	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
+	timeVersusProgress_helper(data, "first_cell")
+	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusFirstCell.pdf", bbox_inches='tight')
 	plt.clf()
 
 def timeVersusLastCell(data):
 	plt.ylabel("Last cell # on user's screen")
 	plt.xlabel("seconds since start of reading session")
-	plt.suptitle(str(x["startTime"]/time_offset) + " : " + x["UDID"] + " : " + x["article_data"]["article_link"])
-	timeVersusProgress_helper(x, "last_cell")
-	plt.savefig(str(x["startTime"]/time_offset) + "timeVersusLastCell.pdf", bbox_inches='tight')
+	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
+	timeVersusProgress_helper(data, "last_cell")
+	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusLastCell.pdf", bbox_inches='tight')
+	plt.clf()
+
+def timeVersusSpeed_helper(data):
+	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
+	t = 0
+	rates = []
+	rate = 0
+	for row in mycol.find():
+		if(t > (row["appeared"] - data["startTime"])/time_offset):
+			rate += 1
+		else:
+			rates.append(rate)
+			rate = 0
+			t += 1
+	plt.plot(rates)
+
+def timeVersusSpeed(data):
+	plt.ylabel("# of lines scrolled per second")
+	plt.xlabel("seconds since start of reading session")
+	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"] + data["version"])
+	timeVersusSpeed_helper(data)
+	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusSpeed.pdf", bbox_inches='tight')
 	plt.clf()
 
 
@@ -232,10 +253,18 @@ def old_arg_func(ses):
 			else:
 				count[str(i["article_data"]["article_link"])] = 1
 		print count
+	elif(sys.argv[2] == 'version'):
+		count = {}
+		for i in ses:
+			if(str(i['version']) in count):
+				count[str(i["version"])] += 1
+			else:
+				count[str(i["version"])] = 1
+		print count
 	elif(sys.argv[2] == 'graph'):
 		num = int(sys.argv[3])
 
-		x = ses[len(ses)-num]
+		
 		timeVersusLastCell(x)
 		timeVersusFirstCell(x)
 		timeOnScreen(x)
@@ -250,6 +279,32 @@ def old_arg_func(ses):
 					timeOnScreen(x)
 					smoothed_timeAsFirstCell(x)
 					smoothed_timeAsLastCell(x)
+	elif(sys.argv[2] == 'all'):
+		for x in ses:
+			try:
+				timeVersusLastCell(x)
+			except:
+				pass
+			try:
+				timeVersusFirstCell(x)
+			except:
+				pass
+			try:
+				timeOnScreen(x)
+			except:
+				pass
+			try:
+				smoothed_timeAsFirstCell(x)
+			except:
+				pass
+			try:
+				smoothed_timeAsLastCell(x)
+			except:
+				pass
+			try:
+				timeVersusSpeed(x)
+			except:
+				pass
 
 
 def timePerArticleVWords(x):
