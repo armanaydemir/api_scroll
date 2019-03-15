@@ -112,7 +112,6 @@ def timeOnScreen_helper(data):
 		for i in range(int(row["first_cell"]), int(row["last_cell"])):
 			times[i] += (row["appeared"] - prev)/time_offset
 		prev = row["appeared"]
-	plt.plot(times)
 	return times
 
 def timeOnScreen(data):
@@ -120,6 +119,7 @@ def timeOnScreen(data):
 	plt.xlabel("cells on device")
 	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
 	times = timeOnScreen_helper(data)
+	plt.plot(times)
 	plt.savefig(str(data["startTime"]/time_offset) +"timeOnScreen.pdf", bbox_inches='tight')
 	plt.clf()
 	return times
@@ -131,13 +131,14 @@ def timeVersusProgress_helper(data, cell_string):
 	for row in mycol.find():
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
+	return (times, lines)
 	plt.plot(times,lines)
 
 def timeVersusFirstCell(data):
 	plt.ylabel("First cell # on user's screen")
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
-	timeVersusProgress_helper(data, "first_cell")
+	plt.plot(timeVersusProgress_helper(data, "first_cell"))
 	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusFirstCell.pdf", bbox_inches='tight')
 	plt.clf()
 
@@ -145,7 +146,7 @@ def timeVersusLastCell(data):
 	plt.ylabel("Last cell # on user's screen")
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
-	timeVersusProgress_helper(data, "last_cell")
+	plt.plot(timeVersusProgress_helper(data, "last_cell"))
 	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusLastCell.pdf", bbox_inches='tight')
 	plt.clf()
 
@@ -161,13 +162,14 @@ def timeVersusSpeed_helper(data):
 			rates.append(rate)
 			rate = 0
 			t += 1
+	print(rates)
 	plt.plot(rates)
 
 def timeVersusSpeed(data):
 	plt.ylabel("# of lines scrolled per second")
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"] + data["version"])
-	timeVersusSpeed_helper(data)
+	timeVersusProgress_helper(data, "first_cell")
 	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusSpeed.pdf", bbox_inches='tight')
 	plt.clf()
 
