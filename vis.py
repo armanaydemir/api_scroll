@@ -169,7 +169,11 @@ def timeVersusSpeed(data):
 	plt.ylabel("# of lines scrolled per second")
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"] + data["version"])
-	timeVersusProgress_helper(data, "first_cell")
+	(times, lines) = timeVersusProgress_helper(data, "first_cell")
+	rates = []
+	for i in np.diff(times):
+		rates.append(1/i)
+	plt.plot(rates)
 	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusSpeed.pdf", bbox_inches='tight')
 	plt.clf()
 
@@ -285,27 +289,27 @@ def old_arg_func(ses):
 		for x in ses:
 			try:
 				timeVersusLastCell(x)
-			except:
+			except Exception:
 				pass
 			try:
 				timeVersusFirstCell(x)
-			except:
+			except Exception:
 				pass
 			try:
 				timeOnScreen(x)
-			except:
+			except Exception:
 				pass
 			try:
 				smoothed_timeAsFirstCell(x)
-			except:
+			except Exception:
 				pass
 			try:
 				smoothed_timeAsLastCell(x)
-			except:
+			except Exception:
 				pass
 			try:
 				timeVersusSpeed(x)
-			except:
+			except Exception:
 				pass
 
 
