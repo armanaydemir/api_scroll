@@ -8,6 +8,9 @@ import decimal
 import sys
 import re
 
+
+#need to order by time when making these db calls
+
 #by work length and sentence length, take a look at young mikes stuff
 #by word frequency
 
@@ -69,7 +72,8 @@ def printcol(c):
 def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
-	for x in mycol.find():
+	sort = {'appeared': 1}
+	for x in mycol.find().sort(sort):
 		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64" ): #and x["version"] in acceptable_versions):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
@@ -79,7 +83,8 @@ def smoothed_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*(len(data["content"])+1)
 	prev = 0
-	for row in mycol.find():
+	sort = {'appeared': 1}
+	for row in mycol.find().sort(sort):
 		if(prev == 0):
 			prev = data["startTime"]
 		else:
@@ -108,7 +113,8 @@ def timeOnScreen_helper(data):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*len(data["content"]) 
 	prev = data["startTime"]
-	for row in mycol.find():
+	sort = {'appeared': 1}
+	for row in mycol.find().sort(sort):
 		for i in range(int(row["first_cell"]), int(row["last_cell"])):
 			times[i] += (row["appeared"] - prev)/time_offset
 		prev = row["appeared"]
@@ -128,17 +134,18 @@ def timeVersusProgress_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = []
 	lines = []
-	for row in mycol.find():
+	sort = {'appeared': 1}
+	for row in mycol.find().sort(sort):
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
 	return (times, lines)
-	plt.plot(times,lines)
 
 def timeVersusFirstCell(data):
 	plt.ylabel("First cell # on user's screen")
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle(str(data["startTime"]/time_offset) + " : " + data["UDID"] + " : " + data["article_data"]["article_link"])
-	plt.plot(timeVersusProgress_helper(data, "first_cell"))
+	(times, lines) = timeVersusProgress_helper(data, "first_cell")
+	plt.plot(time, lines)
 	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusFirstCell.pdf", bbox_inches='tight')
 	plt.clf()
 
@@ -155,7 +162,8 @@ def timeVersusSpeed_helper(data):
 	t = 0
 	rates = []
 	rate = 0
-	for row in mycol.find():
+	sort = {'appeared': 1}
+	for row in mycol.find().sort(sort):
 		if(t > (row["appeared"] - data["startTime"])/time_offset):
 			rate += 1
 		else:
@@ -174,6 +182,7 @@ def timeVersusSpeed(data):
 	for i in np.diff(times):
 		rates.append(1/i)
 	plt.plot(rates)
+	#print(rates)
 	plt.savefig(str(data["startTime"]/time_offset) + "timeVersusSpeed.pdf", bbox_inches='tight')
 	plt.clf()
 
