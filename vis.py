@@ -48,7 +48,7 @@ def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 sessions = myclient["sessions"]
-sort_param = [{'appeared': 1}]
+sort_param = {'_id': -1}
 data = myclient["data"]
 global max_lines_on_screen
 max_lines_on_screen = 0
