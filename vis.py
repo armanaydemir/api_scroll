@@ -302,18 +302,22 @@ def old_arg_func(ses):
 			try:
 				timeOnScreen(x)
 			except Exception:
+				print('uhoh')
 				pass
 			try:
 				smoothed_timeAsFirstCell(x)
 			except Exception:
+				print('uhoh')
 				pass
 			try:
 				smoothed_timeAsLastCell(x)
 			except Exception:
+				print('uhoh')
 				pass
 			try:
 				timeVersusSpeed(x)
 			except Exception:
+				print('uhoh')
 				pass
 
 
