@@ -48,6 +48,7 @@ def float_to_str(f): #https://stackoverflow.com/questions/38847690/convert-float
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 sessions = myclient["sessions"]
+sort_param = [{'appeared': 1}]
 data = myclient["data"]
 global max_lines_on_screen
 max_lines_on_screen = 0
@@ -72,8 +73,7 @@ def printcol(c):
 def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
-	sort = {'appeared': -1}
-	for x in mycol.find().sort(sort):
+	for x in mycol.find().sort(sort_param):
 		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64" ): #and x["version"] in acceptable_versions):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
@@ -83,8 +83,7 @@ def smoothed_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*(len(data["content"])+1)
 	prev = 0
-	sort = {'appeared': -1}
-	for row in mycol.find().sort(sort):
+	for row in mycol.find().sort(sort_param):
 		if(prev == 0):
 			prev = data["startTime"]
 		else:
@@ -113,8 +112,7 @@ def timeOnScreen_helper(data):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*len(data["content"]) 
 	prev = data["startTime"]
-	sort = {'appeared': -1}
-	for row in mycol.find().sort(sort):
+	for row in mycol.find().sort(sort_param):
 		for i in range(int(row["first_cell"]), int(row["last_cell"])):
 			times[i] += (row["appeared"] - prev)/time_offset
 		prev = row["appeared"]
@@ -134,8 +132,7 @@ def timeVersusProgress_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = []
 	lines = []
-	sort = {'appeared': -1}
-	for row in mycol.find().sort(sort):
+	for row in mycol.find().sort(sort_param):
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
 	return (times, lines)
@@ -162,8 +159,7 @@ def timeVersusSpeed_helper(data):
 	t = 0
 	rates = []
 	rate = 0
-	sort = {'appeared': -1}
-	for row in mycol.find().sort(sort):
+	for row in mycol.find().sort(sort_param):
 		if(t > (row["appeared"] - data["startTime"])/time_offset):
 			rate += 1
 		else:
@@ -279,7 +275,6 @@ def old_arg_func(ses):
 	elif(sys.argv[2] == 'graph'):
 		num = int(sys.argv[3])
 
-		
 		timeVersusLastCell(x)
 		timeVersusFirstCell(x)
 		timeOnScreen(x)
