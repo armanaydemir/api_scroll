@@ -72,7 +72,7 @@ def printcol(c):
 def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
-	sort = {'appeared': 1}
+	sort = {'appeared': -1}
 	for x in mycol.find().sort(sort):
 		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64" ): #and x["version"] in acceptable_versions):
 			x["article_data"] = getArticle(x["article_id"])
@@ -83,7 +83,7 @@ def smoothed_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*(len(data["content"])+1)
 	prev = 0
-	sort = {'appeared': 1}
+	sort = {'appeared': -1}
 	for row in mycol.find().sort(sort):
 		if(prev == 0):
 			prev = data["startTime"]
@@ -113,7 +113,7 @@ def timeOnScreen_helper(data):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*len(data["content"]) 
 	prev = data["startTime"]
-	sort = {'appeared': 1}
+	sort = {'appeared': -1}
 	for row in mycol.find().sort(sort):
 		for i in range(int(row["first_cell"]), int(row["last_cell"])):
 			times[i] += (row["appeared"] - prev)/time_offset
@@ -134,7 +134,7 @@ def timeVersusProgress_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = []
 	lines = []
-	sort = {'appeared': 1}
+	sort = {'appeared': -1}
 	for row in mycol.find().sort(sort):
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
@@ -162,7 +162,7 @@ def timeVersusSpeed_helper(data):
 	t = 0
 	rates = []
 	rate = 0
-	sort = {'appeared': 1}
+	sort = {'appeared': -1}
 	for row in mycol.find().sort(sort):
 		if(t > (row["appeared"] - data["startTime"])/time_offset):
 			rate += 1
@@ -296,14 +296,14 @@ def old_arg_func(ses):
 					smoothed_timeAsLastCell(x)
 	elif(sys.argv[2] == 'all'):
 		for x in ses:
-			try:
-				timeVersusLastCell(x)
-			except Exception:
-				pass
-			try:
-				timeVersusFirstCell(x)
-			except Exception:
-				pass
+			# try:
+			# 	timeVersusLastCell(x)
+			# except Exception:
+			# 	pass
+			# try:
+			# 	timeVersusFirstCell(x)
+			# except Exception:
+			# 	pass
 			try:
 				timeOnScreen(x)
 			except Exception:
