@@ -73,7 +73,7 @@ def printcol(c):
 def findSessions(acceptable, incl_incomplete):
 	mycol = data["sessions"]
 	completed = []
-	for x in mycol.find().sort(sort_param):
+	for x in mycol.find().sort({ 'appeared': -1 }):
 		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64" ): #and x["version"] in acceptable_versions):
 			x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
@@ -83,7 +83,7 @@ def smoothed_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*(len(data["content"])+1)
 	prev = 0
-	for row in mycol.find().sort(sort_param):
+	for row in mycol.find().sort({ 'appeared': -1 }):
 		if(prev == 0):
 			prev = data["startTime"]
 		else:
@@ -112,7 +112,7 @@ def timeOnScreen_helper(data):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = [0]*len(data["content"]) 
 	prev = data["startTime"]
-	for row in mycol.find().sort(sort_param):
+	for row in mycol.find().sort( { 'appeared': -1 } ):
 		for i in range(int(row["first_cell"]), int(row["last_cell"])):
 			times[i] += (row["appeared"] - prev)/time_offset
 		prev = row["appeared"]
@@ -132,7 +132,7 @@ def timeVersusProgress_helper(data, cell_string):
 	mycol = sessions[data['UDID'] + float_to_str(data['startTime']).split('.')[0]]
 	times = []
 	lines = []
-	for row in mycol.find().sort(sort_param):
+	for row in mycol.find().sort({ 'appeared': -1 }):
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
 	return (times, lines)
@@ -159,7 +159,7 @@ def timeVersusSpeed_helper(data):
 	t = 0
 	rates = []
 	rate = 0
-	for row in mycol.find().sort(sort_param):
+	for row in mycol.find().sort({ 'appeared': -1 }):
 		if(t > (row["appeared"] - data["startTime"])/time_offset):
 			rate += 1
 		else:
