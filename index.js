@@ -14,9 +14,9 @@ var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 var sessionsCollection = 'sessions01'
 var articlesCollection = 'articles01'
-var database = 'data01'
+var database = 'data0.3.4'
 
-const version = "v0.3.3"
+const version = "v0.3.4"
 
 console.log('started at least')
 
@@ -132,8 +132,7 @@ function add_article(data, callback) {
 			if(!result){
 				//console.log('new article scrape')
 				var options = {
-					url: 'https://mercury.postlight.com/parser?url=' + data.address,
-					headers: headers
+					url: data.address
 				};
 				console.log(options)
 				request(options, function(error, response, body) { if(error) throw(error);
