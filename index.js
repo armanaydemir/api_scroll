@@ -5,7 +5,7 @@ var app = express();
 var request = require('request');
 var fs = require('fs');
 var moment = require('moment')
-
+import Mercury from '@postlight/mercury-parser';
 var politico_api = "eacb0f942382464a9193148875c93431"
 var nyt_key = "Mgbw0wTgMWZQezAzmYBPmSFG2jFgRLi2" // new york times api key for top stories
 
@@ -135,24 +135,25 @@ function add_article(data, callback) {
 					url: data.address
 				};
 				console.log(data)
-				request(options, function(error, response, body) { if(error) throw(error);
-					if (!error && response.statusCode == 200) {
+				Mercury.parse(options.url).then(result => console.log(result));
+				// request(options, function(error, response, body) { if(error) throw(error);
+				// 	if (!error && response.statusCode == 200) {
 						
-						// need to test this function
-						var text = parse_body(body);
-						console.log(text)
-						// dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
-						// 	db.close()
-						// 	callback(resu)
-						// })
+				// 		// need to test this function
+				// 		var text = parse_body(body);
+				// 		console.log(text)
+				// 		// dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
+				// 		// 	db.close()
+				// 		// 	callback(resu)
+				// 		// })
 						
-					}else{
-						console.log(body)
-						console.log(response)
-						console.log('error: ' + error)
-						callback(null)
-					}
-				});
+				// 	}else{
+				// 		console.log(body)
+				// 		console.log(response)
+				// 		console.log('error: ' + error)
+				// 		callback(null)
+				// 	}
+				// });
 			}else{
 				db.close()
 				//console.log(result)
@@ -166,7 +167,7 @@ function add_article(data, callback) {
 
 
 
-function init_article(data, res) {
+function init_article(data, res) { //need to fix this function to be same as add_Article
 	var address = data.article_link
 	if(!address.includes("https://www.nytimes.com")){
 		console.log('isnt nytimes, this should be fun lol')
