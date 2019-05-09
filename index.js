@@ -50,12 +50,12 @@ var headers = {
 };
 
 function parse_body(body) {
-	//const title = JSON.parse(body).title
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 0;
 	var sections = []; 
-	sections.push(title)
+	//const title = JSON.parse(body).title
+	//sections.push(title)
 	while(i < bodies.length){
 		var o = 0;
 		var subsections = [];
