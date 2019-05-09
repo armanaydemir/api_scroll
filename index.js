@@ -5,7 +5,7 @@ var app = express();
 var request = require('request');
 var fs = require('fs');
 var moment = require('moment')
-import Mercury from '@postlight/mercury-parser';
+var Mercury = require('@postlight/mercury-parser')
 var politico_api = "eacb0f942382464a9193148875c93431"
 var nyt_key = "Mgbw0wTgMWZQezAzmYBPmSFG2jFgRLi2" // new york times api key for top stories
 
