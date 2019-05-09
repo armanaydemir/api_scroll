@@ -135,7 +135,7 @@ function add_article(data, callback) {
 				var options = {
 					url: data.address
 				};
-				console.log(data)
+				// console.log(data)
 				Mercury.parse(options.url).then(result => {
 					var text = parse_body(result)
 					dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
@@ -210,7 +210,7 @@ function init_article(data, res) { //need to fix this function to be same as add
 
 app.get('/articles', function(req, res){
 	scrape_top(function(tops){
-		//console.log(tops)
+		console.log(tops)
 		res.send(tops)
 	})
 });
