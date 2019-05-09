@@ -139,7 +139,7 @@ function add_article(data, callback) {
 				Mercury.parse(options.url).then(result => {
 					var text = parse_body(result)
 					console.log(text)
-				}
+				})
 				// request(options, function(error, response, body) { if(error) throw(error);
 				// 	if (!error && response.statusCode == 200) {
 						
