@@ -56,7 +56,7 @@ function parse_body(result) {
 	var i = 0;
 	var sections = []; 
 	const title = result.title
-	//sections.push(title)
+	sections.push(title)
 	while(i < bodies.length){
 		var o = 0;
 		var subsections = [];
@@ -138,35 +138,18 @@ function add_article(data, callback) {
 				console.log(data)
 				Mercury.parse(options.url).then(result => {
 					var text = parse_body(result)
-					console.log(text)
-				})
-				// request(options, function(error, response, body) { if(error) throw(error);
-				// 	if (!error && response.statusCode == 200) {
-						
-				// 		// need to test this function
-				// 		var text = parse_body(body);
-				// 		console.log(text)
-				// 		// dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
-				// 		// 	db.close()
-				// 		// 	callback(resu)
-				// 		// })
-						
-				// 	}else{
-				// 		console.log(body)
-				// 		console.log(response)
-				// 		console.log('error: ' + error)
-				// 		callback(null)
-				// 	}
-				// });
+					dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
+						db.close()
+						callback(resu)
+					})
+				}
 			}else{
 				db.close()
 				//console.log(result)
 				callback(result)
 			}
 		})
-	
-	})
-	
+	})	
 }
 
 
@@ -300,6 +283,11 @@ app.post("/close_article", function(req,res){
 var server = app.listen(22364, function () {
     console.log("Listening on port %s...", server.address().port);
 });
+
+
+
+
+
 
 
 
