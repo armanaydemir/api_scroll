@@ -142,7 +142,7 @@ function add_article(data, callback) {
 						db.close()
 						callback(resu)
 					})
-				}
+				})
 			}else{
 				db.close()
 				//console.log(result)
