@@ -50,7 +50,7 @@ var headers = {
 };
 
 function parse_body(body) {
-	const title = JSON.parse(body).title
+	//const title = JSON.parse(body).title
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 0;
@@ -134,17 +134,17 @@ function add_article(data, callback) {
 				var options = {
 					url: data.address
 				};
-				console.log(options)
+				console.log(data)
 				request(options, function(error, response, body) { if(error) throw(error);
 					if (!error && response.statusCode == 200) {
 						
 						// need to test this function
 						var text = parse_body(body);
-
-						dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
-							db.close()
-							callback(resu)
-						})
+						console.log(text)
+						// dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
+						// 	db.close()
+						// 	callback(resu)
+						// })
 						
 					}else{
 						console.log(body)
