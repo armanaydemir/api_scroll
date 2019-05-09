@@ -135,6 +135,7 @@ function add_article(data, callback) {
 					url: 'https://mercury.postlight.com/parser?url=' + data.address,
 					headers: headers
 				};
+				console.log(options)
 				request(options, function(error, response, body) { if(error) throw(error);
 					if (!error && response.statusCode == 200) {
 						
@@ -147,6 +148,8 @@ function add_article(data, callback) {
 						})
 						
 					}else{
+						console.log(body)
+						console.log(response)
 						console.log('error: ' + error)
 						callback(null)
 					}
