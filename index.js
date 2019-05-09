@@ -14,7 +14,7 @@ var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 var sessionsCollection = 'sessions01'
 var articlesCollection = 'articles01'
-var database = 'data0.3.4'
+var database = 'data034'
 
 const version = "v0.3.4"
 
