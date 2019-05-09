@@ -7,7 +7,7 @@ var fs = require('fs');
 var moment = require('moment')
 
 var politico_api = "eacb0f942382464a9193148875c93431"
-var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
+var nyt_key = "Mgbw0wTgMWZQezAzmYBPmSFG2jFgRLi2" // new york times api key for top stories
 
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
@@ -89,6 +89,7 @@ function scrape_top(callback) {
 	    'api-key': nyt_key
 	  },
 	}, function(err, response, body) {
+		console.log(err)
 		if(err) throw err;
 	 	body = JSON.parse(body);
 	 	r = body.results
