@@ -49,12 +49,13 @@ var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
 
-function parse_body(body) {
+function parse_body(result) {
+	var body = result.content
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 0;
 	var sections = []; 
-	//const title = JSON.parse(body).title
+	const title = result.title
 	//sections.push(title)
 	while(i < bodies.length){
 		var o = 0;
@@ -135,7 +136,10 @@ function add_article(data, callback) {
 					url: data.address
 				};
 				console.log(data)
-				Mercury.parse(options.url).then(result => console.log(result));
+				Mercury.parse(options.url).then(result => {
+					var text = parse_body(result)
+					console.log(text)
+				}
 				// request(options, function(error, response, body) { if(error) throw(error);
 				// 	if (!error && response.statusCode == 200) {
 						
