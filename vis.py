@@ -187,7 +187,8 @@ def timeVersusSpeed_helper(data): #this version does not device by time, but mul
 			rates.append(rate)
 			t += 1
 			rate = 0
-	plt.plot(rates)
+	ind = np.arange(len(times))
+	plt.scatter(ind,rates)
 	return rates
 
 def timeVersusSpeed(data):
@@ -200,7 +201,6 @@ def timeVersusSpeed(data):
 	# for i in np.diff(times):
 	# 	rates.append(1/i)
 	# plt.plot(rates)
-
 	plt.savefig(path + '/' +str(data["startTime"]/time_offset) + "timeVersusSpeed.pdf", bbox_inches="tight")
 	plt.clf()
 
