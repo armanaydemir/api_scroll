@@ -187,7 +187,7 @@ def timeVersusSpeed_helper(data): #this version does not device by time, but mul
 			rates.append(rate)
 			t += 1
 			rate = 0
-	ind = np.arange(len(times))
+	ind = np.arange(len(rates))
 	plt.scatter(ind,rates)
 	return rates
 

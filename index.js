@@ -16,6 +16,12 @@ var sessionsCollection = 'sessions01'
 var articlesCollection = 'articles01'
 var database = 'data034'
 
+var old_db = 'data'
+var old_sessions = 'sessions'
+var old_articles = 'articles'
+var combined_sessions_collection = 'complete_sessions01'
+var combined_articles_collection = 'complete_articles01'
+
 const version = "v0.3.4"
 
 console.log('started at least')
@@ -214,6 +220,97 @@ app.get('/articles', function(req, res){
 		res.send(tops)
 	})
 });
+
+app.get('/identities', function(req,res){
+	res.send([{"udid":"0B70C724_6597_4659_9322_E113E9403601","device":"iPhone9,1"}
+		,{"udid":"35F7C004_7F5D_4C77_8E84_313FD79C77E0","device":"iPad6,11"}
+		,{"udid":"828296DD_6B30_43B8_8986_8E12A13CD9F2","device":"iPhone9,1"}
+		,{"udid":"8CE7904A_11BC_4E65_A236_00BAC8F51F6B","device":"iPhone9,3"}
+		,{"udid":"93D9D52B_04D9_4532_A24B_D90B845A062E","device":"iPhone10,3"}
+		,{"udid":"A48F157C_4768_44C9_86BF_6978C67BB756","device":"iPad7,3"}
+		,{"udid":"ACE7A1BC_AB49_42A6_B276_2A0852E0B9EE","device":"iPhone8,1"}]
+	)
+})
+
+app.post('/sessions', function(req,res){
+	var data = req.body
+	data.UDID = data.UDID.replace(/-/g, '_');
+	//data.UDID = "828296DD_6B30_43B8_8986_8E12A13CD9F2"
+	console.log(data)
+
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(database)
+		dbd.collection(combined_sessions_collection).find({'UDID': data.UDID, 'completed':true}).toArray(function(err, result) {
+		    if (err) throw err;
+		    console.log(result.length);
+		    res.send(result)
+		    db.close();
+		})
+	})
+})
+
+app.post('/session_replay', function(req,res){
+	console.log('session_replay')
+	//in this context article link actual means session id
+	var data = req.body
+	data.UDID = data.UDID.replace(/-/g, '_');
+	console.log(data)
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(database)
+		var dbsession = db.db('sessions')
+		dbd.collection(combined_sessions_collection).findOne({'_id': ObjectId(data.article_link)}, function(err, result) {
+		    if (err) throw err;
+		    dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
+		    	if (er) throw er;
+		    	result.article_data = article
+		    	//article.text.unshift(data.article_link)
+		    	result.paragraphs = article.text
+		    	var s = result.startTime.toString().split('.')[0]
+		    	dbsession.collection(result.UDID + s).find({}).toArray(function(errr, col){
+		    		if (errr) throw errr;
+		    		result.session_data = col
+		    		console.log(col)
+		    		res.send(result)
+		    		db.close();
+		    	})
+		    })
+		})
+	})
+})
+
+app.get('/new_sessions', function(req,res){
+	var data = req.body
+	console.log(data)
+	data.UDID = data.UDID.replace(/-/g, '_');
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(database)
+		dbd.collection(sessionsCollection).find({'UDID': data.UDID, 'completed':true}).toArray(function(err, result) {
+		    if (err) throw err;
+		    console.log(result.length);
+		    res.send(result)
+		    db.close();
+		})
+	})
+})
+
+app.get('/old_sessions', function(req,res){
+	var data = req.body
+	console.log(data)
+	data.UDID = data.UDID.replace(/-/g, '_');
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(old_db)
+		dbd.collection(old_sessions).find({'UDID': data.UDID, 'completed':true}).toArray(function(err, result) {
+			if (err) throw err;
+		    console.log(result.length);
+			res.send(result)
+			db.close();
+		})
+	})
+})
 
 app.post("/open_article", function(req, res) {
 	//console.log('open article')

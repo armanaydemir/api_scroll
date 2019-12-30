@@ -38,7 +38,7 @@ const version = "v0.3.1"
 //0.2.6 -> line instead of word indexes
 //0.2.7 -> adding word and character splits
 //0.3.1 -> final changes for production (orientation) ... 0.3.2 will be official release
-//0.3.3 -> making changes to article endpoint to hopefully get it consistent
+//0.3.3 -> making changes to article endpoint to hopefully get it consistent //ERROR occurred, we 
 
 
 //xcode
@@ -131,6 +131,55 @@ var export_data = function(){
 	})
 }
 
+var combine_sessions = function() {
+	var sessionsCollection = 'sessions01'
+	var combined_sessions_collection = 'complete_sessions01'
+	var combined_articles_collection = 'complete_articles01'
+	var articlesCollection = 'articles01'
+	var database = 'data034'
+	var old_db = 'data'
+	var old_sessions = 'sessions'
+	var old_articles = 'articles'
+
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(old_db)
+		var current_dbd = db.db(database)
+		dbd.collection(old_sessions).find({}).toArray(function(err, result) {
+			if (err) throw err;
+			i = 0
+			while(i < result.length){
+				current_dbd.collection(combined_sessions_collection).insertOne(result[i])
+				i+=1
+			}
+		})
+		current_dbd.collection(sessionsCollection).find({}).toArray(function(err, result) {
+			if (err) throw err;
+			i = 0
+			while(i < result.length){
+				current_dbd.collection(combined_sessions_collection).insertOne(result[i])
+				i+=1
+			}
+		})
+		dbd.collection(old_articles).find({}).toArray(function(err, result) {
+			if (err) throw err;
+			i = 0
+			while(i < result.length){
+				current_dbd.collection(combined_articles_collection).insertOne(result[i])
+				i+=1
+			}
+		})
+		current_dbd.collection(articlesCollection).find({}).toArray(function(err, result) {
+			if (err) throw err;
+			i = 0
+			while(i < result.length){
+				current_dbd.collection(combined_articles_collection).insertOne(result[i])
+				i+=1
+			}
+		})
+	})
+}
+
 
 // purges all session data (deletes everything but the articles)
 var session_purge = function() {
@@ -194,7 +243,7 @@ var test_top = function() {
 
 
 // for calling functions from terminal (can call each function like "node db.js purge" or "node db.js wipe")
-module.exports = {'wipe': complete_wipe, 'purge': session_purge, 'export': export_data, 'add_article': add_article, 'test': test_top}
+module.exports = {'wipe': complete_wipe, 'purge': session_purge, 'export': export_data, 'add_article': add_article, 'test': test_top, 'combine':combine_sessions}
 require('make-runnable');
 
 
