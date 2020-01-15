@@ -134,7 +134,7 @@ function add_article(data, callback) {
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
-		dbd.collection(articlesCollection).findOne({'article_link': data.address}, function(err, result){
+		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
 				//console.log('new article scrape')
@@ -144,7 +144,7 @@ function add_article(data, callback) {
 				// console.log(data)
 				Mercury.parse(options.url).then(result => {
 					var text = parse_body(result)
-					dbd.collection(articlesCollection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
+					dbd.collection(combined_articles_collection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
 						db.close()
 						callback(resu)
 					})
@@ -170,11 +170,11 @@ function init_article(data, res) { //need to fix this function to be same as add
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
-		dbd.collection(articlesCollection).findOne({'article_link': address}, function(err, result){
+		dbd.collection(combined_articles_collection).findOne({'article_link': address}, function(err, result){
 			if(err) throw err;
 			if(!err && result){
 				var text = result.text
-				dbd.collection(sessionsCollection).insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
+				dbd.collection(combined_sessions_collection).insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
 									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
 					if (e) throw e; 
 					//console.log(ress.insertedId)
@@ -191,11 +191,11 @@ function init_article(data, res) { //need to fix this function to be same as add
 				request(options, function(error, response, body) {
 					if (!error && response.statusCode == 200) {
 						var text = parse_body(body);
-						dbd.collection(articlesCollection).insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
+						dbd.collection(combined_articles_collection).insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
 							if (e) throw e; 
 							console.log('woah')
-							console.log(sessionsCollection)
-							dbd.collection(sessionsCollection).insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
+							console.log(combined_sessions_collection)
+							dbd.collection(combined_sessions_collection).insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
 								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
 								if (e) throw e;
 								text.unshift(ress.insertedId); 
@@ -236,7 +236,7 @@ app.post('/sessions', function(req,res){
 	var data = req.body
 	data.UDID = data.UDID.replace(/-/g, '_');
 	//data.UDID = "828296DD_6B30_43B8_8986_8E12A13CD9F2"
-	console.log(data)
+	//console.log(data)
 
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
@@ -255,7 +255,7 @@ app.post('/session_replay', function(req,res){
 	//in this context article link actual means session id
 	var data = req.body
 	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(data)
+	//console.log(data)
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
@@ -282,12 +282,13 @@ app.post('/session_replay', function(req,res){
 
 app.get('/new_sessions', function(req,res){
 	var data = req.body
-	console.log(data)
+	//console.log(data)
 	data.UDID = data.UDID.replace(/-/g, '_');
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
-		dbd.collection(sessionsCollection).find({'UDID': data.UDID, 'completed':true}).toArray(function(err, result) {
+		//used to be sessionsCollection (before combination of old and new)
+		dbd.collection(combined_sessions_collection).find({'UDID': data.UDID, 'completed':true}).toArray(function(err, result) {
 		    if (err) throw err;
 		    console.log(result.length);
 		    res.send(result)
@@ -298,7 +299,7 @@ app.get('/new_sessions', function(req,res){
 
 app.get('/old_sessions', function(req,res){
 	var data = req.body
-	console.log(data)
+	//console.log(data)
 	data.UDID = data.UDID.replace(/-/g, '_');
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
@@ -330,6 +331,7 @@ app.post("/submit_data", function(req, res) {
 	//article link and UDID stuffs
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
+	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db("sessions") // maybe change the name of this db
 		if (err) throw err;
@@ -353,7 +355,7 @@ app.post("/close_article", function(req,res){
 		var q = {'_id': s}
 		//console.log(data.content)
 		var nv = {$set:{"portait": data.portrait, "content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
-		dbd.collection(sessionsCollection).updateOne(q, nv, function(err, result){
+		dbd.collection(combined_sessions_collection).updateOne(q, nv, function(err, result){
 			if(err) throw err
 			// console.log('one updated')
 			// console.log(data.session_id + ' : ' + data.UDID);

@@ -149,7 +149,15 @@ var combine_sessions = function() {
 			if (err) throw err;
 			i = 0
 			while(i < result.length){
-				current_dbd.collection(combined_sessions_collection).insertOne(result[i])
+				// current_dbd.collection(combined_sessions_collection).findOne(result[i]), function(err, match){
+				// 	if(err) throw(err);
+				// 	console.log(match)
+				// 	if(!match){
+				// 		console.log(result[i])
+				// 		console.log("woah")
+				// 	}
+				// }
+				//current_dbd.collection(combined_sessions_collection).insertOne(result[i])
 				i+=1
 			}
 		})
@@ -157,7 +165,15 @@ var combine_sessions = function() {
 			if (err) throw err;
 			i = 0
 			while(i < result.length){
-				current_dbd.collection(combined_sessions_collection).insertOne(result[i])
+				// current_dbd.collection(combined_sessions_collection).findOne(result[i]), function(err, match){
+				// 	if(err) throw(err);
+				// 	console.log(match)
+				// 	if(!match){
+				// 		console.log(result[i])
+				// 		console.log("woah")
+				// 	}
+				// }
+				//current_dbd.collection(combined_sessions_collection).insertOne(result[i])
 				i+=1
 			}
 		})
@@ -165,7 +181,16 @@ var combine_sessions = function() {
 			if (err) throw err;
 			i = 0
 			while(i < result.length){
-				current_dbd.collection(combined_articles_collection).insertOne(result[i])
+				// current_dbd.collection(combined_articles_collection).findOne(result[i]), function(err, match){
+				// 	if(err) throw(err);
+				// 	console.log(match)
+				// 	if(!match){
+				// 		console.log(result[i])
+				// 		console.log("woah")
+				// 	}
+				// }
+				//current_dbd.collection(combined_articles_collection).insertOne(result[i])
+				//current_dbd.collection(combined_articles_collection).insertOne(result[i])
 				i+=1
 			}
 		})
@@ -173,7 +198,17 @@ var combine_sessions = function() {
 			if (err) throw err;
 			i = 0
 			while(i < result.length){
-				current_dbd.collection(combined_articles_collection).insertOne(result[i])
+
+				current_dbd.collection(combined_articles_collection).findOne(result[i], function(err, match){
+					if(err) throw(err);
+					
+					if(!match){
+						console.log(result[i])
+						console.log("woah")
+					}
+					console.log(match)
+				})
+				//current_dbd.collection(combined_articles_collection).insertOne(result[i])
 				i+=1
 			}
 		})
