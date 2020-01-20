@@ -246,7 +246,7 @@ app.post('/sessions', function(req,res){
 		    //if (err) throw err;
 		    console.log('ajsdlfkj')
 		    console.log(result);
-		    return result
+		    return result.completed
 		    // i = 0
 		    // while(i < result.length){
 		    // 	dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
