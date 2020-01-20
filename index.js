@@ -247,6 +247,7 @@ app.post('/sessions', function(req,res){
 		    dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
 		    	if (er) throw er;
 		    	result.article_data = article
+		    	console.log(article)
 		    	res.send(result)
 		    	db.close();
 		    })
