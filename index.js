@@ -243,15 +243,13 @@ app.post('/sessions', function(req,res){
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		console.log('woah')
 		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result){
-			dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
-				if(er) throw er;
-				result.article_data = article
-				console.log(result.article_data)
-				return result
-			})
+			doc = dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
+			doc.result = result
+			return doc
 		}).toArray(function(err, results) {
 			if (err) throw err;
-			//console.log(results)
+			console.log('results')
+			console.log(results)
 			res.send(results)
 			db.close()
 		})
