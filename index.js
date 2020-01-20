@@ -236,7 +236,7 @@ app.post('/sessions', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
 	//data.UDID = "828296DD_6B30_43B8_8986_8E12A13CD9F2"
-	//console.log(data)
+	console.log(data)
 
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
