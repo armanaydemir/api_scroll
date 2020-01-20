@@ -236,18 +236,26 @@ app.post('/sessions', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
 	//data.UDID = "828296DD_6B30_43B8_8986_8E12A13CD9F2"
-	console.log(data)
+	//console.log(data)
 
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
-		dbd.collection(combined_sessions_collection).find({'completed':true}).map(function(result) {console.log(result)
-	    	dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
-		    	if (er) throw er;
-		    	console.log(article)
-		  		result.article_data = article
-		  		return result
-		    })
+		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: - 1}).map(function(err, result) {
+		    if (err) throw err;
+		    console.log(result);
+		    // i = 0
+		    // while(i < result.length){
+		    // 	dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
+			   //  	if (er) throw er;
+			   //  	result[i.article_data = article
+			   //  	console.log(article)
+			   //  	res.send(result)
+			   //  	db.close();
+			   //  })
+		    // 	i += 1
+		    // }
+
 		})
 	})
 })
