@@ -242,7 +242,7 @@ app.post('/sessions', function(req,res){
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		console.log('woah')
-		dbd.collection(combined_sessions_collection).sort({datefield: - 1}).find({'completed':true}).map(function(err, result) {
+		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: - 1}).map(function(err, result) {
 		    if (err) throw err;
 		    console.log('ajsdlfkj')
 		    console.log(result);
