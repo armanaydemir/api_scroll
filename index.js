@@ -242,25 +242,15 @@ app.post('/sessions', function(req,res){
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		console.log('woah')
-		console.log(dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1})
-			// .map(function(result) {
-		 //    //if (err) throw err;
-		 //    console.log('ajsdlfkj')
-		 //    console.log(result);
-		 //    return result.completed
-		    // i = 0
-		    // while(i < result.length){
-		    // 	dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
-			   //  	if (er) throw er;
-			   //  	result[i.article_data = article
-			   //  	console.log(article)
-			   //  	res.send(result)
-			   //  	db.close();
-			   //  })
-		    // 	i += 1
-		    // }
-		
-		)
+		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result){
+			console.log(result)
+			return result
+		}).toArray(function(err, results) {
+			if (err) throw err;
+			console.log(results)
+			res.send(results)
+			db.close()
+		})
 	})
 })
 
