@@ -251,7 +251,7 @@ app.post('/sessions', function(req,res){
 		}).toArray(function(err, results) {
 			if (err) throw err;
 			console.log('results')
-			console.log(results)
+			//console.log(results)
 			res.send(results)
 			db.close()
 		})
