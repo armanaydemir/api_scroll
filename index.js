@@ -241,7 +241,7 @@ app.post('/sessions', function(req,res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
-		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result) {console.log(result)
+		dbd.collection(combined_sessions_collection).find({'completed':true}).map(function(result) {console.log(result)
 	    	dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
 		    	if (er) throw er;
 		    	console.log(article)
