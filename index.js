@@ -243,8 +243,7 @@ app.post('/sessions', function(req,res){
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		console.log('woah')
 		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result){
-			doc = dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
-			return doc
+			dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)}).then(function(res) {return res})
 		}).toArray(function(err, results) {
 			if (err) throw err;
 			console.log('results')
