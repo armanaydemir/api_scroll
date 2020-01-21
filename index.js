@@ -242,7 +242,7 @@ app.post('/sessions', async function(req,res){
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		console.log('woah')
-		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map( async function(result){
+		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result){
 			doc = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
 			return doc
 		}).toArray(function(err, results) {
