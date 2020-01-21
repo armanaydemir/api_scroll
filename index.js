@@ -232,7 +232,7 @@ app.get('/identities', function(req,res){
 	)
 })
 
-app.post('/sessions', async function(req,res){
+app.post('/sessions', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
 	//data.UDID = "828296DD_6B30_43B8_8986_8E12A13CD9F2"
@@ -243,7 +243,7 @@ app.post('/sessions', async function(req,res){
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		console.log('woah')
 		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result){
-			doc = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
+			doc = dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
 			return doc
 		}).toArray(function(err, results) {
 			if (err) throw err;
