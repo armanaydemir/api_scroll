@@ -245,7 +245,7 @@ app.post('/sessions', function(req,res){
 		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result){
 			doc = dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
 			if(doc){
-				console.log('doc')
+				console.log(doc)
 				doc.result = result
 				return doc
 			}
