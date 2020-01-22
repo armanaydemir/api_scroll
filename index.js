@@ -232,7 +232,18 @@ app.get('/identities', function(req,res){
 	)
 })
 
-app.post('/sessions', function(req,res){
+async function sessions_article_helper(dbd,result){
+	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
+	result.article_title = article_data.title
+	return result
+}
+
+async function sessions_helper(dbd, results){
+	return Promise.all(results.map(result => sessions_article_helper(dbd,result)))
+}
+
+//change this back to post
+app.get('/sessions', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
 	//data.UDID = "828296DD_6B30_43B8_8986_8E12A13CD9F2"
@@ -241,15 +252,14 @@ app.post('/sessions', function(req,res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
-		console.log('woah')
-		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({datefield: 1}).map(function(result){
-			dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)}).then(function(res) {return res})
-		}).toArray(function(err, results) {
+		dbd.collection(combined_sessions_collection).find({'completed':true}).toArray(async function(err, results) {
 			if (err) throw err;
-			console.log('results')
-			console.log(results)
-			res.send(results)
-			db.close()
+			sessions_helper(dbd,results).then(data => {
+				console.log(data[0].article_title)
+				res.send(data)
+				db.close()
+			})
+			
 		})
 	})
 })
