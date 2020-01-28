@@ -14,7 +14,7 @@ var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 var sessionsCollection = 'sessions01'
 var articlesCollection = 'articles01'
-var database = 'data034'
+var database = 'data035'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -22,7 +22,7 @@ var old_articles = 'articles'
 var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
-const version = "v0.3.4"
+const version = "v0.3.5"
 
 console.log('started at least')
 
@@ -103,17 +103,16 @@ function scrape_top(callback) {
 	 	i = 0
 	 	syncer = 0
 	 	var tops = []
-	 	
+	 	console.log(r)
 	 	while(r && i < r.length){
 //	 		console.log(r[i].title)
-	 		add_article(r[i] , function(a){
+	 		add_article(r[i] , function(b, a){
 	 			// if(syncer == 1){
 	 			// 	console.log(tops)
 	 			// }
 	 			syncer ++
 	 			if(a){tops.push(a)}
 	 			if(!(syncer < r.length)){
-	 				
 	 				callback(tops);
 	 			}
 	 		})
@@ -216,7 +215,8 @@ function init_article(data, res) { //need to fix this function to be same as add
 
 app.get('/articles', function(req, res){
 	scrape_top(function(tops){
-		console.log(tops)
+		console.log("tops")
+		console.log(tops[0].title)
 		res.send(tops)
 	})
 });
