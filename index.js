@@ -14,7 +14,7 @@ var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 var sessionsCollection = 'sessions01'
 var articlesCollection = 'articles01'
-var database = 'data035'
+var database = 'testdata035'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -100,25 +100,34 @@ function scrape_top(callback) {
 		if(err) throw err;
 	 	body = JSON.parse(body);
 	 	r = body.results
-	 	i = 0
-	 	syncer = 0
-	 	var tops = []
-	 	console.log(r)
-	 	while(r && i < r.length){
-//	 		console.log(r[i].title)
-	 		add_article(r[i] , function(b, a){
-	 			// if(syncer == 1){
-	 			// 	console.log(tops)
-	 			// }
-	 			syncer ++
-	 			if(a){tops.push(a)}
-	 			if(!(syncer < r.length)){
-	 				callback(tops);
-	 			}
+	 	console.log(r[0].title)
+	 	r.map(function(data){
+	 		add_article(data, function(result){
+	 			return result
 	 		})
-	 		i++
-	 	}
-	})
+	 	})
+	 	console.log(r)
+// 	 	i = 0
+// 	 	syncer = 0
+// 	 	var tops = []
+// 	 	console.log(r)
+// 	 	while(r && i < r.length){
+// //	 		console.log(r[i].title)
+// 	 		add_article(r[i] , function(result,input){
+// 	 			// if(syncer == 1){
+// 	 			// 	console.log(tops)
+// 	 			// }
+// 	 			a = result
+// 	 			syncer ++
+// 	 			if(a){tops.push(a)}
+// 	 			if(!(syncer < r.length)){
+// 	 				callback(tops);
+// 	 			}
+// 	 		})
+// 	 		i++
+// 	 	}
+		callback('woah')
+ 	})
 }
 
 function add_article(data, callback) {
@@ -142,15 +151,17 @@ function add_article(data, callback) {
 				};
 				// console.log(data)
 				Mercury.parse(options.url).then(result => {
-					var text = parse_body(result)
-					dbd.collection(combined_articles_collection).insertOne({'abstract': data.abstract, 'text': text, 'article_link':data.address, 'title': text[0], 'date_written': data.date_written, "category": data.category, "version":version}, function(e, resu){ if (e) throw e; 
+					data.text = parse_body(result)
+					data.title = data.text[0]
+					data.version = version
+					dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
 						db.close()
 						callback(resu)
 					})
 				})
 			}else{
-				db.close()
 				//console.log(result)
+				db.close()
 				callback(result)
 			}
 		})
@@ -160,63 +171,28 @@ function add_article(data, callback) {
 
 
 function init_article(data, res) { //need to fix this function to be same as add_Article
-	var address = data.article_link
-	if(!address.includes("https://www.nytimes.com")){
-		console.log('isnt nytimes, this should be fun lol')
-	}
-	address = address.split('.html')[0] + '.html'
-
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbd = db.db(database)
-		dbd.collection(combined_articles_collection).findOne({'article_link': address}, function(err, result){
-			if(err) throw err;
-			if(!err && result){
-				var text = result.text
-				dbd.collection(combined_sessions_collection).insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
-									'endTime': '', 'version': data.version, 'type': data.type, 'completed':false}, function(e, ress){ 
-					if (e) throw e; 
-					//console.log(ress.insertedId)
-					text.unshift(ress.insertedId); 
-					res.send(text);
-				});
-				db.close()
-			}else{
-				//console.log('new article scrape')
-				var options = {
-					url: 'https://mercury.postlight.com/parser?url=' + address,
-					headers: headers
-				};
-				request(options, function(error, response, body) {
-					if (!error && response.statusCode == 200) {
-						var text = parse_body(body);
-						dbd.collection(combined_articles_collection).insertOne({'text': text, 'article_link':address, 'title': text[0], 'date_written': data.date_written, 'category': data.category, 'version':version}, function(e, res){
-							if (e) throw e; 
-							console.log('woah')
-							console.log(combined_sessions_collection)
-							dbd.collection(combined_sessions_collection).insertOne({'UDID': data.UDID, 'article_id': res._id, 'startTime': data.startTime, 
-								'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
-								if (e) throw e;
-								text.unshift(ress.insertedId); 
-								res.send(text);
-						    });
-							db.close()
-						});
-					}else{
-						console.log('error: ' + error)
-						res.send(error);
-					}
-				});
-			}
-		})
-	});
+	console.log(data)
+	// var address = data.article_link
+	// if(!address.includes("https://www.nytimes.com")){
+	// 	console.log('isnt nytimes, this should be fun lol')
+	// }
+	// address = address.split('.html')[0] + '.html'
+	// add_article(data,function(result,input){
+	// 	dbd.collection(combined_sessions_collection).insertOne({'UDID': data.UDID, 'article_id': resu._id, 'startTime': data.startTime, 
+	// 	'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
+	// 		if (e) throw e;
+	// 		db.close()
+	// 		text.unshift(ress.insertedId); 
+	// 		res.send(text);
+	// 	});
+	// })
 }
 
 
 app.get('/articles', function(req, res){
 	scrape_top(function(tops){
 		console.log("tops")
-		console.log(tops[0].title)
+		//console.log(tops[0].title)
 		res.send(tops)
 	})
 });
