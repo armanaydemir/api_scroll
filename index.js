@@ -14,7 +14,7 @@ var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 var sessionsCollection = 'sessions01'
 var articlesCollection = 'articles01'
-var database = 'testdata035'
+var database = 'data034'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -106,7 +106,7 @@ function scrape_top(callback) {
 	 			return result
 	 		})
 	 	})
-	 	console.log(r)
+	 	console.log(r[0].article_link)
 // 	 	i = 0
 // 	 	syncer = 0
 // 	 	var tops = []
@@ -126,18 +126,18 @@ function scrape_top(callback) {
 // 	 		})
 // 	 		i++
 // 	 	}
-		callback('woah')
+		callback(r)
  	})
 }
 
 function add_article(data, callback) {
-	abstract = data.abstract
 	data.address = data.url
 	data.address = data.address.split('.html')[0]
 	var link = data.address.split('/')
+	data.address = data.address + '.html'
 	data.date_written = link.slice(3, 6).join('/')
 	data.category = link.slice(6, link.length-1).join('/')
-	data.address = data.address + '.html'
+	data.article_link = data.address
 	//console.log('add_Article')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
@@ -170,22 +170,28 @@ function add_article(data, callback) {
 
 
 
-function init_article(data, res) { //need to fix this function to be same as add_Article
+function init_session(data, res) {
 	console.log(data)
-	// var address = data.article_link
-	// if(!address.includes("https://www.nytimes.com")){
-	// 	console.log('isnt nytimes, this should be fun lol')
-	// }
-	// address = address.split('.html')[0] + '.html'
-	// add_article(data,function(result,input){
-	// 	dbd.collection(combined_sessions_collection).insertOne({'UDID': data.UDID, 'article_id': resu._id, 'startTime': data.startTime, 
-	// 	'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
-	// 		if (e) throw e;
-	// 		db.close()
-	// 		text.unshift(ress.insertedId); 
-	// 		res.send(text);
-	// 	});
-	// })
+	var address = data.article_link
+	if(!address.includes("https://www.nytimes.com")){
+		console.log('isnt nytimes, this should be fun lol')
+	}
+	address = address.split('.html')[0] + '.html'
+	data.url = address
+	add_article(data,function(result){
+		MongoClient.connect(url, function(e, db) {
+			if(e) throw e;
+			var dbd = db.db(database)
+			dbd.collection(combined_sessions_collection).insertOne({'UDID': data.UDID, 'article_id': result._id, 'startTime': data.startTime, 
+			'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
+				if (e) throw e;
+				db.close()
+				text = result.text
+				text.unshift(ress.insertedId); 
+				res.send(text);
+			});
+		})
+	})
 }
 
 
@@ -312,7 +318,7 @@ app.post("/open_article", function(req, res) {
 	// console.log(data.article_link + ' : ' + data.UDID);s
 	// console.log(': ' + data.startTime + ' :')
 	// console.log('----------')
-    init_article(data, res);
+    init_session(data, res);
 });
 
 app.post("/submit_data", function(req, res) {
