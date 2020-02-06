@@ -60,7 +60,8 @@ sort_param = [("appeared", pymongo.ASCENDING), ("_id", pymongo.ASCENDING)]
 data = myclient["data"]
 global max_lines_on_screen
 max_lines_on_screen = 0
-
+combined_sessions_collection = 'complete_sessions01'
+combined_articles_collection = 'complete_articles01'
 
 acceptable_versions = ["v0.3.1", "v0.2.7"] # 100000000
 time_offset = 100000000

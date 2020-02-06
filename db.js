@@ -38,7 +38,9 @@ const version = "v0.3.1"
 //0.2.6 -> line instead of word indexes
 //0.2.7 -> adding word and character splits
 //0.3.1 -> final changes for production (orientation) ... 0.3.2 will be official release
-//0.3.3 -> making changes to article endpoint to hopefully get it consistent //ERROR occurred, we 
+//0.3.3 -> making changes to article endpoint to hopefully get it consistent ??
+//0.3.4 -> change for bc of mercury deprication
+//0.3.5
 
 
 //xcode
