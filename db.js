@@ -51,6 +51,7 @@ const version = "v0.3.1"
 //0.2.6 -> and sending line instead of word indexes
 //0.2.7 -> maaaany ui changes and a whole refactore, also sending word, character, and content splits now
 //0.3.1 -> final changes for production (orientation and nicer button)
+//0.3.5 -> small changes (should be practically the same) (next changes will be for notifications)
 
 
 //two of the exact same functions in index.js and db.js, should condense and call it from the other one

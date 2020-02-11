@@ -9,6 +9,39 @@ import sys
 import re
 import os 
 import datetime
+def clean_text(file_text):
+	file_text = file_text.lower()
+	file_text = re.sub("mr\.", "mr", file_text)
+	file_text = re.sub("mrs\.", "mrs", file_text)
+	file_text = re.sub("dr\.", "dr", file_text)
+	file_text = re.sub("sr\.", "sr", file_text)
+	file_text = re.sub(",", "", file_text)
+	file_text = re.sub("\'", "", file_text)
+	file_text = re.sub("-", "", file_text)
+	file_text = re.sub("\"", "", file_text)
+	file_text = re.sub("\s+", " ", file_text)
+	return file_text
+
+def analyse_text_helper(session_data):
+	tmax = 0.0
+	total = 0.0
+	c = 0
+	num_words = 0
+	phrases = 0
+	paragraphs = 0
+	text = getArticle(session_data['article_id'])["text"]
+	for i in range(0, len(text)):
+		for t in text:
+			c += 1
+			ctext = clean_text(t)
+			num_words += len(ctext.split())
+			for word in ctext.split():
+				if("." in word or ";" in word or ":" in word or "?" in word or "!" in word):
+					phrases += 1
+			paragraphs += 1
+
+	return [paragraphs,phrases,num_words]
+
 
 now = datetime.datetime.now()
 path = str(now.month) + '-' + str(now.day) + '-' + str(now.hour) + '-' + str(now.minute)

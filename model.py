@@ -11,6 +11,15 @@ import decimal
 import sys
 import re
 import datetime
+import math
+
+from pprint import pprint as print
+from gensim.models.fasttext import FastText as FT_gensim
+from gensim.test.utils import datapath
+
+import matplotlib
+#matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 now = datetime.datetime.now()
 path = str(now.month) + '-' + str(now.day) + '-' + str(now.hour) + '-' + str(now.minute)
@@ -57,7 +66,7 @@ def getSessionsSequence(data):
 def findSessions(acceptable, incl_incomplete):
 	mycol = data[combined_sessions_collection]
 	completed = []
-	for x in mycol.find():
+	for x in mycol.find():  #(x["UDID"] == "A48F157C_4768_44C9_86BF_6978C67BB756" or x["UDID"] == "828296DD_6B30_43B8_8986_8E12A13CD9F2")
 		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64"):# and x["version"] in acceptable_versions):
 			#x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
@@ -110,31 +119,52 @@ y = []
 for ses in c[10::]:
 	#ss = getSessionsSequence(ses)
 	x.append(analyse_text_helper(ses))
-	y.append([getTotalTime(ses)/data_offset])
+	y.append([math.log(getTotalTime(ses)/data_offset)])
 vx = []
 vy = []
 
 for ses in c[:10]:
 	vx.append(analyse_text_helper(ses))
-	vy.append([getTotalTime(ses)/data_offset])
+	vy.append([math.log(getTotalTime(ses)/data_offset)])
 
 
+XX = []
+YY = []
+for ses in c:
+	XX.append(analyse_text_helper(ses))
+	YY.append([math.log(getTotalTime(ses)/data_offset)])
+plt.scatter([i[0] for i in XX], YY)
+#plt.show()
+plt.scatter([i[1] for i in XX], YY)
+#plt.show()
+plt.scatter([i[2] for i in XX], YY)
+#plt.show()
 
+print(x)
+print(vx)
 # Define the model
 model = tf.keras.Sequential()
 # Adds a densely-connected layer with 64 units to the model:
-model.add(layers.Dense(5, activation='sigmoid'))
+model.add(layers.Dense(1, activation='elu', input_shape=(3,)))
 # Add another:
-model.add(layers.Dense(5, activation='sigmoid'))
-# Add a softmax layer with 10 output units:
-model.add(layers.Dense(1, activation='relu'))
-model.compile(optimizer='sgd',
+#model.add(layers.Dense(5, activation='elu'))
+
+#model.add(layers.Dense(1, activation='elu'))
+model.compile(optimizer='adam',#adam
               loss='mse',
               metrics=['mae'])
+print(model.weights)
+model.fit(x,y,epochs=50000,validation_data=(vx, vy),callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=75,restore_best_weights=True)]) #batch_size=80
+print(model.weights)
 
-model.fit(x,y,epochs=50000,batch_size=40,validation_data=(vx, vy))
-
-
+hh = (model.predict(XX))
+count = 0
+for i in range(0,len(hh)):
+	if(abs(hh[i]-YY[i]) < 30):
+		print(i)
+		count += 1
+print(count)
+print(len(hh))
 
 
 
