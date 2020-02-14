@@ -4,6 +4,8 @@ const cheerio = require('cheerio')
 var app = express();
 var request = require('request');
 var fs = require('fs');
+var KalmanFilter = require('kalmanjs')
+var kf = new KalmanFilter();
 //var moment = require('moment')
 var Mercury = require('@postlight/mercury-parser')
 var politico_api = "eacb0f942382464a9193148875c93431"
@@ -32,7 +34,6 @@ things to do
 look into CFAbsoluteTime vs Date()
 	- maybe just have both???
 improve vis.py and make it take arguments
-email mike about viss and new updates
 add politico/other news sites scrapers (npr, cnn) , apple news api
 
 
@@ -47,6 +48,7 @@ data sources we can add
 add camera to see if they are looking at screen if its easy enough
 add finger positioning
 */
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -194,6 +196,18 @@ function init_session(data, res) {
 	})
 }
 
+//smooth time betweeen scrolls instead of actual scrolls.
+function smooth_session(col, callback){
+	var kalmanFilter = new KalmanFilter({R: 0.1, Q: 3});
+
+	var dataConstantKalman = col.map(function(v) {
+		v["appeared"] = kalmanFilter.filter(v["appeared"]);
+		v["time"] = v["appeared"]
+		return v
+	});
+
+	callback(col)
+}
 
 app.get('/articles', function(req, res){
 	scrape_top(function(tops){
@@ -249,13 +263,16 @@ app.get('/sessions', function(req,res){
 app.post('/session_replay', function(req,res){
 	console.log('session_replay')
 	//in this context article link actual means session id
-	var data = req.body
-	data.UDID = data.UDID.replace(/-/g, '_');
+
 	//console.log(data)
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
+		var data = req.body
+		data.UDID = data.UDID.replace(/-/g, '_');
+		console.log(data)
 		var dbd = db.db(database)
 		var dbsession = db.db('sessions')
+		console.log(data.article_link)
 		dbd.collection(combined_sessions_collection).findOne({'_id': ObjectId(data.article_link)}, function(err, result) {
 		    if (err) throw err;
 		    dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
@@ -266,10 +283,12 @@ app.post('/session_replay', function(req,res){
 		    	var s = result.startTime.toString().split('.')[0]
 		    	dbsession.collection(result.UDID + s).find({}).toArray(function(errr, col){
 		    		if (errr) throw errr;
-		    		result.session_data = col
-		    		console.log(col)
-		    		res.send(result)
-		    		db.close();
+		    		smooth_session(col, function(smoothed){
+		    			result.session_data = col
+						res.send(result)
+						db.close();
+		    		})
+				
 		    	})
 		    })
 		})
@@ -363,7 +382,6 @@ app.post("/close_article", function(req,res){
 
 	res.sendStatus(200)
 });
-
 
 
 
