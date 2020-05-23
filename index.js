@@ -201,8 +201,8 @@ function smooth_session(col, callback){
 	var kalmanFilter = new KalmanFilter({R: 0.1, Q: 3});
 
 	var dataConstantKalman = col.map(function(v) {
-		v["appeared"] = kalmanFilter.filter(v["appeared"]);
-		v["time"] = v["appeared"]
+		v["smoothed"] = kalmanFilter.filter(v["appeared"]);
+		//v["time"] = v["appeared"]
 		return v
 	});
 
@@ -382,8 +382,6 @@ app.post("/close_article", function(req,res){
 
 	res.sendStatus(200)
 });
-
-
 
 
 
