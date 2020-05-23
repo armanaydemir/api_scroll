@@ -14,8 +14,8 @@ var nyt_key = "Mgbw0wTgMWZQezAzmYBPmSFG2jFgRLi2" // new york times api key for t
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
-var sessionsCollection = 'sessions01'
-var articlesCollection = 'articles01'
+var sessionsCollection = 'complete_sessions01'
+var articlesCollection = 'complete_articles01'
 var database = 'data034'
 
 var old_db = 'data'
@@ -196,19 +196,6 @@ function init_session(data, res) {
 	})
 }
 
-//smooth time betweeen scrolls instead of actual scrolls.
-function smooth_session(col, callback){
-	var kalmanFilter = new KalmanFilter({R: 0.1, Q: 3});
-
-	var dataConstantKalman = col.map(function(v) {
-		v["smoothed"] = kalmanFilter.filter(v["appeared"]);
-		//v["time"] = v["appeared"]
-		return v
-	});
-
-	callback(col)
-}
-
 app.get('/articles', function(req, res){
 	scrape_top(function(tops){
 		console.log("tops")
@@ -283,12 +270,10 @@ app.post('/session_replay', function(req,res){
 		    	var s = result.startTime.toString().split('.')[0]
 		    	dbsession.collection(result.UDID + s).find({}).toArray(function(errr, col){
 		    		if (errr) throw errr;
-		    		smooth_session(col, function(smoothed){
-		    			result.session_data = col
-						res.send(result)
-						db.close();
-		    		})
-				
+		    		
+	    			result.session_data = col
+					res.send(result)
+					db.close();
 		    	})
 		    })
 		})
@@ -344,6 +329,7 @@ app.post("/submit_data", function(req, res) {
 	var data = req.body
 	//console.log('submit data')
 	//article link and UDID stuffs
+	print(data)
 	data.article = data.article.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
