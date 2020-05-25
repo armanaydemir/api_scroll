@@ -329,8 +329,9 @@ app.post("/submit_data", function(req, res) {
 	var data = req.body
 	//console.log('submit data')
 	//article link and UDID stuffs
-	console.log(data)
-	data.article = data.article.split('.html')[0] + '.html'
+	if(data.article){
+		data.article = data.article.split('.html')[0] + '.html'
+	}
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
