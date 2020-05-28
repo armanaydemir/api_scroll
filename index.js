@@ -247,6 +247,7 @@ app.get('/sessions', function(req,res){
 					console.log(data[tempi].article_text[1])
 					tempi = tempi + 1
 				}
+				print("jabjabjab")
 				res.send(data)
 				db.close()
 			})
