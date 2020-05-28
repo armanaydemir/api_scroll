@@ -219,7 +219,6 @@ async function sessions_article_helper(dbd,result){
 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
 	result.article_title = article_data.title
 	//console.log(article_data.text)
-	result.article_text = article_data.text
 	return result
 }
 
@@ -241,12 +240,12 @@ app.get('/sessions', function(req,res){
 			if (err) throw err;
 			sessions_helper(dbd,results).then(data => {
 				var tempi = 0
-				while(tempi < 20){
-					console.log("--=====--")
-					console.log(data[tempi].article_title)
-					console.log(data[tempi].article_text[1])
-					tempi = tempi + 1
-				}
+				// while(tempi < 20){
+				// 	console.log("--=====--")
+				// 	console.log(data[tempi].article_title)
+				// 	console.log(data[tempi].article_text[1])
+				// 	tempi = tempi + 1
+				// }
 				console.log("jabjabjab")
 				res.send(data)
 				db.close()
