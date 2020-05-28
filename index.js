@@ -218,7 +218,7 @@ app.get('/identities', function(req,res){
 async function sessions_article_helper(dbd,result){
 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
 	result.article_title = article_data.title
-	print(article_data)
+	console.log(article_data)
 	result.article_text = article_data.text
 	return result
 }
