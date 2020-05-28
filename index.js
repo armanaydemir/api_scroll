@@ -243,7 +243,7 @@ app.get('/sessions', function(req,res){
 				console.log(data[0].article_title)
 				var tempi = 0
 				while(tempi < 10){
-					console.log(data[tempi].article_text[0:4])
+					console.log(data[tempi].article_text[1])
 					tempi = tempi + 1
 				}
 				res.send(data)
