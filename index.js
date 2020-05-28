@@ -240,6 +240,7 @@ app.get('/sessions', function(req,res){
 		dbd.collection(combined_sessions_collection).find({'completed':true}).sort({_id: -1}).toArray(async function(err, results) {
 			if (err) throw err;
 			sessions_helper(dbd,results).then(data => {
+				console.log("--=====--")
 				console.log(data[0].article_title)
 				var tempi = 0
 				while(tempi < 10){
