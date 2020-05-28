@@ -218,7 +218,7 @@ app.get('/identities', function(req,res){
 async function sessions_article_helper(dbd,result){
 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
 	result.article_title = article_data.title
-	console.log(article_data)
+	console.log(article_data.text)
 	result.article_text = article_data.text
 	return result
 }
@@ -243,7 +243,7 @@ app.get('/sessions', function(req,res){
 				console.log(data[0].article_title)
 				var tempi = 0
 				while(tempi < 10){
-					print(data[tempi].article_text[0])
+					console.log(data[tempi].article_text[0])
 				}
 				res.send(data)
 				db.close()
