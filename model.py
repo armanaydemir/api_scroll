@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import tensorflow as tf
-from tensorflow.keras import layers
+# import tensorflow as tf
+# from tensorflow.keras import layers
 import os
 import time
 import pymongo
@@ -13,14 +13,14 @@ import re
 import datetime
 import math
 
-from pprint import pprint as print
-from gensim.models.fasttext import FastText as FT_gensim
-from gensim.test.utils import datapath
-import gensim
+# from pprint import pprint as print
+# from gensim.models.fasttext import FastText as FT_gensim
+# from gensim.test.utils import datapath
+# import gensim
 
-import matplotlib
-#matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+# import matplotlib
+# #matplotlib.use("Agg")
+# import matplotlib.pyplot as plt
 
 now = datetime.datetime.now()
 path = str(now.month) + '-' + str(now.day) + '-' + str(now.hour) + '-' + str(now.minute)
@@ -74,36 +74,36 @@ def findSessions(acceptable, incl_incomplete):
 	return completed
 
 
-def getTotalTime(data):
-	return data["endTime"] - data["startTime"]
+# def getTotalTime(data):
+# 	return data["endTime"] - data["startTime"]
 
-def getText(ses, tokens_only):
-	line = ""
-	for i in getArticle(ses['article_id'])["text"]:
-		line += i + " "
-	tokens = gensim.utils.simple_preprocess(line)
-	if tokens_only:
-		return tokens
-	else:
-		# For training data, add tags 
-		return gensim.models.doc2vec.TaggedDocument(tokens, [i])
+# def getText(ses, tokens_only):
+# 	line = ""
+# 	for i in getArticle(ses['article_id'])["text"]:
+# 		line += i + " "
+# 	tokens = gensim.utils.simple_preprocess(line)
+# 	if tokens_only:
+# 		return tokens
+# 	else:
+# 		# For training data, add tags 
+# 		return gensim.models.doc2vec.TaggedDocument(tokens, [i])
 
 
-def read_corpus(c, tokens_only=False):
-	for ses in c:
-		line = ""
-		for i in getArticle(ses['article_id'])["text"]:
-			line = line + i + " "
-		print(line)
-		print('------')
-		tokens = gensim.utils.simple_preprocess(line)
+# def read_corpus(c, tokens_only=False):
+# 	for ses in c:
+# 		line = ""
+# 		for i in getArticle(ses['article_id'])["text"]:
+# 			line = line + i + " "
+# 		print(line)
+# 		print('------')
+# 		tokens = gensim.utils.simple_preprocess(line)
 
-		if tokens_only:
-			yield tokens
-		else:
-			# For training data, add tags
-			print(gensim.models.doc2vec.TaggedDocument(tokens, [i]))
-			yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
+# 		if tokens_only:
+# 			yield tokens
+# 		else:
+# 			# For training data, add tags
+# 			print(gensim.models.doc2vec.TaggedDocument(tokens, [i]))
+# 			yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
 
 c = findSessions(acceptable_versions,False)
 dic = {}
