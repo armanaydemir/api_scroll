@@ -106,41 +106,51 @@ def read_corpus(c, tokens_only=False):
 			yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
 
 c = findSessions(acceptable_versions,False)
-train_corpus = list(read_corpus(c[10:]))
-test_corpus = list(read_corpus(c[:10], tokens_only=True))
-#print(train_corpus[1])
-#print(test_corpus[1])
-model = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=40)
-model.build_vocab(train_corpus)
-model.train(train_corpus, total_examples=model.corpus_count, epochs=model.epochs)
-print(train_corpus[5])
-vector = model.infer_vector(train_corpus[5].words)
-print(vector)
-sims = model.docvecs.most_similar([vector], topn=len(model.docvecs))
-print(sims)
-ranks = []
-second_ranks = []
-for doc_id in range(len(train_corpus)):
-    inferred_vector = model.infer_vector(train_corpus[doc_id].words)
-    sims = model.docvecs.most_similar([inferred_vector], topn=len(model.docvecs))
-    rank = [docid for docid, sim in sims][doc_id]
-    print(rank)
-    print(doc_id)
-    ranks.append(rank)
+dic = {}
+for i in c:
+	if(i["type"] not in dic.keys()):
+		dic[i["type"]] = 1
+	else:
+		dic[i["type"]] += 1
+print(dic)
 
-    second_ranks.append(sims[1])
 
-import collections
+#"----------"
+# train_corpus = list(read_corpus(c[10:]))
+# test_corpus = list(read_corpus(c[:10], tokens_only=True))
+# #print(train_corpus[1])
+# #print(test_corpus[1])
+# model = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=40)
+# model.build_vocab(train_corpus)
+# model.train(train_corpus, total_examples=model.corpus_count, epochs=model.epochs)
+# print(train_corpus[5])
+# vector = model.infer_vector(train_corpus[5].words)
+# print(vector)
+# sims = model.docvecs.most_similar([vector], topn=len(model.docvecs))
+# print(sims)
+# ranks = []
+# second_ranks = []
+# for doc_id in range(len(train_corpus)):
+#     inferred_vector = model.infer_vector(train_corpus[doc_id].words)
+#     sims = model.docvecs.most_similar([inferred_vector], topn=len(model.docvecs))
+#     rank = [docid for docid, sim in sims][doc_id]
+#     print(rank)
+#     print(doc_id)
+#     ranks.append(rank)
 
-counter = collections.Counter(ranks)
-print(counter)
+#     second_ranks.append(sims[1])
+
+# import collections
+
+# counter = collections.Counter(ranks)
+# print(counter)
 
 
 
 # # Define the model
 # model = tf.keras.Sequential()
 # # Adds a densely-connected layer with 64 units to the model:
-# model.add(layers.Dense(1, activation='elu', input_shape=(3,)))
+# model.add(layers.Dense(1, activation='elu'))
 # # Add another:
 # #model.add(layers.Dense(5, activation='elu'))
 
