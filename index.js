@@ -248,8 +248,8 @@ app.get('/sessions', function(req,res){
 					tempi = tempi + 1
 				}
 				console.log("jabjabjab")
-				print(ccc)
-				print(tempi)
+				console.log(ccc)
+				console.log(tempi)
 				res.send(data)
 				db.close()
 			})
