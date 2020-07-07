@@ -240,13 +240,14 @@ app.get('/sessions', function(req,res){
 			if (err) throw err;
 			sessions_helper(dbd,results).then(data => {
 				var tempi = 0
-				// while(tempi < 20){
-				// 	console.log("--=====--")
-				// 	console.log(data[tempi].article_title)
-				// 	console.log(data[tempi].article_text[1])
-				// 	tempi = tempi + 1
-				// }
+				var ccc = 0
+				while(tempi < len(results)){
+					if("content" in data[tempi].keys()):
+						ccc = ccc + 1
+					tempi = tempi + 1
+				}
 				console.log("jabjabjab")
+				print(ccc)
 				res.send(data)
 				db.close()
 			})
