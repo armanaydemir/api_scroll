@@ -241,11 +241,12 @@ app.get('/sessions', function(req,res){
 			sessions_helper(dbd,results).then(data => {
 				var tempi = 0
 				var ccc = 0
-				while(tempi < len(results)):
-					if("content" in data[tempi].keys()):
+				while(tempi < results.length){
+					if(data[tempi].content){
 						ccc = ccc + 1
+					}
 					tempi = tempi + 1
-
+				}
 				console.log("jabjabjab")
 				print(ccc)
 				print(tempi)
