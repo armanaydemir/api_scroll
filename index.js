@@ -242,7 +242,7 @@ app.get('/sessions', function(req,res){
 				var tempi = 0
 				var ccc = 0
 				while(tempi < results.length){
-					if(data[tempi].content){
+					if(data[tempi].content && data[tempi].type != 'x86_64'){
 						ccc = ccc + 1
 					}
 					tempi = tempi + 1
