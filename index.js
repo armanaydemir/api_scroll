@@ -24,7 +24,7 @@ var old_articles = 'articles'
 var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
-const version = "v0.3.5"
+const version = "v0.3.7"
 
 console.log('started at least')
 
@@ -218,6 +218,7 @@ app.get('/identities', function(req,res){
 async function sessions_article_helper(dbd,result){
 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
 	result.article_title = article_data.title
+
 	//console.log(article_data.text)
 	return result
 }
@@ -281,8 +282,16 @@ app.post('/session_replay', function(req,res){
 		    	var s = result.startTime.toString().split('.')[0]
 		    	dbsession.collection(result.UDID + s).find({}).toArray(function(errr, col){
 		    		if (errr) throw errr;
-		    		
+		    		i = 0
+		    		max = 0
+		    		while(i < col.length){
+		    			if(col[i].last_cell - col[i].first_cell > max){
+		    				max = col[i].last_cell - col[i].first_cell
+		    			}
+		    			i = i + 1
+		    		}
 	    			result.session_data = col
+	    			result.max_lines = max
 					res.send(result)
 					db.close();
 		    	})
