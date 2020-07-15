@@ -254,7 +254,7 @@ app.get('/sessions', function(req,res){
 				res.send(data)
 				db.close()
 			})
-			
+			ter
 		})
 	})
 })
