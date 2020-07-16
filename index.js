@@ -28,6 +28,8 @@ const version = "v0.3.7"
 
 console.log('started at least')
 
+spaceLabelHeightRatio = 0.25
+
 /*
 things to do
 ------------------
@@ -284,9 +286,20 @@ app.post('/session_replay', function(req,res){
 		    		if (errr) throw errr;
 		    		i = 0
 		    		max = 0
+		    		c = result.content
 		    		while(i < col.length){
 		    			if(col[i].last_cell - col[i].first_cell > max){
-		    				max = col[i].last_cell - col[i].first_cell
+		    				j = col[i].first_cell
+		    				count = 0
+		    				while(j < col[i].last_cell){
+		    					if(c[j].text != ""){
+		    						count = count + 1
+		    					} else {
+		    						count = count + spaceLabelHeightRatio
+		    					}
+		    					j = j + 1
+		    				}
+		    				if(count > max){max = count}
 		    			}
 		    			i = i + 1
 		    		}
