@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp42'
+var database = 'data037temp43'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -26,6 +26,7 @@ var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
 
+var sessions_db = 'sessions01'
 
 
 
@@ -304,6 +305,7 @@ app.get('/sessions', function(req,res){
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		dbd.collection(combined_sessions_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
 			if (err) throw err;
+			console.log(results)
 			sessions_helper(dbd,results).then(data => {
 				var tempi = 0
 				var ccc = 0
@@ -337,7 +339,7 @@ app.post('/session_replay', function(req,res){
 		data.UDID = data.UDID.replace(/-/g, '_');
 		console.log(data)
 		var dbd = db.db(database)
-		var dbsession = db.db('sessions')
+		var dbsession = db.db(sessions_db)
 		console.log(data.article_link)
 		dbd.collection(combined_sessions_collection).findOne({'_id': ObjectId(data.article_link)}, function(err, result) {
 		    if (err) throw err;
@@ -440,7 +442,7 @@ app.post("/submit_data", function(req, res) {
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db(combined_sessions_collection) // maybe change the name of this db
+		var dbd = db.db(sessions_db) // maybe change the name of this db
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
