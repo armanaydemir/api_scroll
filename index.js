@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp43'
+var database = 'data037temp44'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -26,7 +26,7 @@ var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
 
-var sessions_db = 'sessions01'
+var sessions_db = 'sessions02'
 
 
 
@@ -281,17 +281,17 @@ app.get('/identities', function(req,res){
 	)
 })
 
-async function sessions_article_helper(dbd,result){
-	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
-	result.article_title = article_data.title
+// async function sessions_article_helper(dbd,result){
+// 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
+// 	result.article_title = article_data.title
 
-	//console.log(article_data.text)
-	return result
-}
+// 	//console.log(article_data.text)
+// 	return result
+// }
 
-async function sessions_helper(dbd, results){
-	return Promise.all(results.map(result => sessions_article_helper(dbd,result)))
-}
+// async function sessions_helper(dbd, results){
+// 	return Promise.all(results.map(result => sessions_article_helper(dbd,result)))
+// }
 
 //change this back to post
 app.get('/sessions', function(req,res){
@@ -306,24 +306,25 @@ app.get('/sessions', function(req,res){
 		dbd.collection(combined_sessions_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
 			if (err) throw err;
 			console.log(results)
-			sessions_helper(dbd,results).then(data => {
-				var tempi = 0
-				var ccc = 0
-				var new_data = []
-				while(tempi < results.length){
-					if(data[tempi].content && data[tempi].type != 'x86_64'){
-						ccc = ccc + 1
-						new_data.push(data[tempi])
-					}
-					tempi = tempi + 1
+
+			// sessions_helper(dbd,results).then(data => {
+			var tempi = 0
+			var ccc = 0
+			var new_data = []
+			while(tempi < results.length){
+				if(data[tempi].content && data[tempi].type != 'x86_64'){
+					ccc = ccc + 1
+					new_data.push(data[tempi])
 				}
-				console.log("jabjabjab")
-				console.log(ccc)
-				console.log(tempi)
-				res.send(data)
-				//res.send(new_data)
-				db.close()
-			})
+				tempi = tempi + 1
+			}
+			console.log("jabjabjab")
+			console.log(ccc)
+			console.log(tempi)
+			res.send(data)
+			//res.send(new_data)
+			db.close()
+			// })
 		})
 	})
 })
