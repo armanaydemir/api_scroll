@@ -14,9 +14,10 @@ var nyt_key = "Mgbw0wTgMWZQezAzmYBPmSFG2jFgRLi2" // new york times api key for t
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
+
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data034'
+var database = 'data037temp41'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -24,12 +25,34 @@ var old_articles = 'articles'
 var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
+
+
+
+
+
+//complete_sessions01
+//complete_articles01
+
+// var sessionsCollection = 'complete_sessions01'
+// var articlesCollection = 'complete_articles01'
+// var database = 'data034'
+
+// var old_db = 'data'
+// var old_sessions = 'sessions'
+// var old_articles = 'articles'
+// var combined_sessions_collection = 'complete_sessions01'
+// var combined_articles_collection = 'complete_articles01'
+
+
+var new_articles = 'new_artilces'
+
 const version = "v0.3.7"
 
 console.log('started at least')
 
 spaceLabelHeightRatio = 0.25
-
+maxLines = 20
+maxChars = 55
 /*
 things to do
 ------------------
@@ -93,6 +116,37 @@ function parse_body(result) {
 	return sections;
 }
 
+function parse_lines(text) {
+	var content = []
+	var i = 1
+	content.push(text[0])
+	while(i < text.length){
+		var t = text[i]
+		if(t == ""){
+			content.push(t)
+		}else{
+			var regex = /\s*(?:(\S{30})|([\s\S]{1,30})(?!\S))/g;
+			var cstring = t.replace(regex, function($0,$1,$2) { return $1 ? $1 + "-\n" : $2 + "\n"; } )
+			// console.log(t)
+
+			// console.log(cstring)
+			var clist = cstring.split("\n")
+			
+			var ii = 0
+			while(ii < clist.length){
+				// console.log(clist[ii])
+				content.push(clist[ii])
+				ii += 1
+			}
+		}
+		i += 1
+	}
+	// setInterval(myTimer, 1000)
+	// console.log(content)
+	// console.log("=")
+	return content
+}
+
 function scrape_top(callback) {
 	request.get({
 	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
@@ -100,17 +154,18 @@ function scrape_top(callback) {
 	    'api-key': nyt_key
 	  },
 	}, function(err, response, body) {
-		console.log(err)
+		// console.log(err)
 		if(err) throw err;
 	 	body = JSON.parse(body);
+	 	//r = [body.results[0]]
 	 	r = body.results
-	 	console.log(r[0].title)
+	 	// console.log(r[0].title)
 	 	r.map(function(data){
 	 		add_article(data, function(result){
 	 			return result
 	 		})
 	 	})
-	 	console.log(r[0].article_link)
+	 	// console.log(r[0].article_link)
 // 	 	i = 0
 // 	 	syncer = 0
 // 	 	var tops = []
@@ -156,15 +211,24 @@ function add_article(data, callback) {
 				// console.log(data)
 				Mercury.parse(options.url).then(result => {
 					data.text = parse_body(result)
+					// console.log(data.text)
+					data.content = parse_lines(data.text)
 					data.title = data.text[0]
 					data.version = version
+					//console.log(data)
+					//console.log("----")
+					//console.log(data.content)
+					
 					dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
 						db.close()
+						// console.log(resu.text)
+						// console.log(resu.content)
+						// console.log("----")
 						callback(resu)
 					})
 				})
 			}else{
-				//console.log(result)
+				//console.log(result.content)
 				db.close()
 				callback(result)
 			}
@@ -190,9 +254,8 @@ function init_session(data, res) {
 			'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
 				if (e) throw e;
 				db.close()
-				text = result.text
-				text.unshift(ress.insertedId); 
-				res.send(text);
+				console.log(result.content)
+				res.send(result);
 			});
 		})
 	})
@@ -244,19 +307,21 @@ app.get('/sessions', function(req,res){
 			sessions_helper(dbd,results).then(data => {
 				var tempi = 0
 				var ccc = 0
+				var new_data = []
 				while(tempi < results.length){
 					if(data[tempi].content && data[tempi].type != 'x86_64'){
 						ccc = ccc + 1
+						new_data.push(data[tempi])
 					}
 					tempi = tempi + 1
 				}
 				console.log("jabjabjab")
 				console.log(ccc)
 				console.log(tempi)
-				res.send(data)
+				//res.send(data)
+				res.send(new_data)
 				db.close()
 			})
-			ter
 		})
 	})
 })
@@ -286,12 +351,16 @@ app.post('/session_replay', function(req,res){
 		    		if (errr) throw errr;
 		    		i = 0
 		    		max = 0
+		    		max_char = 0
 		    		c = result.content
 		    		while(i < col.length){
 		    			if(col[i].last_cell - col[i].first_cell > max){
 		    				j = col[i].first_cell
 		    				count = 0
 		    				while(j < col[i].last_cell){
+		    					if(c[j].text.length > max_char){
+		    						max_char = c[j].text.length
+		    					}
 		    					if(c[j].text != ""){
 		    						count = count + 1
 		    					} else {
@@ -305,6 +374,9 @@ app.post('/session_replay', function(req,res){
 		    		}
 	    			result.session_data = col
 	    			result.max_lines = max
+	    			console.log("maxlines")
+	    			console.log(max)
+	    			console.log(max_char)
 					res.send(result)
 					db.close();
 		    	})
