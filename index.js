@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp41'
+var database = 'data037temp42'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -440,7 +440,7 @@ app.post("/submit_data", function(req, res) {
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db("sessions") // maybe change the name of this db
+		var dbd = db.db(combined_sessions_collection) // maybe change the name of this db
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
