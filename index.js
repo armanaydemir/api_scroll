@@ -257,7 +257,7 @@ function init_session(data, res) {
 				db.close()
 				console.log(ress)
 				//console.log(result.content)
-				result.sessionID = ress._id
+				result.sessionID = ress.insertedId
 				//console.log(result.sessionID)
 				res.send(result);
 			});
