@@ -336,6 +336,16 @@ app.get('/sessions', function(req,res){
 	})
 })
 
+//change this back to post
+app.get('/settings', function(req,res){
+	var data = req.body
+	console.log("settings")
+	console.log(data)
+	toReturn = {}
+	toReturn.replay = false
+	return toReturn
+})
+
 app.post('/session_replay', function(req,res){
 	console.log('session_replay')
 	//in this context article link actual means session id
