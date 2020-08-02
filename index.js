@@ -342,7 +342,7 @@ app.get('/settings', function(req,res){
 	console.log("settings")
 	console.log(data)
 	toReturn = {}
-	toReturn.replay = false
+	toReturn.showReplays = true
 	return toReturn
 })
 
