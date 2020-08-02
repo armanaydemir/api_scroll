@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp45'
+var database = 'data037temp46'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -26,7 +26,7 @@ var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
 
-var sessions_db = 'sessions03'
+var sessions_db = 'sessions04'
 
 
 
@@ -356,27 +356,27 @@ app.post('/session_replay', function(req,res){
 		    		max = 0
 		    		max_char = 0
 		    		c = result.content
-		    		while(i < col.length){
-		    			if(col[i].last_cell - col[i].first_cell > max){
-		    				j = col[i].first_cell
-		    				count = 0
-		    				while(j < col[i].last_cell){
-		    					if(c[j].text.length > max_char){
-		    						max_char = c[j].text.length
-		    					}
-		    					if(c[j].text != ""){
-		    						count = count + 1
-		    					} else {
-		    						count = count + spaceLabelHeightRatio
-		    					}
-		    					j = j + 1
-		    				}
-		    				if(count > max){max = count}
-		    			}
-		    			i = i + 1
-		    		}
+		    		// while(i < col.length){
+		    		// 	if(col[i].last_cell - col[i].first_cell > max){
+		    		// 		j = col[i].first_cell
+		    		// 		count = 0
+		    		// 		while(j < col[i].last_cell){
+		    		// 			if(c[j].text.length > max_char){
+		    		// 				max_char = c[j].text.length
+		    		// 			}
+		    		// 			if(c[j].text != ""){
+		    		// 				count = count + 1
+		    		// 			} else {
+		    		// 				count = count + spaceLabelHeightRatio
+		    		// 			}
+		    		// 			j = j + 1
+		    		// 		}
+		    		// 		if(count > max){max = count}
+		    		// 	}
+		    		// 	i = i + 1
+		    		// }
 	    			result.session_data = col
-	    			result.max_lines = max
+	    			result.max_lines = maxLines
 	    			console.log("maxlines")
 	    			console.log(max)
 	    			console.log(max_char)
