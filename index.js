@@ -308,20 +308,20 @@ app.get('/sessions', function(req,res){
 			console.log(results)
 
 			// sessions_helper(dbd,results).then(data => {
-			var tempi = 0
-			var ccc = 0
-			var new_data = []
-			while(tempi < results.length){
-				if(data[tempi].content && data[tempi].type != 'x86_64'){
-					ccc = ccc + 1
-					new_data.push(data[tempi])
-				}
-				tempi = tempi + 1
-			}
-			console.log("jabjabjab")
-			console.log(ccc)
-			console.log(tempi)
-			res.send(data)
+			// var tempi = 0
+			// var ccc = 0
+			// var new_data = []
+			// while(tempi < results.length){
+			// 	if(data[tempi].content && data[tempi].type != 'x86_64'){
+			// 		ccc = ccc + 1
+			// 		new_data.push(data[tempi])
+			// 	}
+			// 	tempi = tempi + 1
+			// }
+			// console.log("jabjabjab")
+			// console.log(ccc)
+			// console.log(tempi)
+			res.send(results)
 			//res.send(new_data)
 			db.close()
 			// })
