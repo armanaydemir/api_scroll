@@ -255,7 +255,8 @@ function init_session(data, res) {
 			'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
 				if (e) throw e;
 				db.close()
-				console.log(result.content)
+				//console.log(result.content)
+				result.sessionID = ress._id
 				res.send(result);
 			});
 		})
