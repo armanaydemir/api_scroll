@@ -257,7 +257,7 @@ function init_session(data, res) {
 				db.close()
 				//console.log(result.content)
 				result.sessionID = ress._id
-				print(result.sessionID)
+				console.log(result.sessionID)
 				res.send(result);
 			});
 		})
