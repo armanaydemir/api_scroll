@@ -263,7 +263,7 @@ function init_session(data, res) {
 				toReturn.article_data = result
 				toReturn.max_lines = maxLines
 				//console.log(result.sessionID)
-				res.send(result);
+				res.send(toReturn);
 			});
 		})
 	})
