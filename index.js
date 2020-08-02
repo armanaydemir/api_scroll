@@ -257,7 +257,11 @@ function init_session(data, res) {
 				db.close()
 				console.log(ress)
 				//console.log(result.content)
-				result.sessionID = ress.insertedId
+				
+				var toReturn = {}
+				toReturn.sessionID = ress.insertedId
+				toReturn.article_data = result
+				toReturn.max_lines = maxLines
 				//console.log(result.sessionID)
 				res.send(result);
 			});
