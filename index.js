@@ -343,7 +343,7 @@ app.get('/settings', function(req,res){
 	console.log(data)
 	toReturn = {}
 	toReturn.showReplays = true
-	return toReturn
+	res.send(toReturn)
 })
 
 app.post('/session_replay', function(req,res){
