@@ -474,7 +474,9 @@ app.post("/submit_data", function(req, res) {
 
 app.post("/submit_event", function(req, res) {
 	var data = req.body
-	//console.log('submit data')
+	console.log('submit event')
+	console.log(data)
+	console.log("---")
 	//article link and UDID stuffs
 	if(data.article){
 		data.article = data.article.split('.html')[0] + '.html'
