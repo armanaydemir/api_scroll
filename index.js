@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp48'
+var database = 'data037temp50'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -26,7 +26,7 @@ var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
 
-var sessions_db = 'sessions06'
+var sessions_db = 'sessions08'
 
 
 
