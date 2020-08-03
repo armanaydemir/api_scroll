@@ -27,6 +27,7 @@ var combined_articles_collection = 'complete_articles01'
 
 
 var sessions_db = 'sessions08'
+var events_db = 'events08'
 
 
 
@@ -460,7 +461,28 @@ app.post("/submit_data", function(req, res) {
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db(sessions_db) // maybe change the name of this db
+		var dbd = db.db(sessions_db) 
+		if (err) throw err;
+		var s = data.startTime.toString().split('.')[0]
+		//console.log(data.UDID + s)
+  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		db.close();
+	});
+
+	res.sendStatus(200)
+});
+
+app.post("/submit_event", function(req, res) {
+	var data = req.body
+	//console.log('submit data')
+	//article link and UDID stuffs
+	if(data.article){
+		data.article = data.article.split('.html')[0] + '.html'
+	}
+	data.UDID = data.UDID.replace(/-/g, '_');
+	console.log(data.UDID)
+	MongoClient.connect(url, function(err, db) {
+		var dbd = db.db(events_db) 
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
