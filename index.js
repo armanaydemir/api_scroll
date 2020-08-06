@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp50'
+var database = 'data037temp60'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -26,8 +26,8 @@ var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
 
-var sessions_db = 'sessions08'
-var events_db = 'events08'
+var sessions_db = 'sessions09'
+var events_db = 'events09'
 
 
 
@@ -452,6 +452,28 @@ app.post("/open_article", function(req, res) {
 });
 
 app.post("/submit_data", function(req, res) {
+	var data = req.body
+	//console.log('submit data')
+	//article link and UDID stuffs
+	if(data.article){
+		data.article = data.article.split('.html')[0] + '.html'
+	}
+	data.UDID = data.UDID.replace(/-/g, '_');
+	console.log(data.UDID)
+	MongoClient.connect(url, function(err, db) {
+		var dbd = db.db(sessions_db) 
+		if (err) throw err;
+		var s = data.startTime.toString().split('.')[0]
+		//console.log(data.UDID + s)
+  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		db.close();
+	});
+
+	res.sendStatus(200)
+});
+
+
+app.post("/submit_data_batched", function(req, res) {
 	var data = req.body
 	//console.log('submit data')
 	//article link and UDID stuffs
