@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp62'
+var database = 'data037temp63'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -26,8 +26,8 @@ var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
 
-var sessions_db = 'sessions11'
-var events_db = 'events11'
+var sessions_db = 'sessions12'
+var events_db = 'events12'
 
 
 
@@ -164,10 +164,10 @@ function scrape_top(callback) {
 	 	// console.log(r[0].title)
 	 	r.map(function(data){
 	 		add_article(data, function(result){
+	 			result.line_count = result.content.length
 	 			return result
 	 		})
 	 	})
-	 	r.line_count = result.content.length
 	 	// console.log(r[0].article_link)
 // 	 	i = 0
 // 	 	syncer = 0
