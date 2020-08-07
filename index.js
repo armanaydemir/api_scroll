@@ -167,6 +167,7 @@ function scrape_top(callback) {
 	 			return result
 	 		})
 	 	})
+	 	r.line_count = result.content.length
 	 	// console.log(r[0].article_link)
 // 	 	i = 0
 // 	 	syncer = 0
@@ -344,6 +345,7 @@ app.get('/settings', function(req,res){
 	console.log(data)
 	toReturn = {}
 	toReturn.showReplays = true
+	toReturn.showIntro = true
 	res.send(toReturn)
 })
 
