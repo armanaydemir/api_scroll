@@ -482,12 +482,13 @@ app.post("/submit_data_batched", function(req, res) {
 	}
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
+	//console.log(data.session_id)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(sessions_db) 
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.UDID + s).insertMany(data.data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
