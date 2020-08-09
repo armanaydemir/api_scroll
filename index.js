@@ -17,7 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
-var database = 'data037temp63'
+var database = 'data037temp69'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -26,8 +26,8 @@ var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 
 
-var sessions_db = 'sessions12'
-var events_db = 'events12'
+var sessions_db = 'sessions18'
+var events_db = 'events18'
 
 
 
@@ -164,7 +164,6 @@ function scrape_top(callback) {
 	 	// console.log(r[0].title)
 	 	r.map(function(data){
 	 		add_article(data, function(result){
-	 			result.line_count = result.content.length
 	 			return result
 	 		})
 	 	})
@@ -188,6 +187,7 @@ function scrape_top(callback) {
 // 	 		})
 // 	 		i++
 // 	 	}
+
 		callback(r)
  	})
 }
@@ -218,6 +218,7 @@ function add_article(data, callback) {
 					data.content = parse_lines(data.text)
 					data.title = data.text[0]
 					data.version = version
+					data.line_count = data.content.length
 					//console.log(data)
 					//console.log("----")
 					//console.log(data.content)
@@ -242,7 +243,7 @@ function add_article(data, callback) {
 
 
 function init_session(data, res) {
-	console.log(data)
+	//console.log(data)
 	var address = data.article_link
 	if(!address.includes("https://www.nytimes.com")){
 		console.log('isnt nytimes, this should be fun lol')
@@ -257,7 +258,7 @@ function init_session(data, res) {
 			'endTime': '', 'version': data.version, 'type': data.type, 'completed': false}, function(e, ress){ 
 				if (e) throw e;
 				db.close()
-				console.log(ress)
+				//console.log(ress)
 				//console.log(result.content)
 				
 				var toReturn = {}
@@ -292,6 +293,8 @@ app.get('/identities', function(req,res){
 
 async function sessions_article_helper(dbd,result){
 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
+	console.log(article_data)
+	console.log(result.article_id)
 	result.article_title = article_data.title
 	result.article_data = article_data
 	//console.log(article_data.text)
@@ -314,7 +317,7 @@ app.get('/sessions', function(req,res){
 		var dbd = db.db(database) //'UDID': data.UDID, 
 		dbd.collection(combined_sessions_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
 			if (err) throw err;
-			console.log(results)
+			//console.log(results)
 
 			sessions_helper(dbd,results).then(data => {
 				var tempi = 0
@@ -373,8 +376,8 @@ app.post('/session_replay', function(req,res){
 		    	dbsession.collection(result.UDID + s).find({}).toArray(function(errr, col){
 		    		if (errr) throw errr;
 		    		i = 0
-		    		max = 0
-		    		max_char = 0
+		    		// max = 0
+		    		// max_char = 0
 		    		c = result.content
 		    		// while(i < col.length){
 		    		// 	if(col[i].last_cell - col[i].first_cell > max){
@@ -397,9 +400,9 @@ app.post('/session_replay', function(req,res){
 		    		// }
 	    			result.session_data = col
 	    			result.max_lines = maxLines
-	    			console.log("maxlines")
-	    			console.log(max)
-	    			console.log(max_char)
+	    			// console.log("maxlines")
+	    			// console.log(max)
+	    			// console.log(max_char)
 					res.send(result)
 					db.close();
 		    	})
@@ -477,30 +480,34 @@ app.post("/submit_data", function(req, res) {
 
 app.post("/submit_data_batched", function(req, res) {
 	var data = req.body
-	//console.log('submit data')
+	console.log('submit data batched')
 	//article link and UDID stuffs
 	if(data.article){
 		data.article = data.article.split('.html')[0] + '.html'
 	}
 	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(data.UDID)
+	console.log(data.data)
 	//console.log(data.session_id)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(sessions_db) 
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).insertMany(data.data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.UDID + s).insertMany(data.data, function(e, ress){ 
+  			if (e) throw e; 
+  			toReturn = {}
+  			res.send(toReturn)
+  		});
   		db.close();
 	});
 
-	res.sendStatus(200)
+	//res.sendStatus(200)
 });
 
 app.post("/submit_event", function(req, res) {
 	var data = req.body
 	console.log('submit event')
-	console.log(data)
+	//console.log(data)
 	console.log("---")
 	//article link and UDID stuffs
 	if(data.article){
