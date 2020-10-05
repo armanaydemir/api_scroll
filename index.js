@@ -17,6 +17,8 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
+
+//very important
 var database = 'data037temp69'
 
 var old_db = 'data'
@@ -340,7 +342,7 @@ app.get('/sessions', function(req,res){
 		})
 	})
 })
-
+ 
 //change this back to post
 app.get('/settings', function(req,res){
 	var data = req.body
