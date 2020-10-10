@@ -567,8 +567,6 @@ app.post("/close_article", function(req,res){
 
 
 
-
-
 var server = app.listen(22364, function () {
     console.log("Listening on port %s...", server.address().port);
 });
