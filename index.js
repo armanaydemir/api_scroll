@@ -17,6 +17,7 @@ var url = "mongodb://localhost:27017/";
 
 var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
+var emailsCollection = "complete_emails01"
 
 //very important
 var database = 'data037temp69'
@@ -26,6 +27,7 @@ var old_sessions = 'sessions'
 var old_articles = 'articles'
 var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
+var emails_collection = "complete_emails01"
 
 
 var sessions_db = 'sessions18'
@@ -352,6 +354,12 @@ app.get('/settings', function(req,res){
 	toReturn.showReplays = true
 	toReturn.showIntro = true
 	res.send(toReturn)
+})
+
+app.get('/submit_email', function(req,res){
+	var data = req.body
+	console.log('submit_email')
+	console.log(data)
 })
 
 app.post('/session_replay', function(req,res){
