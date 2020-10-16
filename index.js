@@ -396,12 +396,30 @@ app.post('/submit_email', function(req,res){
 	var data = req.body
 	console.log('submit_email')
 	console.log(data)
+
+	res.sendStatus(200)
 })
 
 app.post('/submit_answers', function(req,res){
 	var data = req.body
 	console.log('submit_answers')
 	console.log(data)
+
+	if(data.article){
+		data.article = data.article.split('.html')[0] + '.html'
+	}
+	data.UDID = data.UDID.replace(/-/g, '_');
+	console.log(data.UDID)
+	MongoClient.connect(url, function(err, db) {
+		var dbd = db.db(questions_db) 
+		if (err) throw err;
+		var s = data.startTime.toString().split('.')[0]
+		//console.log(data.UDID + s)
+  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		db.close();
+	});
+
+	res.sendStatus(200)
 })
 
 app.post('/session_replay', function(req,res){
