@@ -7,25 +7,40 @@ var headers = { 'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY' };
 var nyt_key = "1ee97e209fe0403fb34042bbd31ab50f" // new york times api key for top stories
 
 
-const version = "v0.3.1"
+const version = "v0.4.0"
 //"schema" for this db 
 // add version to sessions collection 
 // ---------------------------------------------------------------------------
 // db: data (contains everything but actual session data)
-// 		collection: articles (for now contains every article read, but can later add scraper to this)
+// 		collection: articles (constain )
 //			document: text - where we save the article text, article_link - link to article at nytimes.com, category, abstract, 
 //					  title - normal title shown at top of article and in list of articles, date_written - YYYY/MM/DD, version
-//		collection: sessions (contains all completed reading sessions, actually session data is in session db though)
+//		collection: sessions (contains all completed reading sessions, acts as pointer to collections within sessions, questions, and events dbs)
 //			document: UDID - id for that specific phone, article_id - objectid of article in articles collection, startTime - when session started, type - what type of device was used for reading,
 // 					   endTime - when session closed , completed -if they tapped to submit yet or not, version, 
 //						content - word, character, text, and more info for each cell, portrait - if device was portait or not during reading
-// db: sessions (each collection holds scrolling data for specfic session)			  
+//		collection: emails (contains all articles )
+//			document: UDID - id for that specific phone, email - submitted email from app splash screen
+// 	
+//
+//
+//
+//	db: sessions (each collection holds scrolling data for specfic session)			  
 //		collection: UDID + startTime (each title of collection is combination of these)
 //			(new document every time a new last line appears)
 //			documents: UDID, last_cell - what the new last line is, first_cell - what the first line is right now, previous_last_cell - what the previous last line is, previous_first_cell
 //					   content_offset - how much user has scrolled, article_id - links to article in articles collection,
 //					   appeared - time when previous last line appeared, startTime - same as startTime in sessions collection, time - time when data was sent to server (given by phone),
 //
+//
+//	db: events (each collection holds event data for specfic session)			  
+//		collection: UDID + startTime (each title of collection is combination of these)
+//			documents: each type of event objects, no specific structure.
+//
+///
+//	db: questions(each collection holds event data for specfic session)	
+//		collection: UDID + startTime (each title of collection is combination of these)
+//			documents: answers and questions for each survery after every session. 
 // 
 // ----------------------------------------------------------------------------
 
