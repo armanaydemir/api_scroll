@@ -55,7 +55,7 @@ const version = "v0.4.0"
 //0.3.1 -> final changes for production (orientation) ... 0.3.2 will be official release
 //0.3.3 -> making changes to article endpoint to hopefully get it consistent ??
 //0.3.4 -> change for bc of mercury deprication
-//0.3.5
+//0.4.0 -> change to schema for emails and questions
 
 
 //xcode
@@ -67,7 +67,7 @@ const version = "v0.4.0"
 //0.2.7 -> maaaany ui changes and a whole refactore, also sending word, character, and content splits now
 //0.3.1 -> final changes for production (orientation and nicer button)
 //0.3.5 -> small changes (should be practically the same) (next changes will be for notifications)
-
+//0.4.0 -> changes for emails and questions adn finally ready.
 
 //two of the exact same functions in index.js and db.js, should condense and call it from the other one
 function parse_body(body) {
