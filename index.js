@@ -356,13 +356,13 @@ app.get('/settings', function(req,res){
 	res.send(toReturn)
 })
 
-app.get('/submit_email', function(req,res){
+app.post('/submit_email', function(req,res){
 	var data = req.body
 	console.log('submit_email')
 	console.log(data)
 })
 
-app.get('/submit_answers', function(req,res){
+app.post('/submit_answers', function(req,res){
 	var data = req.body
 	console.log('submit_answers')
 	console.log(data)
