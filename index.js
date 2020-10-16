@@ -34,6 +34,41 @@ var sessions_db = 'sessions70'
 var events_db = 'events70'
 var questions_db = 'questions70'
 
+var standard_questions = [
+{
+	"id": "1"
+	"text": "Out of 5, what would you rate the quality of the article"
+	"options": [		
+		{"id": "1", "text": "1"},
+		{"id": "2", "text": "2"},
+		{"id": "3", "text": "3"},
+		{"id": "4", "text": "4"},
+		{"id": "5", "text": "5"}
+	]
+},
+{
+	"id": "2"
+	"text": "Out of 5, what would you rate your understanding of the article"
+	"options": [		
+		{"id": "1", "text": "1"},
+		{"id": "2", "text": "2"},
+		{"id": "3", "text": "3"},
+		{"id": "4", "text": "4"},
+		{"id": "5", "text": "5"}
+	]
+},
+{
+	"id": "3"
+	"text": "Out of 5, what would you rate your prior interest in article's subject"
+	"options": [		
+		{"id": "1", "text": "1"},
+		{"id": "2", "text": "2"},
+		{"id": "3", "text": "3"},
+		{"id": "4", "text": "4"},
+		{"id": "5", "text": "5"}
+	]
+},
+]
 
 
 //complete_sessions01
@@ -269,6 +304,7 @@ function init_session(data, res) {
 				toReturn.sessionID = ress.insertedId
 				toReturn.article_data = result
 				toReturn.max_lines = maxLines
+				toReturn.questions = standard_questions
 				//console.log(result.sessionID)
 				res.send(toReturn);
 			});
