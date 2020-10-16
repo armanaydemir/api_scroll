@@ -559,7 +559,7 @@ app.post("/submit_data_batched", function(req, res) {
 		data.article = data.article.split('.html')[0] + '.html'
 	}
 	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(data.data)
+	//console.log(data.data)
 	//console.log(data.session_id)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(sessions_db) 
