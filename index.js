@@ -20,7 +20,7 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp69'
+var database = 'data037temp70'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -30,9 +30,9 @@ var combined_articles_collection = 'complete_articles01'
 var emails_collection = "complete_emails01"
 
 
-var sessions_db = 'sessions18'
-var events_db = 'events18'
-var questions_db = 'questions18'
+var sessions_db = 'sessions70'
+var events_db = 'events70'
+var questions_db = 'questions70'
 
 
 
@@ -297,8 +297,8 @@ app.get('/identities', function(req,res){
 
 async function sessions_article_helper(dbd,result){
 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
-	console.log(article_data)
-	console.log(result.article_id)
+	//console.log(article_data)
+	//console.log(result.article_id)
 	result.article_title = article_data.title
 	result.article_data = article_data
 	//console.log(article_data.text)
@@ -334,9 +334,9 @@ app.get('/sessions', function(req,res){
 					}
 					tempi = tempi + 1
 				}
-				console.log("jabjabjab")
-				console.log(ccc)
-				console.log(tempi)
+				//console.log("jabjabjab")
+				//console.log(ccc)
+				//console.log(tempi)
 				res.send(data)
 				//res.send(new_data)
 				db.close()
