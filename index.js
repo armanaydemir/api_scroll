@@ -32,7 +32,7 @@ var emails_collection = "complete_emails01"
 
 var sessions_db = 'sessions18'
 var events_db = 'events18'
-
+var questions_db = 'questions18'
 
 
 
@@ -359,6 +359,12 @@ app.get('/settings', function(req,res){
 app.get('/submit_email', function(req,res){
 	var data = req.body
 	console.log('submit_email')
+	console.log(data)
+})
+
+app.get('/submit_answers', function(req,res){
+	var data = req.body
+	console.log('submit_answers')
 	console.log(data)
 })
 
