@@ -37,9 +37,9 @@ const version = "v0.4.0"
 //		collection: UDID + startTime (each title of collection is combination of these)
 //			documents: each type of event objects, no specific structure.
 //
-///
+/// right now questions is the only one that uses "sessionID instead of UDID+startTime. this is the id of the document in the collection of data.sessions"
 //	db: questions(each collection holds event data for specfic session)	
-//		collection: UDID + startTime (each title of collection is combination of these)
+//		collection: sessionID (each title of collection is combination of these)
 //			documents: answers and questions for each survery after every session. 
 // 
 // ----------------------------------------------------------------------------
