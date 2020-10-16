@@ -408,14 +408,14 @@ app.post('/submit_answers', function(req,res){
 	if(data.article){
 		data.article = data.article.split('.html')[0] + '.html'
 	}
-	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(data.UDID)
+	// data.UDID = data.UDID.replace(/-/g, '_');
+	// console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(questions_db) 
 		if (err) throw err;
-		var s = data.startTime.toString().split('.')[0]
+		// var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.sessionID).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
@@ -583,14 +583,14 @@ app.post("/submit_event", function(req, res) {
 	if(data.article){
 		data.article = data.article.split('.html')[0] + '.html'
 	}
-	// data.UDID = data.UDID.replace(/-/g, '_');
-	// console.log(data.UDID)
+	data.UDID = data.UDID.replace(/-/g, '_');
+	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
 		var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.sessionID).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
