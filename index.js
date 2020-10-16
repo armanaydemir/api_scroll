@@ -415,7 +415,7 @@ app.post('/submit_answers', function(req,res){
 		if (err) throw err;
 		// var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.sessionID).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
