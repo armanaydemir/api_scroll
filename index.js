@@ -397,7 +397,12 @@ app.post('/submit_email', function(req,res){
 	console.log('submit_email')
 	console.log(data)
 
-	res.sendStatus(200)
+	MongoClient.connect(url, function(err, db) {
+		var dbd = db.db(database) 
+		if (err) throw err;
+  		dbd.collection(emails_collection).insertOne(data, function(e, resu){ if (e) {throw e;} else {res.send({"success": true})} });
+  		db.close();
+	});
 })
 
 app.post('/submit_answers', function(req,res){
