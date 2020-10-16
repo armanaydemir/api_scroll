@@ -20,7 +20,7 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp70'
+var database = 'data037temp71'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -30,9 +30,9 @@ var combined_articles_collection = 'complete_articles01'
 var emails_collection = "complete_emails01"
 
 
-var sessions_db = 'sessions70'
-var events_db = 'events70'
-var questions_db = 'questions70'
+var sessions_db = 'sessions71'
+var events_db = 'events71'
+var questions_db = 'questions71'
 
 var standard_questions = [
 {
