@@ -418,8 +418,6 @@ app.post('/submit_answers', function(req,res){
   		dbd.collection(data.session_id).insertOne(data, function(e, resu){ if (e) {throw e;} else {res.send({"success": true})} });
   		db.close();
 	});
-
-	res.sendStatus(200)
 })
 
 app.post('/session_replay', function(req,res){
