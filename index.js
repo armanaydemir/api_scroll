@@ -36,8 +36,8 @@ var questions_db = 'questions70'
 
 var standard_questions = [
 {
-	"id": "1"
-	"text": "Out of 5, what would you rate the quality of the article"
+	"id": "1",
+	"text": "Out of 5, what would you rate the quality of the article",
 	"options": [		
 		{"id": "1", "text": "1"},
 		{"id": "2", "text": "2"},
@@ -47,8 +47,8 @@ var standard_questions = [
 	]
 },
 {
-	"id": "2"
-	"text": "Out of 5, what would you rate your understanding of the article"
+	"id": "2",
+	"text": "Out of 5, what would you rate your understanding of the article",
 	"options": [		
 		{"id": "1", "text": "1"},
 		{"id": "2", "text": "2"},
@@ -58,8 +58,8 @@ var standard_questions = [
 	]
 },
 {
-	"id": "3"
-	"text": "Out of 5, what would you rate your prior interest in article's subject"
+	"id": "3",
+	"text": "Out of 5, what would you rate your prior interest in article's subject",
 	"options": [		
 		{"id": "1", "text": "1"},
 		{"id": "2", "text": "2"},
@@ -67,7 +67,7 @@ var standard_questions = [
 		{"id": "4", "text": "4"},
 		{"id": "5", "text": "5"}
 	]
-},
+}
 ]
 
 
