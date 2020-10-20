@@ -124,6 +124,7 @@ var headers = {
 };
 
 function parse_body_npr(result) {
+	console.log("parse_body_npr")
 	var body = result
 	const $ = cheerio.load(body);
 	const bodies = $('p');
@@ -273,11 +274,11 @@ function add_article_npr(data, callback) {
 		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
-				//console.log('new article scrape')
-				// console.log(data)
+				console.log('new article scrape')
+				console.log(data)
 				request.get({ url: data.address }, function(er, response, body) {
 					data.text = parse_body_npr(body)
-					// console.log(data.text)
+					console.log(data.text)
 					data.content = parse_lines(data.text)
 					data.title = data.text[0]
 					data.version = version
