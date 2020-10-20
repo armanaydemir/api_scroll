@@ -209,7 +209,7 @@ function scrape_top_npr(callback) {
 		var i = 0
 		while(i < links.length){
 			const link = links[i]
-			console.log(link.children.attribs)
+			console.log(link.children[0].attribs)
 			i = i+1
 		}
 		console.log(i)
