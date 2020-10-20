@@ -124,7 +124,7 @@ var headers = {
 };
 
 function parse_body_npr(result) {
-	var body = result.content
+	var body = result
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 2;
@@ -276,7 +276,7 @@ function add_article_npr(data, callback) {
 				//console.log('new article scrape')
 				// console.log(data)
 				request.get({ url: data.address }, function(er, response, body) {
-					data.text = parse_body_npr(result)
+					data.text = parse_body_npr(body)
 					// console.log(data.text)
 					data.content = parse_lines(data.text)
 					data.title = data.text[0]
