@@ -241,7 +241,7 @@ function scrape_top_npr(callback) {
 	 			return result
 	 		})
 	 	})
-		return r
+		callback(r)
 	})
 }
 
@@ -280,7 +280,7 @@ function add_article_npr(data, callback) {
 				console.log(data)
 				request.get({ url: data.address }, function(er, response, body) {
 					data.text = parse_body_npr(body)
-					console.log(data.text)
+					//console.log(data.text)
 					data.content = parse_lines(data.text)
 					data.title = data.text[0]
 					data.version = version
