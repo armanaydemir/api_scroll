@@ -20,7 +20,7 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp72'
+var database = 'data037temp73'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -30,9 +30,9 @@ var combined_articles_collection = 'complete_articles01'
 var emails_collection = "complete_emails01"
 
 
-var sessions_db = 'sessions72'
-var events_db = 'events72'
-var questions_db = 'questions72'
+var sessions_db = 'sessions73'
+var events_db = 'events73'
+var questions_db = 'questions73'
 
 var standard_questions = [
 {
@@ -267,9 +267,10 @@ function scrape_top(callback) {
 }
 
 function add_article_npr(data, callback) {
+	console.log("add article npr")
 	data.address = "https://text.npr.org" + data.url
 	data.article_link = data.address
-	//console.log('add_Article')
+	console.log(data.address)
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
@@ -298,7 +299,7 @@ function add_article_npr(data, callback) {
 					})
 				})
 			}else{
-				//console.log(result.content)
+				console.log(result)
 				db.close()
 				callback(result)
 			}
