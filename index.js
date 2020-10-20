@@ -206,7 +206,13 @@ function scrape_top_npr(callback) {
 	 	const $ = cheerio.load(body);
 		const bodies = $('ul');
 		const links = bodies[0].children
-		console.log(links)
+		var i = 0
+		while(i < links.length){
+			const link = links[i]
+			console.log(link.children)
+			i = i+1
+		}
+		console.log(i)
 	//  	r.map(function(data){
 	//  		add_article(data, function(result){
 	//  			return result
