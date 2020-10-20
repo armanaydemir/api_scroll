@@ -385,7 +385,7 @@ function init_session(data, res) {
 }
 
 app.get('/articles', function(req, res){
-	scrape_top(function(tops){
+	scrape_top_npr(function(tops){
 		console.log("tops")
 		//console.log(tops[0].title)
 		res.send(tops)
