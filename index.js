@@ -20,7 +20,7 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp71'
+var database = 'data037temp72'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -30,9 +30,9 @@ var combined_articles_collection = 'complete_articles01'
 var emails_collection = "complete_emails01"
 
 
-var sessions_db = 'sessions71'
-var events_db = 'events71'
-var questions_db = 'questions71'
+var sessions_db = 'sessions72'
+var events_db = 'events72'
+var questions_db = 'questions72'
 
 var standard_questions = [
 {
@@ -127,11 +127,34 @@ function parse_body_npr(result) {
 	var body = result.content
 	const $ = cheerio.load(body);
 	const bodies = $('p');
-	var i = 0;
+	var i = 2;
 	var sections = []; 
-	// const title = result.title
-	// sections.push(title)
-	return sections
+	const title = result.title
+	sections.push(title)
+	while(i < bodies.length){
+		var o = 0;
+		var subsections = [];
+		//console.log(bodies[i].children.length)
+		while(o < bodies[i].children.length){
+			if(bodies[i].children[o].type == 'text'){
+				subsections.push(bodies[i].children[o].data.replace('\\n',''));
+				//console.log(bodies[i].children[o].data)
+			}
+			else if(bodies[i].children[o].type == 'tag' && bodies[i].children[o].children.length > 0 && bodies[i].children[o].children[0].data){
+				//console.log(bodies[i].children[o].children[0])
+				subsections.push(bodies[i].children[o].children[0].data.replace('\\n',''));
+				
+			}
+			o ++;
+		}	
+		//console.log(subsections);
+		//console.log(subsections.join(''));
+		//console.log('------------------------')
+		sections.push(subsections.join(''));
+		i ++;
+	}
+	//console.log(title);
+	return sections;
 }
 
 function parse_body(result) {
@@ -193,9 +216,6 @@ function parse_lines(text) {
 		}
 		i += 1
 	}
-	// setInterval(myTimer, 1000)
-	// console.log(content)
-	// console.log("=")
 	return content
 }
 
@@ -205,22 +225,22 @@ function scrape_top_npr(callback) {
 		if(err) throw err;
 	 	const $ = cheerio.load(body);
 		const bodies = $('ul');
-		const links = bodies[0].children
+		const li = bodies[0].children
 		var i = 0
-		while(i < links.length){
-			const link = links[i]
-			console.log(link.children[0].attribs.href)
+		var r = []
+		while(i < li.length){
+			const link = li[i]
+			r.push({"url": link.children[0].attribs.href})
+			// console.log(link.children[0].attribs.href)
 			i = i+1
 		}
-		console.log(i)
-	//  	r.map(function(data){
-	//  		add_article(data, function(result){
-	//  			return result
-	//  		})
-	//  	})
+	 	r.map(function(data){
+	 		add_article_npr(data, function(result){
+	 			return result
+	 		})
+	 	})
 		return r
 	})
-
 }
 
 function scrape_top(callback) {
@@ -233,37 +253,54 @@ function scrape_top(callback) {
 		// console.log(err)
 		if(err) throw err;
 	 	body = JSON.parse(body);
-	 	//r = [body.results[0]]
 	 	r = body.results
-	 	// console.log(r[0].title)
 	 	r.map(function(data){
 	 		add_article(data, function(result){
 	 			return result
 	 		})
 	 	})
-	 	// console.log(r[0].article_link)
-// 	 	i = 0
-// 	 	syncer = 0
-// 	 	var tops = []
-// 	 	console.log(r)
-// 	 	while(r && i < r.length){
-// //	 		console.log(r[i].title)
-// 	 		add_article(r[i] , function(result,input){
-// 	 			// if(syncer == 1){
-// 	 			// 	console.log(tops)
-// 	 			// }
-// 	 			a = result
-// 	 			syncer ++
-// 	 			if(a){tops.push(a)}
-// 	 			if(!(syncer < r.length)){
-// 	 				callback(tops);
-// 	 			}
-// 	 		})
-// 	 		i++
-// 	 	}
-
 		callback(r)
  	})
+}
+
+function add_article_npr(data, callback) {
+	data.address = "https://text.npr.org" + data.url
+	data.article_link = data.address
+	//console.log('add_Article')
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(database)
+		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
+			if(err) throw(err);
+			if(!result){
+				//console.log('new article scrape')
+				// console.log(data)
+				request.get({ url: data.address }, function(er, response, body) {
+					data.text = parse_body_npr(result)
+					// console.log(data.text)
+					data.content = parse_lines(data.text)
+					data.title = data.text[0]
+					data.version = version
+					data.line_count = data.content.length
+					//console.log(data)
+					//console.log("----")
+					//console.log(data.content)
+					
+					dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
+						db.close()
+						// console.log(resu.text)
+						// console.log(resu.content)
+						// console.log("----")
+						callback(resu)
+					})
+				})
+			}else{
+				//console.log(result.content)
+				db.close()
+				callback(result)
+			}
+		})
+	})	
 }
 
 function add_article(data, callback) {
