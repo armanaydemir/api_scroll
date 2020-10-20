@@ -204,12 +204,12 @@ function scrape_top_npr(callback) {
 	function(err, response, body) {
 		if(err) throw err;
 		console.log(body)
-		console.log(response)
-	 	body = JSON.parse(body);
-	 	//r = [body.results[0]]
-	 	r = body.results
-	 	// console.log(r[0].title)
-	 	console.log(r)
+		// console.log(response)
+	 	// body = JSON.parse(body);
+	 	// //r = [body.results[0]]
+	 	// r = body.results
+	 	// // console.log(r[0].title)
+	 	// console.log(r)
 	//  	r.map(function(data){
 	//  		add_article(data, function(result){
 	//  			return result
