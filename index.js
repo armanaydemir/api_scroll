@@ -20,7 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp73'
+var database = 'data037temp74'
+var sessions_db = 'sessions74'
+var events_db = 'events74'
+var questions_db = 'questions74'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -30,9 +33,7 @@ var combined_articles_collection = 'complete_articles01'
 var emails_collection = "complete_emails01"
 
 
-var sessions_db = 'sessions73'
-var events_db = 'events73'
-var questions_db = 'questions73'
+
 
 var standard_questions = [
 {
@@ -130,8 +131,7 @@ function parse_body_npr(result) {
 	const bodies = $('p');
 	var i = 2;
 	var sections = []; 
-	const title = result.title
-	sections.push(title)
+
 	while(i < bodies.length){
 		var o = 0;
 		var subsections = [];
@@ -154,7 +154,6 @@ function parse_body_npr(result) {
 		sections.push(subsections.join(''));
 		i ++;
 	}
-	//console.log(title);
 	return sections;
 }
 
