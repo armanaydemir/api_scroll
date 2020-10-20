@@ -203,13 +203,10 @@ function scrape_top_npr(callback) {
 	request.get({ url: "https://text.npr.org" }, 
 	function(err, response, body) {
 		if(err) throw err;
-		console.log(body)
-		// console.log(response)
-	 	// body = JSON.parse(body);
-	 	// //r = [body.results[0]]
-	 	// r = body.results
-	 	// // console.log(r[0].title)
-	 	// console.log(r)
+	 	const $ = cheerio.load(body);
+		const bodies = $('ul');
+		const links = bodies[0].children
+		console.log(links)
 	//  	r.map(function(data){
 	//  		add_article(data, function(result){
 	//  			return result
