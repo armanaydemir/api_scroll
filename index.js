@@ -123,6 +123,17 @@ var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
 
+function parse_body_npr(result) {
+	var body = result.content
+	const $ = cheerio.load(body);
+	const bodies = $('p');
+	var i = 0;
+	var sections = []; 
+	// const title = result.title
+	// sections.push(title)
+	return sections
+}
+
 function parse_body(result) {
 	var body = result.content
 	const $ = cheerio.load(body);
@@ -186,6 +197,25 @@ function parse_lines(text) {
 	// console.log(content)
 	// console.log("=")
 	return content
+}
+
+function scrape_top_npr(callback) {
+	request.get({ url: "https://text.npr.org" }, 
+	function(err, response, body) {
+		if(err) throw err;
+	 	body = JSON.parse(body);
+	 	//r = [body.results[0]]
+	 	r = body.results
+	 	// console.log(r[0].title)
+	 	console.log(r)
+	//  	r.map(function(data){
+	//  		add_article(data, function(result){
+	//  			return result
+	//  		})
+	//  	})
+		return r
+	})
+
 }
 
 function scrape_top(callback) {
@@ -314,6 +344,14 @@ function init_session(data, res) {
 
 app.get('/articles', function(req, res){
 	scrape_top(function(tops){
+		console.log("tops")
+		//console.log(tops[0].title)
+		res.send(tops)
+	})
+});
+
+app.get('/articles_npr', function(req, res){
+	scrape_top_npr(function(tops){
 		console.log("tops")
 		//console.log(tops[0].title)
 		res.send(tops)
