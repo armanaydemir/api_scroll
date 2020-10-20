@@ -221,6 +221,7 @@ function parse_lines(text) {
 }
 
 function scrape_top_npr(callback) {
+	console.log("scrape top npr")
 	request.get({ url: "https://text.npr.org" }, 
 	function(err, response, body) {
 		if(err) throw err;
@@ -235,6 +236,7 @@ function scrape_top_npr(callback) {
 			// console.log(link.children[0].attribs.href)
 			i = i+1
 		}
+		console.log(r)
 	 	r.map(function(data){
 	 		add_article_npr(data, function(result){
 	 			return result
