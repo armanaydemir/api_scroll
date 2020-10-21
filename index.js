@@ -237,11 +237,11 @@ function scrape_top_npr(callback) {
 		}
 		//console.log(r)
 	 	Promise.all(r.map(function(data){
-	 		promise_add_article_npr(data).then(new_data => {return new_data})
+	 		promise_add_article_npr(data).then(new_data => {
+	 			console.log("finaler")
+	 			console.log(new_data)
+	 			return new_data})
 	 	})).then((final_r) => {
-	 		console.log("finaler")
-	 		console.log(final_r)
-	 		console.log(r)
 	 		callback(r)
 	 	})
 	 	// console.log("r.map")
