@@ -259,11 +259,12 @@ function scrape_top(callback) {
 		if(err) throw err;
 	 	body = JSON.parse(body);
 	 	r = body.results
-	 	r.map(function(data){
+	 	Promise.all(r.map(function(data){
 	 		add_article(data, function(result){
 	 			return result
 	 		})
-	 	}).then(() => callback(r))
+	 	}))
+		callback(r)
  	})
 }
 
