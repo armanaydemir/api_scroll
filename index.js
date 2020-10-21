@@ -236,7 +236,7 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	r.map(function(data){
+	 	r.map(async function(data){
 	 		await add_article_npr(data, (new_data => {
 	 			return new_data}))
 	 	}).then(() => {
