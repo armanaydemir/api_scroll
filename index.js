@@ -237,10 +237,7 @@ function scrape_top_npr(callback) {
 		}
 		//console.log(r)
 	 	Promise.all(r.map(function(data){
-	 		add_article_npr(data, function(result){
-	 			console.log(result)
-	 			return result
-	 		})
+	 		promise_add_article_npr(data).then(new_data => {return new_data})
 	 	})).then(() => callback(r))
 	 	// console.log("r.map")
 	 	// console.log(r)
@@ -268,7 +265,53 @@ function scrape_top(callback) {
  	})
 }
 
-async function add_article_npr(data, callback) {
+function promise_add_article_npr(data, callback) {
+	return new Promise((resolve, reject) => {
+		console.log("add article npr")
+		data.address = "https://text.npr.org" + data.url
+		data.article_link = data.address
+		console.log(data.address)
+		MongoClient.connect(url, function(e, db) {
+			if(e) throw e;
+			var dbd = db.db(database)
+			dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
+				if(err) throw(err);
+				if(!result){
+					//console.log('new article scrape')
+					//console.log(data)
+					request.get({ url: data.address }, function(er, response, body) {
+						data.text = parse_body_npr(body)
+						//console.log(data.text)
+						data.content = parse_lines(data.text)
+						data.title = data.text[0]
+						data.version = version
+						data.line_count = data.content.length
+						//console.log(data)
+						//console.log("----")
+						//console.log(data.content)
+						
+						dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
+							db.close()
+							// console.log(resu.text)
+							// console.log(resu.content)
+							// console.log("----")
+							console.log(resu.title)
+							resolve(resu)
+						})
+					})
+				}else{
+					//console.log(result)
+					db.close()
+					resolve(result)
+				}
+			})
+		})	
+	})
+	
+}
+
+
+function add_article_npr(data, callback) {
 	console.log("add article npr")
 	data.address = "https://text.npr.org" + data.url
 	data.article_link = data.address
