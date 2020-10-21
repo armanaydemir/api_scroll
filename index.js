@@ -236,14 +236,14 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	await Promise.all(r.map(function(data){
+	 	Promise.all(r.map(function(data){
 	 		add_article_npr(data, function(result){
 	 			console.log(result)
 	 			return result
 	 		})
-	 	}))
-	 	console.log("r.map")
-	 	console.log(r)
+	 	})).then(() => callback(r))
+	 	// console.log("r.map")
+	 	// console.log(r)
 		callback(r)
 	})
 }
