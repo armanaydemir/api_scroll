@@ -236,7 +236,7 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	Promise.all(r.map(function(data){
+	 	Promise.all(r.map(async function(data){
 	 		promise_add_article_npr(data).then(new_data => {
 	 			console.log("finaler")
 	 			console.log(new_data)
