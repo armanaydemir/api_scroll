@@ -236,7 +236,7 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	Promise.all(r.map(function(data){
+	 	await Promise.all(r.map(function(data){
 	 		add_article_npr(data, function(result){
 	 			console.log(result)
 	 			return result
