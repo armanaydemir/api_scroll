@@ -235,12 +235,13 @@ function scrape_top_npr(callback) {
 			// console.log(link.children[0].attribs.href)
 			i = i+1
 		}
-		console.log(r)
+		//console.log(r)
 	 	r.map(function(data){
 	 		add_article_npr(data, function(result){
 	 			return result
 	 		})
 	 	})
+	 	console.log(r)
 		callback(r)
 	})
 }
@@ -276,8 +277,8 @@ function add_article_npr(data, callback) {
 		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
-				console.log('new article scrape')
-				console.log(data)
+				//console.log('new article scrape')
+				//console.log(data)
 				request.get({ url: data.address }, function(er, response, body) {
 					data.text = parse_body_npr(body)
 					//console.log(data.text)
@@ -298,7 +299,7 @@ function add_article_npr(data, callback) {
 					})
 				})
 			}else{
-				console.log(result)
+				//console.log(result)
 				db.close()
 				callback(result)
 			}
