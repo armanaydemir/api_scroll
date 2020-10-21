@@ -236,13 +236,15 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	await r.map(async function(data){
-	 		add_article_npr(data, (new_data => {
+	 	r.map(function(data){
+	 		await add_article_npr(data, (new_data => {
 	 			return new_data}))
+	 	}).then(() => {
+	 		console.log("r.map")
+	 		console.log(r)
+			callback(r)
 	 	})
-	 	console.log("r.map")
-	 	console.log(r)
-		callback(r)
+	 	
 	})
 }
 
@@ -312,7 +314,7 @@ function promise_add_article_npr(data, callback) {
 }
 
 
-function add_article_npr(data, callback) {
+async function add_article_npr(data, callback) {
 	console.log("add article npr")
 	data.address = "https://text.npr.org" + data.url
 	data.article_link = data.address
