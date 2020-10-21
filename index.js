@@ -296,6 +296,7 @@ function add_article_npr(data, callback) {
 						// console.log(resu.text)
 						// console.log(resu.content)
 						// console.log("----")
+						console.log(resu.title)
 						callback(resu)
 					})
 				})
