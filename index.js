@@ -241,6 +241,7 @@ function scrape_top_npr(callback) {
 	 			return result
 	 		})
 	 	})
+	 	console.log("r.map")
 	 	console.log(r)
 		callback(r)
 	})
