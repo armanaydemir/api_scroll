@@ -238,6 +238,7 @@ function scrape_top_npr(callback) {
 		//console.log(r)
 	 	r.map(function(data){
 	 		add_article_npr(data, function(result){
+	 			console.log(result)
 	 			return result
 	 		})
 	 	})
