@@ -263,8 +263,7 @@ function scrape_top(callback) {
 	 		add_article(data, function(result){
 	 			return result
 	 		})
-	 	})
-		callback(r)
+	 	}).then(() => callback(r))
  	})
 }
 
