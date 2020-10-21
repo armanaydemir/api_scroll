@@ -244,7 +244,7 @@ function scrape_top_npr(callback) {
 	 	})).then(() => callback(r))
 	 	// console.log("r.map")
 	 	// console.log(r)
-		callback(r)
+		//callback(r)
 	})
 }
 
