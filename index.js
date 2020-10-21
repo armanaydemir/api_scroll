@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp75'
-var sessions_db = 'sessions75'
-var events_db = 'events75'
-var questions_db = 'questions75'
+var database = 'data037temp76'
+var sessions_db = 'sessions76'
+var events_db = 'events76'
+var questions_db = 'questions76'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -394,6 +394,7 @@ app.get('/articles', function(req, res){
 	scrape_top_npr(function(tops){
 		console.log("tops")
 		//console.log(tops[0].title)
+		console.log(tops)
 		res.send(tops)
 	})
 });
@@ -402,6 +403,7 @@ app.get('/articles_npr', function(req, res){
 	scrape_top_npr(function(tops){
 		console.log("tops")
 		//console.log(tops[0].title)
+		console.log(tops)
 		res.send(tops)
 	})
 });
