@@ -236,10 +236,7 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	Promise.all(r.map(async function(data){
-	 		await add_article_npr(data, (new_data => {
-	 			return new_data}))
-	 	})).then(() => {
+	 	Promise.all(r.map(data => return promise_add_article_npr(data))).then(() => {
 	 		console.log("r.map")
 	 		console.log(r)
 			callback(r)
@@ -268,7 +265,7 @@ function scrape_top(callback) {
  	})
 }
 
-function promise_add_article_npr(data, callback) {
+function promise_add_article_npr(data) {
 	return new Promise((resolve, reject) => {
 		console.log("add article npr")
 		data.address = "https://text.npr.org" + data.url
@@ -438,7 +435,7 @@ function init_session(data, res) {
 }
 
 app.get('/articles', function(req, res){
-	scrape_top_npr(function(tops){
+	scrape_top(function(tops){
 		console.log("tops")
 		//console.log(tops[0].title)
 		console.log(tops)
