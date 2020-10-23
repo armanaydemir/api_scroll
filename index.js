@@ -236,12 +236,12 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	r.map(data => return promise_add_article_npr(data)).then(() => {
-	 		console.log("r.map")
-	 		console.log(r)
-			callback(r)
+	 	r.map(function(data){
+	 		add_article_npr(data, function(result){
+	 			return result
+	 		})
 	 	})
-	 	
+	 	callback(r)
 	})
 }
 
