@@ -464,6 +464,7 @@ app.get('/articles', function(req, res){
 
 app.get('/nyt_scrape_one', function(req, res){
 	var data = req.body
+	console.log(data)
 	add_article(data, function(result){
 		console.log(result)
 		res.send(result)
