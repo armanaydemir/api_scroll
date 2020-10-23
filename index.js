@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp76'
-var sessions_db = 'sessions76'
-var events_db = 'events76'
-var questions_db = 'questions76'
+var database = 'data037temp77'
+var sessions_db = 'sessions77'
+var events_db = 'events77'
+var questions_db = 'questions77'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -434,7 +434,7 @@ function init_session(data, res) {
 	})
 }
 
-app.get('/scrape_articles', function(req, res){
+app.get('/npr_scrape_all', function(req, res){
 	scrape_top_npr(function(tops){
 		console.log("tops")
 		//console.log(tops[0].title)
@@ -443,7 +443,15 @@ app.get('/scrape_articles', function(req, res){
 	})
 });
 
-app.get('/all_articles', function(req, res){
+app.get('/npr_scrape_one', function(req, res){
+	var data = req.body
+	add_article_npr(data, function(result){
+		console.log(result)
+		res.send(result)
+	})
+});
+
+app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
@@ -454,23 +462,22 @@ app.get('/all_articles', function(req, res){
 	})
 })
 
-// app.get('/articles_npr', function(req, res){
-// 	scrape_top_npr(function(tops){
-// 		console.log("tops")
-// 		//console.log(tops[0].title)
-// 		console.log(tops)
-// 		res.send(tops)
-// 	})
-// });
+app.get('/nyt_scrape_one', function(req, res){
+	var data = req.body
+	add_article(data, function(result){
+		console.log(result)
+		res.send(result)
+	})
+});
 
-// app.get('/articles', function(req, res){
-// 	scrape_top_npr(function(tops){
-// 		console.log("tops")
-// 		//console.log(tops[0].title)
-// 		console.log(tops)
-// 		res.send(tops)
-// 	})
-// });
+app.get('/nyt_scrape_all', function(req, res){
+	scrape_top(function(tops){
+		console.log("tops")
+		//console.log(tops[0].title)
+		console.log(tops)
+		res.send(tops)
+	})
+});
 
 
 app.get('/identities', function(req,res){
