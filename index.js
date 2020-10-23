@@ -451,6 +451,7 @@ app.get('/all_articles', function(req, res){
 			if(err) throw err;
 			res.send(results)
 		})
+	})
 })
 
 // app.get('/articles_npr', function(req, res){
