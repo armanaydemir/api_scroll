@@ -236,7 +236,7 @@ function scrape_top_npr(callback) {
 			i = i+1
 		}
 		//console.log(r)
-	 	Promise.all(r.map(data => return promise_add_article_npr(data))).then(() => {
+	 	r.map(data => return promise_add_article_npr(data)).then(() => {
 	 		console.log("r.map")
 	 		console.log(r)
 			callback(r)
@@ -434,16 +434,7 @@ function init_session(data, res) {
 	})
 }
 
-app.get('/articles', function(req, res){
-	scrape_top(function(tops){
-		console.log("tops")
-		//console.log(tops[0].title)
-		console.log(tops)
-		res.send(tops)
-	})
-});
-
-app.get('/articles_npr', function(req, res){
+app.get('/scrape_articles', function(req, res){
 	scrape_top_npr(function(tops){
 		console.log("tops")
 		//console.log(tops[0].title)
@@ -451,6 +442,35 @@ app.get('/articles_npr', function(req, res){
 		res.send(tops)
 	})
 });
+
+app.get('/all_articles', function(req, res){
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(database)
+		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
+			if(err) throw err;
+			res.send(results)
+		})
+})
+
+// app.get('/articles_npr', function(req, res){
+// 	scrape_top_npr(function(tops){
+// 		console.log("tops")
+// 		//console.log(tops[0].title)
+// 		console.log(tops)
+// 		res.send(tops)
+// 	})
+// });
+
+// app.get('/articles', function(req, res){
+// 	scrape_top_npr(function(tops){
+// 		console.log("tops")
+// 		//console.log(tops[0].title)
+// 		console.log(tops)
+// 		res.send(tops)
+// 	})
+// });
+
 
 app.get('/identities', function(req,res){
 	res.send([{"udid":"0B70C724_6597_4659_9322_E113E9403601","device":"iPhone9,1"}
