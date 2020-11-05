@@ -141,6 +141,7 @@ function parse_body_npr(result) {
 				console.log('hhh')
 				sections.push(bodies[i].children[o].data.replace('\\n',''))
 			}
+			o ++;
 		}
 		i ++;
 	}
