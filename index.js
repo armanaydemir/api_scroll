@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp78'
-var sessions_db = 'sessions78'
-var events_db = 'events78'
-var questions_db = 'questions78'
+var database = 'data037temp79'
+var sessions_db = 'sessions79'
+var events_db = 'events79'
+var questions_db = 'questions79'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -129,7 +129,7 @@ function parse_body_npr(result) {
 	var body = result
 	const $ = cheerio.load(body);
 	const bodies = $('p');
-	var i = 2;
+	var i = 1;
 	var sections = []; 
 
 	while(i < bodies.length){
@@ -411,7 +411,7 @@ function init_session(data, res) {
 	}
 	//address = address.split('.html')[0] + '.html'
 	data.url = address
-	add_article(data,function(result){
+	add_article_npr(data,function(result){
 		MongoClient.connect(url, function(e, db) {
 			if(e) throw e;
 			var dbd = db.db(database)
@@ -446,7 +446,7 @@ app.get('/npr_scrape_all', function(req, res){
 app.get('/npr_scrape_one', function(req, res){
 	var data = req.body
 	add_article_npr(data, function(result){
-		console.log(result)
+		// console.log(result)
 		res.send(result)
 	})
 });
