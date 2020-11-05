@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp81'
-var sessions_db = 'sessions81'
-var events_db = 'events81'
-var questions_db = 'questions81'
+var database = 'data037temp82'
+var sessions_db = 'sessions82'
+var events_db = 'events82'
+var questions_db = 'questions82'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -136,15 +136,17 @@ function parse_body_npr(result) {
 	console.log(headers.length)
 	while(i < headers.length){
 		var o = 0
-		while(o < headers[i].children[0].type == 'text'){
-			console.log('hhh')
-			sections.push(bodies[i].children[o].data.replace('\\n',''))
+		while(o < headers[i].children.length){}
+			if(headers[i].children[o].type == 'text'){
+				console.log('hhh')
+				sections.push(bodies[i].children[o].data.replace('\\n',''))
+			}
 		}
 		i ++;
 	}
 
 
-	i = 1
+	i = 2
 	while(i < bodies.length){
 		var o = 0;
 		var subsections = [];
