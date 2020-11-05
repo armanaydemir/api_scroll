@@ -132,9 +132,12 @@ function parse_body_npr(result) {
 	var i = 0;
 	const headers = $('h1')
 	var sections = []; 
+	console.log('headers.length')
+	console.log(headers.length)
 	while(i < headers.length){
 		var o = 0
 		while(o < headers[i].children[0].type == 'text'){
+			console.log('hhh')
 			sections.push(bodies[i].children[o].data.replace('\\n',''))
 		}
 		i ++;
