@@ -268,7 +268,7 @@ function scrape_top(callback) {
 function promise_add_article_npr(data) {
 	return new Promise((resolve, reject) => {
 		console.log("add article npr")
-		data.address = "https://text.npr.org" + data.url
+		data.address = data.url
 		data.article_link = data.address
 		console.log(data.address)
 		MongoClient.connect(url, function(e, db) {
@@ -313,7 +313,7 @@ function promise_add_article_npr(data) {
 
 async function add_article_npr(data, callback) {
 	console.log("add article npr")
-	data.address = "https://text.npr.org" + data.url
+	data.address = data.url
 	data.article_link = data.address
 	console.log(data.address)
 	MongoClient.connect(url, function(e, db) {
@@ -404,12 +404,12 @@ function add_article(data, callback) {
 
 
 function init_session(data, res) {
-	//console.log(data)
+	// console.log(data)
 	var address = data.article_link
-	if(!address.includes("https://www.nytimes.com")){
-		console.log('isnt nytimes, this should be fun lol')
+	if(!address.includes("text.npr")){
+		console.log('isnt text.npr, this should be fun lol')
 	}
-	address = address.split('.html')[0] + '.html'
+	//address = address.split('.html')[0] + '.html'
 	data.url = address
 	add_article(data,function(result){
 		MongoClient.connect(url, function(e, db) {
