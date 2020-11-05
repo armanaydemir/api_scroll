@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 //very important
-var database = 'data037temp83'
-var sessions_db = 'sessions83'
-var events_db = 'events83'
-var questions_db = 'questions83'
+var database = 'data037temp84'
+var sessions_db = 'sessions84'
+var events_db = 'events84'
+var questions_db = 'questions84'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -130,21 +130,23 @@ function parse_body_npr(result) {
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 0;
-	const headers = $('h1')
-	var sections = []; 
-	console.log('headers.length')
-	console.log(headers.length)
-	while(i < headers.length){
-		var o = 0
-		while(o < headers[i].children.length){
-			if(headers[i].children[o].type == 'text'){
-				console.log('hhh')
-				sections.push(bodies[i].children[o].data.replace('\\n',''))
-			}
-			o ++;
-		}
-		i ++;
-	}
+	// const headers = $('h1')
+	const title = $(".story-title")
+	console.log(title.text())
+	var sections = [title.text()]; 
+	// console.log('headers.length')
+	// console.log(headers.length)
+	// while(i < headers.length){
+	// 	var o = 0
+	// 	while(o < headers[i].children.length){
+	// 		if(headers[i].children[o].type == 'text'){
+	// 			console.log('hhh')
+	// 			sections.push(bodies[i].children[o].data.replace('\\n',''))
+	// 		}
+	// 		o ++;
+	// 	}
+	// 	i ++;
+	// }
 
 
 	i = 2
