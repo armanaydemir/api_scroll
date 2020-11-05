@@ -129,42 +129,19 @@ function parse_body_npr(result) {
 	var body = result
 	const $ = cheerio.load(body);
 	const bodies = $('p');
-	var i = 1;
-	var sections = []; 
-
-	while(i < bodies.length){
-		var o = 0;
-		var subsections = [];
-		//console.log(bodies[i].children.length)
-		while(o < bodies[i].children.length){
-			if(bodies[i].children[o].type == 'text'){
-				subsections.push(bodies[i].children[o].data.replace('\\n',''));
-				//console.log(bodies[i].children[o].data)
-			}
-			else if(bodies[i].children[o].type == 'tag' && bodies[i].children[o].children.length > 0 && bodies[i].children[o].children[0].data){
-				//console.log(bodies[i].children[o].children[0])
-				subsections.push(bodies[i].children[o].children[0].data.replace('\\n',''));
-				
-			}
-			o ++;
-		}	
-		//console.log(subsections);
-		//console.log(subsections.join(''));
-		//console.log('------------------------')
-		sections.push(subsections.join(''));
-		i ++;
-	}
-	return sections;
-}
-
-function parse_body(result) {
-	var body = result.content
-	const $ = cheerio.load(body);
-	const bodies = $('p');
 	var i = 0;
+	const headers = $('h1')
 	var sections = []; 
-	const title = result.title
-	sections.push(title)
+	while(i < headers.length){
+		var o = 0
+		while(o < headers[i].children[0].type == 'text'){
+			sections.push(bodies[i].children[o].data.replace('\\n',''))
+		}
+		i ++;
+	}
+
+
+	i = 1
 	while(i < bodies.length){
 		var o = 0;
 		var subsections = [];
@@ -187,9 +164,42 @@ function parse_body(result) {
 		sections.push(subsections.join(''));
 		i ++;
 	}
-	//console.log(title);
 	return sections;
 }
+
+// function parse_body(result) {
+// 	var body = result.content
+// 	const $ = cheerio.load(body);
+// 	const bodies = $('p');
+// 	var i = 0;
+// 	var sections = []; 
+// 	const title = result.title
+// 	sections.push(title)
+// 	while(i < bodies.length){
+// 		var o = 0;
+// 		var subsections = [];
+// 		//console.log(bodies[i].children.length)
+// 		while(o < bodies[i].children.length){
+// 			if(bodies[i].children[o].type == 'text'){
+// 				subsections.push(bodies[i].children[o].data.replace('\\n',''));
+// 				//console.log(bodies[i].children[o].data)
+// 			}
+// 			else if(bodies[i].children[o].type == 'tag' && bodies[i].children[o].children.length > 0 && bodies[i].children[o].children[0].data){
+// 				//console.log(bodies[i].children[o].children[0])
+// 				subsections.push(bodies[i].children[o].children[0].data.replace('\\n',''));
+				
+// 			}
+// 			o ++;
+// 		}	
+// 		//console.log(subsections);
+// 		//console.log(subsections.join(''));
+// 		//console.log('------------------------')
+// 		sections.push(subsections.join(''));
+// 		i ++;
+// 	}
+// 	//console.log(title);
+// 	return sections;
+// }
 
 function parse_lines(text) {
 	var content = []
