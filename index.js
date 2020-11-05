@@ -245,25 +245,25 @@ function scrape_top_npr(callback) {
 	})
 }
 
-function scrape_top(callback) {
-	request.get({
-	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
-	  qs: {
-	    'api-key': nyt_key
-	  },
-	}, function(err, response, body) {
-		// console.log(err)
-		if(err) throw err;
-	 	body = JSON.parse(body);
-	 	r = body.results
-	 	r.map(function(data){
-	 		add_article(data, function(result){
-	 			return result
-	 		})
-	 	})
-		callback(r)
- 	})
-}
+// function scrape_top(callback) {
+// 	request.get({
+// 	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
+// 	  qs: {
+// 	    'api-key': nyt_key
+// 	  },
+// 	}, function(err, response, body) {
+// 		// console.log(err)
+// 		if(err) throw err;
+// 	 	body = JSON.parse(body);
+// 	 	r = body.results
+// 	 	r.map(function(data){
+// 	 		add_article(data, function(result){
+// 	 			return result
+// 	 		})
+// 	 	})
+// 		callback(r)
+//  	})
+// }
 
 function promise_add_article_npr(data) {
 	return new Promise((resolve, reject) => {
@@ -353,53 +353,53 @@ async function add_article_npr(data, callback) {
 	})	
 }
 
-function add_article(data, callback) {
-	data.address = data.url
-	data.address = data.address.split('.html')[0]
-	var link = data.address.split('/')
-	data.address = data.address + '.html'
-	data.date_written = link.slice(3, 6).join('/')
-	data.category = link.slice(6, link.length-1).join('/')
-	data.article_link = data.address
-	//console.log('add_Article')
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbd = db.db(database)
-		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
-			if(err) throw(err);
-			if(!result){
-				//console.log('new article scrape')
-				var options = {
-					url: data.address
-				};
-				// console.log(data)
-				Mercury.parse(options.url).then(result => {
-					data.text = parse_body(result)
-					// console.log(data.text)
-					data.content = parse_lines(data.text)
-					data.title = data.text[0]
-					data.version = version
-					data.line_count = data.content.length
-					//console.log(data)
-					//console.log("----")
-					//console.log(data.content)
+// function add_article(data, callback) {
+// 	data.address = data.url
+// 	data.address = data.address.split('.html')[0]
+// 	var link = data.address.split('/')
+// 	data.address = data.address + '.html'
+// 	data.date_written = link.slice(3, 6).join('/')
+// 	data.category = link.slice(6, link.length-1).join('/')
+// 	data.article_link = data.address
+// 	//console.log('add_Article')
+// 	MongoClient.connect(url, function(e, db) {
+// 		if(e) throw e;
+// 		var dbd = db.db(database)
+// 		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
+// 			if(err) throw(err);
+// 			if(!result){
+// 				//console.log('new article scrape')
+// 				var options = {
+// 					url: data.address
+// 				};
+// 				// console.log(data)
+// 				Mercury.parse(options.url).then(result => {
+// 					data.text = parse_body(result)
+// 					// console.log(data.text)
+// 					data.content = parse_lines(data.text)
+// 					data.title = data.text[0]
+// 					data.version = version
+// 					data.line_count = data.content.length
+// 					//console.log(data)
+// 					//console.log("----")
+// 					//console.log(data.content)
 					
-					dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
-						db.close()
-						// console.log(resu.text)
-						// console.log(resu.content)
-						// console.log("----")
-						callback(resu)
-					})
-				})
-			}else{
-				//console.log(result.content)
-				db.close()
-				callback(result)
-			}
-		})
-	})	
-}
+// 					dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
+// 						db.close()
+// 						// console.log(resu.text)
+// 						// console.log(resu.content)
+// 						// console.log("----")
+// 						callback(resu)
+// 					})
+// 				})
+// 			}else{
+// 				//console.log(result.content)
+// 				db.close()
+// 				callback(result)
+// 			}
+// 		})
+// 	})	
+// }
 
 
 
@@ -462,23 +462,23 @@ app.get('/articles', function(req, res){
 	})
 })
 
-app.get('/nyt_scrape_one', function(req, res){
-	var data = req.body
-	console.log(data)
-	add_article(data, function(result){
-		console.log(result)
-		res.send(result)
-	})
-});
+// app.get('/nyt_scrape_one', function(req, res){
+// 	var data = req.body
+// 	console.log(data)
+// 	add_article(data, function(result){
+// 		console.log(result)
+// 		res.send(result)
+// 	})
+// });
 
-app.get('/nyt_scrape_all', function(req, res){
-	scrape_top(function(tops){
-		console.log("tops")
-		//console.log(tops[0].title)
-		console.log(tops)
-		res.send(tops)
-	})
-});
+// app.get('/nyt_scrape_all', function(req, res){
+// 	scrape_top(function(tops){
+// 		console.log("tops")
+// 		//console.log(tops[0].title)
+// 		console.log(tops)
+// 		res.send(tops)
+// 	})
+// });
 
 
 // app.get('/identities', function(req,res){
@@ -571,9 +571,9 @@ app.post('/submit_answers', function(req,res){
 	console.log('submit_answers')
 	console.log(data)
 
-	if(data.article){
-		data.article = data.article.split('.html')[0] + '.html'
-	}
+	// if(data.article){
+	// 	data.article = data.article.split('.html')[0] + '.html'
+	// }
 	// data.UDID = data.UDID.replace(/-/g, '_');
 	// console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
@@ -682,7 +682,7 @@ app.post("/open_article", function(req, res) {
 	//console.log('open article')
 	var data = req.body
 
-	data.article_link = data.article_link.split('.html')[0] + '.html'
+	//data.article_link = data.article_link.split('.html')[0] + '.html'
 	data.UDID = data.UDID.replace(/-/g, '_');
 	// console.log(data.article_link + ' : ' + data.UDID);s
 	// console.log(': ' + data.startTime + ' :')
@@ -694,9 +694,9 @@ app.post("/submit_data", function(req, res) {
 	var data = req.body
 	//console.log('submit data')
 	//article link and UDID stuffs
-	if(data.article){
-		data.article = data.article.split('.html')[0] + '.html'
-	}
+	// if(data.article){
+	// 	data.article = data.article.split('.html')[0] + '.html'
+	// }
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
@@ -716,9 +716,9 @@ app.post("/submit_data_batched", function(req, res) {
 	var data = req.body
 	console.log('submit data batched')
 	//article link and UDID stuffs
-	if(data.article){
-		data.article = data.article.split('.html')[0] + '.html'
-	}
+	// if(data.article){
+	// 	data.article = data.article.split('.html')[0] + '.html'
+	// }
 	data.UDID = data.UDID.replace(/-/g, '_');
 	//console.log(data.data)
 	//console.log(data.session_id)
@@ -744,9 +744,9 @@ app.post("/submit_event", function(req, res) {
 	//console.log(data)
 	console.log("---")
 	//article link and UDID stuffs
-	if(data.article){
-		data.article = data.article.split('.html')[0] + '.html'
-	}
+	// if(data.article){
+	// 	data.article = data.article.split('.html')[0] + '.html'
+	// }
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
