@@ -38,35 +38,35 @@ var emails_collection = "complete_emails01"
 var standard_questions = [
 {
 	"id": "1",
-	"text": "Out of 5, what would you rate the quality of the article",
+	"text": "Rate the quality of the article",
 	"options": [		
-		{"id": "1", "text": "1"},
-		{"id": "2", "text": "2"},
-		{"id": "3", "text": "3"},
-		{"id": "4", "text": "4"},
-		{"id": "5", "text": "5"}
+		{"id": "1", "text": "Weak"},
+		{"id": "2", "text": "Below Average"},
+		{"id": "3", "text": "Average"},
+		{"id": "4", "text": "Above Average"},
+		{"id": "5", "text": "Strong"}
 	]
 },
 {
 	"id": "2",
-	"text": "Out of 5, what would you rate your understanding of the article",
+	"text": "Rate your understanding of the article",
 	"options": [		
-		{"id": "1", "text": "1"},
-		{"id": "2", "text": "2"},
-		{"id": "3", "text": "3"},
-		{"id": "4", "text": "4"},
-		{"id": "5", "text": "5"}
+		{"id": "1", "text": "Little"},
+		{"id": "2", "text": "Below Average"},
+		{"id": "3", "text": "Average"},
+		{"id": "4", "text": "Above Average"},
+		{"id": "5", "text": "Complete"}
 	]
 },
 {
 	"id": "3",
-	"text": "Out of 5, what would you rate your prior interest in article's subject",
+	"text": "Rate your prior interest in article's subject",
 	"options": [		
-		{"id": "1", "text": "1"},
-		{"id": "2", "text": "2"},
-		{"id": "3", "text": "3"},
-		{"id": "4", "text": "4"},
-		{"id": "5", "text": "5"}
+		{"id": "1", "text": "Low"},
+		{"id": "2", "text": "Below Average"},
+		{"id": "3", "text": "Average"},
+		{"id": "4", "text": "Above Average"},
+		{"id": "5", "text": "High"}
 	]
 }
 ]
