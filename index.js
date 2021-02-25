@@ -485,26 +485,26 @@ app.get('/articles', function(req, res){
 		var dbd = db.db(database)
 		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(er, results) {
 			if(er) throw er;
-			var tempi = 0
-			var new_data = []
-			while(tempi < results.length){
-				//console.log(results[tempi])
-				dbd.collection(combined_sessions_collection).findOne({article_id: results[tempi]._id ,UDID: data.UDID}, function(err, session){
-					if(err) throw err;
-					console.log("aycc")
-					if(!session){
-						new_data.push(results[tempi])
-					}else{
-						console.log(session)
-					}
-				})
-				tempi = tempi + 1
-			}
-			res.send(new_data)
-			db.close()
+
+			articles_helper(dbd,results).then(new_data => {
+				res.send(new_data)
+				db.close()
+				}
+			)
 		})
 	})
 })
+
+async function articles_filter_helper(dbd,result){
+	dbd.collection(combined_sessions_collection).findOne({article_id: results[tempi]._id ,UDID: data.UDID}, function(err, session){
+		if(err) throw err;
+		return !session
+	})
+}
+
+async function articles_helper(dbd, results){
+	return Promise.all(results.filter(result => articles_filter_helper(dbd,result)))
+}
 
 // app.get('/nyt_scrape_one', function(req, res){
 // 	var data = req.body
