@@ -484,10 +484,20 @@ app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
-		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).filter(result => articles_filter_helper(dbd,result, data)).toArray( function(er, results) {
+		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(er, results) {
 			if(er) throw er;
-			
-			res.send(results)
+			var new_data = []
+			var i = 0
+			while(i < results.length){
+				session = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(results[i]._id),'UDID': data})
+				if(!session):
+					new_data.push(results[i])
+				i = i + 1
+			}
+			//new_data = results.filter(result => articles_filter_helper(dbd,result, data) )
+			// articles_helper(dbd,results, data).then(new_data => {
+			//console.log(new_data.length)
+			res.send(new_data)
 			db.close()
 			
 				
