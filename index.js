@@ -492,6 +492,8 @@ app.get('/articles', function(req, res){
 				session = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(results[i]._id),'UDID': data})
 				if(!session){
 					new_data.push(results[i])
+				}else{
+					console.log(session)
 				}
 				i = i + 1
 			}
