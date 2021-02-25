@@ -500,18 +500,17 @@ app.get('/articles', function(req, res){
 async function articles_filter_helper(dbd,result, data){
 	console.log(data)
 	console.log(result._id)
-	dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data}, function(err, session){
-		if(err) throw err;
-		console.log(session)
-		if(session){
-			console.log(false)
-			return false
-		}
-		else{
-			console.log(true)
-			return true
-		}
-	})
+	session_data = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data})
+	session = session_data 
+	console.log(session)
+	if(session){
+		console.log(false)
+		return false
+	}
+	else{
+		console.log(true)
+		return true
+	}
 }
 
 async function articles_helper(dbd, results, data){
