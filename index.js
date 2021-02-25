@@ -489,8 +489,11 @@ app.get('/articles', function(req, res){
 			var new_data = []
 			while(tempi < results.length){
 				//console.log(results[tempi])
-				if( dbd.collection(combined_sessions_collection).find({article_id: results[tempi]._id ,UDID: data.UDID}) ){
+				woah = dbd.collection(combined_sessions_collection).find({article_id: results[tempi]._id ,UDID: data.UDID})
+				if(!woah){
 					new_data.push(results[tempi])
+				}else{
+					console.log(woah)
 				}
 				tempi = tempi + 1
 			}
