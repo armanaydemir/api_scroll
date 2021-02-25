@@ -484,7 +484,7 @@ app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
-		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(er, results) {
+		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(function(er, results) {
 			if(er) throw er;
 
 			new_data = await articles_helper(dbd,results, data) //.then(new_data => {
