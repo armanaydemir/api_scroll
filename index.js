@@ -488,6 +488,7 @@ app.get('/articles', function(req, res){
 			if(er) throw er;
 
 			articles_helper(dbd,results, data).then(new_data => {
+				console.log(new_data.length)
 				res.send(new_data)
 				db.close()
 				}
@@ -502,7 +503,12 @@ async function articles_filter_helper(dbd,result, data){
 	dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data}, function(err, session){
 		if(err) throw err;
 		console.log(session)
-		return !session
+		if(session):
+			console.log(false)
+			return false
+		else:
+			console.log(true)
+			return true
 	})
 }
 
