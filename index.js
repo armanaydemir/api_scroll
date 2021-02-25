@@ -503,12 +503,14 @@ async function articles_filter_helper(dbd,result, data){
 	dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data}, function(err, session){
 		if(err) throw err;
 		console.log(session)
-		if(session):
+		if(session){
 			console.log(false)
 			return false
-		else:
+		}
+		else{
 			console.log(true)
 			return true
+		}
 	})
 }
 
