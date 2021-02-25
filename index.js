@@ -479,7 +479,7 @@ app.get('/npr_scrape_one', function(req, res){
 });
 
 app.get('/articles', function(req, res){
-	var data = req.header
+	var data = req.get("X-UDID")
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
@@ -498,7 +498,7 @@ app.get('/articles', function(req, res){
 async function articles_filter_helper(dbd,result, data){
 	console.log(data)
 	console.log(result._id)
-	dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data.UDID}, function(err, session){
+	dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data}, function(err, session){
 		if(err) throw err;
 		console.log(session)
 		return !session
