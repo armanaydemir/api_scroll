@@ -483,21 +483,24 @@ app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
-		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
-			if(err) throw err;
+		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(er, results) {
+			if(er) throw er;
 			var tempi = 0
 			var new_data = []
 			while(tempi < results.length){
 				//console.log(results[tempi])
-				woah = dbd.collection(combined_sessions_collection).find({article_id: results[tempi]._id ,UDID: data.UDID})
-				if(!woah){
-					new_data.push(results[tempi])
-				}else{
-					console.log(woah)
-				}
+				dbd.collection(combined_sessions_collection).findOne({article_id: results[tempi]._id ,UDID: data.UDID}, function(err, session){
+					if(err) throw err;
+					if(!session){
+						new_data.push(results[tempi])
+					}else{
+						console.log(session)
+					}
+				})
 				tempi = tempi + 1
 			}
 			res.send(new_data)
+			dbd.close()
 		})
 	})
 })
