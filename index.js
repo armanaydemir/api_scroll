@@ -489,7 +489,7 @@ app.get('/articles', function(req, res){
 			var new_data = []
 			var i = 0
 			while(i < results.length){
-				session = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(results[i]._id),'UDID': data})
+				session = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(results[i]._id),'UDID': data, 'completed': true})
 				if(!session){
 					new_data.push(results[i])
 				}else{
@@ -497,9 +497,6 @@ app.get('/articles', function(req, res){
 				}
 				i = i + 1
 			}
-			//new_data = results.filter(result => articles_filter_helper(dbd,result, data) )
-			// articles_helper(dbd,results, data).then(new_data => {
-			//console.log(new_data.length)
 			res.send(new_data)
 			db.close()
 			
@@ -508,26 +505,6 @@ app.get('/articles', function(req, res){
 		})
 	})
 })
-
-async function articles_filter_helper(dbd,result, data){
-	console.log(data)
-	console.log(result._id)
-	session_data = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data})
-	session = session_data 
-	console.log(session)
-	if(session){
-		console.log(false)
-		return false
-	}
-	else{
-		console.log(true)
-		return true
-	}
-}
-
-// async function articles_helper(dbd, results, data){
-// 	return Promise.all())
-// }
 
 // app.get('/nyt_scrape_one', function(req, res){
 // 	var data = req.body
