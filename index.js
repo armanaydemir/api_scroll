@@ -484,7 +484,16 @@ app.get('/articles', function(req, res){
 		var dbd = db.db(database)
 		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
 			if(err) throw err;
-			res.send(results)
+			var tempi = 0
+			var new_data = []
+			while(tempi < results.length){
+				print(results[tempi])
+				
+				new_data.push(results[tempi])
+				
+				tempi = tempi + 1
+			}
+			res.send(new_data)
 		})
 	})
 })
