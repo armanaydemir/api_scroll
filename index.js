@@ -491,6 +491,7 @@ app.get('/articles', function(req, res){
 				//console.log(results[tempi])
 				dbd.collection(combined_sessions_collection).findOne({article_id: results[tempi]._id ,UDID: data.UDID}, function(err, session){
 					if(err) throw err;
+					console.log("aycc")
 					if(!session){
 						new_data.push(results[tempi])
 					}else{
