@@ -500,7 +500,7 @@ app.get('/articles', function(req, res){
 				tempi = tempi + 1
 			}
 			res.send(new_data)
-			dbd.close()
+			db.close()
 		})
 	})
 })
