@@ -480,6 +480,7 @@ app.get('/npr_scrape_one', function(req, res){
 
 app.get('/articles', function(req, res){
 	var data = req.get("X-UDID")
+	data = data.replace(/-/g, '_');
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
