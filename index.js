@@ -487,12 +487,12 @@ app.get('/articles', function(req, res){
 		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(er, results) {
 			if(er) throw er;
 
-			articles_helper(dbd,results, data).then(new_data => {
-				console.log(new_data.length)
-				res.send(new_data)
-				db.close()
-				}
-			)
+			new_data = await articles_helper(dbd,results, data) //.then(new_data => {
+			console.log(new_data.length)
+			res.send(new_data)
+			db.close()
+				
+			
 		})
 	})
 })
