@@ -496,7 +496,9 @@ app.get('/articles', function(req, res){
 })
 
 async function articles_filter_helper(dbd,result, data){
-	dbd.collection(combined_sessions_collection).findOne({'article_id': result._id ,'UDID': data.UDID}, function(err, session){
+	console.log(data.UDID)
+	console.log(result._id)
+	dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(result._id),'UDID': data.UDID}, function(err, session){
 		if(err) throw err;
 		console.log(session)
 		return !session
