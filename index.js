@@ -490,8 +490,9 @@ app.get('/articles', function(req, res){
 			var i = 0
 			while(i < results.length){
 				session = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(results[i]._id),'UDID': data})
-				if(!session):
+				if(!session){
 					new_data.push(results[i])
+				}
 				i = i + 1
 			}
 			//new_data = results.filter(result => articles_filter_helper(dbd,result, data) )
