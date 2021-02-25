@@ -486,12 +486,12 @@ app.get('/articles', function(req, res){
 		var dbd = db.db(database)
 		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(function(er, results) {
 			if(er) throw er;
-			results.filter(result => articles_filter_helper(dbd,result, data)).then(new_data => {
+			new_data = results.filter(result => articles_filter_helper(dbd,result, data))
 			// articles_helper(dbd,results, data).then(new_data => {
-				console.log(new_data.length)
-				res.send(new_data)
-				db.close()
-			})
+			console.log(new_data.length)
+			res.send(new_data)
+			db.close()
+			
 				
 			
 		})
