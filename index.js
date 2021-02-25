@@ -483,7 +483,7 @@ app.get('/articles', function(req, res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
-		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(er, results) {
+		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).map({result => result.UDID = data.UDID}).toArray(async function(er, results) {
 			if(er) throw er;
 
 			articles_helper(dbd,results).then(new_data => {
@@ -496,7 +496,7 @@ app.get('/articles', function(req, res){
 })
 
 async function articles_filter_helper(dbd,result){
-	dbd.collection(combined_sessions_collection).findOne({article_id: result._id ,UDID: data.UDID}, function(err, session){
+	dbd.collection(combined_sessions_collection).findOne({article_id: result._id ,UDID: result.UDID}, function(err, session){
 		if(err) throw err;
 		return !session
 	})
