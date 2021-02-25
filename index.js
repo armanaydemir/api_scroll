@@ -479,6 +479,7 @@ app.get('/npr_scrape_one', function(req, res){
 });
 
 app.get('/articles', function(req, res){
+	var data = req.body
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
@@ -487,10 +488,10 @@ app.get('/articles', function(req, res){
 			var tempi = 0
 			var new_data = []
 			while(tempi < results.length){
-				console.log(results[tempi])
-				//if( dbd.collection(combined_sessions_collection).find({article_id: ,UDID: })
-				new_data.push(results[tempi])
-				
+				//console.log(results[tempi])
+				if( dbd.collection(combined_sessions_collection).find({article_id: results[tempi]._id ,UDID: data.UDID}) ){
+					new_data.push(results[tempi])
+				}
 				tempi = tempi + 1
 			}
 			res.send(new_data)
