@@ -492,8 +492,6 @@ app.get('/articles', function(req, res){
 				session = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(results[i]._id),'UDID': data, 'completed': true})
 				if(!session){
 					new_data.push(results[i])
-				}else{
-					console.log(session)
 				}
 				i = i + 1
 			}
@@ -592,7 +590,9 @@ app.get('/settings', function(req,res){
 	console.log("settings")
 	console.log(data)
 	toReturn = {}
-	toReturn.showReplays = true
+	
+	toReturn.showReplays = false //data.type.contains("x86")
+
 	toReturn.showIntro = true
 	res.send(toReturn)
 })
