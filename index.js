@@ -247,7 +247,6 @@ function parse_lines(text) {
 }
 
 function scrape_top_npr(callback) {
-	console.log("scrape top npr")
 	request.get({ url: "https://text.npr.org" }, 
 	function(err, response, body) {
 		if(err) throw err;
@@ -271,26 +270,6 @@ function scrape_top_npr(callback) {
 	 	callback(r)
 	})
 }
-
-// function scrape_top(callback) {
-// 	request.get({
-// 	  url: "https://api.nytimes.com/svc/topstories/v2/home.json",
-// 	  qs: {
-// 	    'api-key': nyt_key
-// 	  },
-// 	}, function(err, response, body) {
-// 		// console.log(err)
-// 		if(err) throw err;
-// 	 	body = JSON.parse(body);
-// 	 	r = body.results
-// 	 	r.map(function(data){
-// 	 		add_article(data, function(result){
-// 	 			return result
-// 	 		})
-// 	 	})
-// 		callback(r)
-//  	})
-// }
 
 function promise_add_article_npr(data) {
 	return new Promise((resolve, reject) => {
@@ -349,30 +328,19 @@ async function add_article_npr(data, callback) {
 		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
 			if(err) throw(err);
 			if(!result){
-				//console.log('new article scrape')
-				//console.log(data)
 				request.get({ url: data.address }, function(er, response, body) {
 					data.text = parse_body_npr(body)
-					//console.log(data.text)
 					data.content = parse_lines(data.text)
 					data.title = data.text[0]
 					data.version = version
 					data.line_count = data.content.length
-					//console.log(data)
-					//console.log("----")
-					//console.log(data.content)
-					
+
 					dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
 						db.close()
-						// console.log(resu.text)
-						// console.log(resu.content)
-						// console.log("----")
-						// console.log(resu.title)
 						callback(resu)
 					})
 				})
 			}else{
-				//console.log(result)
 				db.close()
 				callback(result)
 			}
@@ -504,24 +472,6 @@ app.get('/articles', function(req, res){
 	})
 })
 
-// app.get('/nyt_scrape_one', function(req, res){
-// 	var data = req.body
-// 	console.log(data)
-// 	add_article(data, function(result){
-// 		console.log(result)
-// 		res.send(result)
-// 	})
-// });
-
-// app.get('/nyt_scrape_all', function(req, res){
-// 	scrape_top(function(tops){
-// 		console.log("tops")
-// 		//console.log(tops[0].title)
-// 		console.log(tops)
-// 		res.send(tops)
-// 	})
-// });
-
 
 // app.get('/identities', function(req,res){
 // 	res.send([{"udid":"0B70C724_6597_4659_9322_E113E9403601","device":"iPhone9,1"}
@@ -548,11 +498,10 @@ async function sessions_helper(dbd, results){
 	return Promise.all(results.map(result => sessions_article_helper(dbd,result)))
 }
 
-//change this back to post
+
 app.get('/sessions', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
-	//data.UDID = "828296DD_6B30_43B8_8986_8E12A13CD9F2"
 	//console.log(data)
 
 	MongoClient.connect(url, function(e, db) {
@@ -573,9 +522,7 @@ app.get('/sessions', function(req,res){
 					}
 					tempi = tempi + 1
 				}
-				//console.log("jabjabjab")
-				//console.log(ccc)
-				//console.log(tempi)
+
 				res.send(data)
 				//res.send(new_data)
 				db.close()
@@ -654,33 +601,12 @@ app.post('/session_replay', function(req,res){
 		    	dbsession.collection(result.UDID + s).find({}).toArray(function(errr, col){
 		    		if (errr) throw errr;
 		    		i = 0
-		    		// max = 0
-		    		// max_char = 0
+		    		
 		    		c = result.content
-		    		// while(i < col.length){
-		    		// 	if(col[i].last_cell - col[i].first_cell > max){
-		    		// 		j = col[i].first_cell
-		    		// 		count = 0
-		    		// 		while(j < col[i].last_cell){
-		    		// 			if(c[j].text.length > max_char){
-		    		// 				max_char = c[j].text.length
-		    		// 			}
-		    		// 			if(c[j].text != ""){
-		    		// 				count = count + 1
-		    		// 			} else {
-		    		// 				count = count + spaceLabelHeightRatio
-		    		// 			}
-		    		// 			j = j + 1
-		    		// 		}
-		    		// 		if(count > max){max = count}
-		    		// 	}
-		    		// 	i = i + 1
-		    		// }
+		    		
 	    			result.session_data = col
 	    			result.max_lines = maxLines
-	    			// console.log("maxlines")
-	    			// console.log(max)
-	    			// console.log(max_char)
+	    			
 					res.send(result)
 					db.close();
 		    	})
@@ -818,10 +744,6 @@ app.post("/close_article", function(req,res){
 		var nv = {$set:{"portait": data.portrait, "content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
 		dbd.collection(combined_sessions_collection).updateOne(q, nv, function(err, result){
 			if(err) throw err
-			// console.log('one updated')
-			// console.log(data.session_id + ' : ' + data.UDID);
-			// console.log(data.startTime + ' : ' + data.time)
-			// console.log('===========')
 			db.close()
 		});
 	});
