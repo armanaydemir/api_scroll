@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 // VERY VERY IMPORTANT
-var database = 'data_test5'
-var sessions_db = 'sessions_test5'
-var events_db = 'events_test5'
-var questions_db = 'questions_test5'
+var database = 'data_test6'
+var sessions_db = 'sessions_test6'
+var events_db = 'events_test6'
+var questions_db = 'questions_test6'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -93,9 +93,6 @@ var standard_questions = [
 // var old_articles = 'articles'
 // var combined_sessions_collection = 'complete_sessions01'
 // var combined_articles_collection = 'complete_articles01'
-
-
-var new_articles = 'new_artilces'
 
 const version = "v0.3.7"
 
@@ -537,8 +534,8 @@ app.get('/settings', function(req,res){
 	console.log("settings")
 	console.log(data)
 	toReturn = {}
-	
-	toReturn.showReplays = true //data.type.contains("x86")
+	var type = req.get("X-DEVICE-TYPE")
+	toReturn.showReplays = type.contains("x86")
 
 	toReturn.showIntro = true
 	res.send(toReturn)
@@ -594,9 +591,9 @@ app.post('/get_event', function(req, res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
-		var s = data.startTime.toString().split('.')[0]
+		//var s = data.startTime.toString().split('.')[0]
 		// //console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
+  		dbd.collection(data.session_id).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
   		db.close();
 	});
 })
@@ -715,9 +712,9 @@ app.post("/submit_event", function(req, res) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
 
-		var s = data.startTime.toString().split('.')[0]
+		//var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
