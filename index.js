@@ -592,7 +592,7 @@ app.post('/get_survey', function(req, res){
 app.post('/get_event', function(req, res){
 	var data = req.body
 	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db(questions_db) 
+		var dbd = db.db(events_db) 
 		if (err) throw err;
 		// var s = data.startTime.toString().split('.')[0]
 		// //console.log(data.UDID + s)
