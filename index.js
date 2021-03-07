@@ -703,7 +703,7 @@ app.post("/submit_data_batched", function(req, res) {
 app.post("/submit_event", function(req, res) {
 	var data = req.body
 	console.log('submit event')
-	//console.log(data)
+	console.log(data)
 	console.log("---")
 	//article link and UDID stuffs
 	// if(data.article){
@@ -714,6 +714,7 @@ app.post("/submit_event", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
+
 		// var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
   		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
