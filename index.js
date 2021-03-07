@@ -596,7 +596,7 @@ app.post('/get_event', function(req, res){
 		if (err) throw err;
 		// var s = data.startTime.toString().split('.')[0]
 		// //console.log(data.UDID + s)
-  		dbd.collection(data.session_id.find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
+  		dbd.collection(data.session_id).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
   		db.close();
 	});
 })
