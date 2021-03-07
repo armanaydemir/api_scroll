@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 // VERY VERY IMPORTANT
-var database = 'data_run01'
-var sessions_db = 'sessions_run01'
-var events_db = 'events_run01'
-var questions_db = 'questions_run01'
+var database = 'data_official'
+var sessions_db = 'sessions_official'
+var events_db = 'events_official'
+var questions_db = 'questions_official'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -31,8 +31,6 @@ var old_articles = 'articles'
 var combined_sessions_collection = 'complete_sessions01'
 var combined_articles_collection = 'complete_articles01'
 var emails_collection = "complete_emails01"
-
-
 
 
 var standard_questions = [
