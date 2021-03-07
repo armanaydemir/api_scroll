@@ -538,7 +538,7 @@ app.get('/settings', function(req,res){
 	console.log(data)
 	toReturn = {}
 	
-	toReturn.showReplays = false //data.type.contains("x86")
+	toReturn.showReplays = true //data.type.contains("x86")
 
 	toReturn.showIntro = true
 	res.send(toReturn)
