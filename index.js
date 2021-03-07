@@ -20,10 +20,10 @@ var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
 // VERY VERY IMPORTANT
-var database = 'data_test3'
-var sessions_db = 'sessions_test3'
-var events_db = 'events_test3'
-var questions_db = 'questions_test3'
+var database = 'data_test4'
+var sessions_db = 'sessions_test4'
+var events_db = 'events_test4'
+var questions_db = 'questions_test4'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
