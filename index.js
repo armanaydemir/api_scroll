@@ -19,11 +19,11 @@ var sessionsCollection = 'complete_sessions01'
 var articlesCollection = 'complete_articles01'
 var emailsCollection = "complete_emails01"
 
-//very important
-var database = 'data_01'
-var sessions_db = 'sessions_01'
-var events_db = 'events_01'
-var questions_db = 'questions_01'
+// VERY VERY IMPORTANT
+var database = 'data_test'
+var sessions_db = 'sessions_test'
+var events_db = 'events_test'
+var questions_db = 'questions_test'
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -577,6 +577,30 @@ app.post('/submit_answers', function(req,res){
 	});
 })
 
+app.post('/get_survey', function(req, res){
+	var data = req.body
+	MongoClient.connect(url, function(err, db) {
+		var dbd = db.db(questions_db) 
+		if (err) throw err;
+		// var s = data.startTime.toString().split('.')[0]
+		//console.log(data.UDID + s)
+  		dbd.collection(data.session_id).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
+  		db.close();
+	});
+})
+
+app.post('/get_event', function(req, res){
+	var data = req.body
+	MongoClient.connect(url, function(err, db) {
+		var dbd = db.db(questions_db) 
+		if (err) throw err;
+		var s = data.startTime.toString().split('.')[0]
+		//console.log(data.UDID + s)
+  		dbd.collection(data.UDID + s).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
+  		db.close();
+	});
+})
+
 app.post('/session_replay', function(req,res){
 	console.log('session_replay')
 	//in this context article link actual means session id
@@ -615,38 +639,6 @@ app.post('/session_replay', function(req,res){
 	})
 })
 
-app.get('/new_sessions', function(req,res){
-	var data = req.body
-	//console.log(data)
-	data.UDID = data.UDID.replace(/-/g, '_');
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbd = db.db(database)
-		//used to be sessionsCollection (before combination of old and new)
-		dbd.collection(combined_sessions_collection).find({'UDID': data.UDID, 'completed':true}).toArray(function(err, result) {
-		    if (err) throw err;
-		    console.log(result.length);
-		    res.send(result)
-		    db.close();
-		})
-	})
-})
-
-app.get('/old_sessions', function(req,res){
-	var data = req.body
-	//console.log(data)
-	data.UDID = data.UDID.replace(/-/g, '_');
-	MongoClient.connect(url, function(e, db) {
-		if(e) throw e;
-		var dbd = db.db(old_db)
-		dbd.collection(old_sessions).find({'UDID': data.UDID, 'completed':true}).toArray(function(err, result) {
-			if (err) throw err;
-		    console.log(result.length);
-			res.send(result)
-			db.close();
-		})
-	})
-})
 
 app.post("/open_article", function(req, res) {
 	//console.log('open article')
