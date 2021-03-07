@@ -594,9 +594,9 @@ app.post('/get_event', function(req, res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(questions_db) 
 		if (err) throw err;
-		var s = data.startTime.toString().split('.')[0]
-		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
+		// var s = data.startTime.toString().split('.')[0]
+		// //console.log(data.UDID + s)
+  		dbd.collection(data.session_id.find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
   		db.close();
 	});
 })
@@ -622,7 +622,7 @@ app.post('/session_replay', function(req,res){
 		    	//article.text.unshift(data.article_link)
 		    	result.paragraphs = article.text
 		    	var s = result.startTime.toString().split('.')[0]
-		    	dbsession.collection(result.UDID + s).find({}).toArray(function(errr, col){
+		    	dbsession.collection(data.article_link).find({}).toArray(function(errr, col){
 		    		if (errr) throw errr;
 		    		i = 0
 		    		
@@ -660,13 +660,13 @@ app.post("/submit_data", function(req, res) {
 	// 	data.article = data.article.split('.html')[0] + '.html'
 	// }
 	data.UDID = data.UDID.replace(/-/g, '_');
-	console.log(data.UDID)
+	// console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(sessions_db) 
 		if (err) throw err;
-		var s = data.startTime.toString().split('.')[0]
+		// var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
@@ -687,9 +687,9 @@ app.post("/submit_data_batched", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(sessions_db) 
 		if (err) throw err;
-		var s = data.startTime.toString().split('.')[0]
+		// var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).insertMany(data.data, function(e, ress){ 
+  		dbd.collection(data.session_id).insertMany(data.data, function(e, ress){ 
   			if (e) throw e; 
   			toReturn = {}
   			res.send(toReturn)
@@ -714,9 +714,9 @@ app.post("/submit_event", function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
-		var s = data.startTime.toString().split('.')[0]
+		// var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
