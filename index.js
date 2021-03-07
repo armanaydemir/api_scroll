@@ -594,9 +594,9 @@ app.post('/get_event', function(req, res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
-		// var s = data.startTime.toString().split('.')[0]
+		var s = data.startTime.toString().split('.')[0]
 		// //console.log(data.UDID + s)
-  		dbd.collection(data.session_id).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
+  		dbd.collection(data.UDID + s).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
   		db.close();
 	});
 })
@@ -715,9 +715,9 @@ app.post("/submit_event", function(req, res) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
 
-		// var s = data.startTime.toString().split('.')[0]
+		var s = data.startTime.toString().split('.')[0]
 		//console.log(data.UDID + s)
-  		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
+  		dbd.collection(data.UDID + s).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
 
