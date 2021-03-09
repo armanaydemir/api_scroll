@@ -543,6 +543,9 @@ app.post('/submit_email', function(req,res){
 	var data = req.body
 	console.log('submit_email')
 	console.log(data)
+	var udid = req.get("X-UDID")
+	udid = udid.replace(/-/g, '_');
+	data.UDID = udid
 
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(database) 
