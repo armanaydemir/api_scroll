@@ -25,13 +25,13 @@ import math
 now = datetime.datetime.now()
 path = str(now.month) + '-' + str(now.day) + '-' + str(now.hour) + '-' + str(now.minute)
 
-acceptable_versions = ["v0.3.1", "v0.2.7","v0.2.7"] # 100000000
+#acceptable_versions = ["v0.3.1", "v0.2.7","v0.2.7"] # 100000000
 time_offset = 100000000
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-sessions = myclient["sessions"]
+sessions = myclient["sessions_official"]
 sort_param = [("appeared", pymongo.ASCENDING), ("_id", pymongo.ASCENDING)]
-data = myclient["data034"]
+data = myclient["data_official"]
 combined_sessions_collection = 'complete_sessions01'
 combined_articles_collection = 'complete_articles01'
 
@@ -68,7 +68,7 @@ def findSessions(acceptable, incl_incomplete):
 	mycol = data[combined_sessions_collection]
 	completed = []
 	for x in mycol.find():  #(x["UDID"] == "A48F157C_4768_44C9_86BF_6978C67BB756" or x["UDID"] == "828296DD_6B30_43B8_8986_8E12A13CD9F2")
-		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64" and x["version"] in acceptable_versions):
+		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64"):
 			#x["article_data"] = getArticle(x["article_id"])
 			completed.append(x)
 	return completed
@@ -108,10 +108,10 @@ def findSessions(acceptable, incl_incomplete):
 c = findSessions(acceptable_versions,False)
 dic = {}
 for i in c:
-	if(i["type"] not in dic.keys()):
-		dic[i["type"]] = 1
+	if(i["UDID"] not in dic.keys()):
+		dic[i["UDID"]] = 1
 	else:
-		dic[i["type"]] += 1
+		dic[i["UDID"]] += 1
 print(dic)
 
 
