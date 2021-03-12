@@ -544,13 +544,13 @@ app.get('/sessions_UDID', function(req,res){
 				article_dict = {}
 				while(tempi < results.length){
 					i = data[tempi]
-					if(i["article_id"] in article_dict.keys()){
+					if(i["article_id"] in article_dict){
 						article_dict[i["article_id"]] += 1
 					}
 					else{
 						article_dict[i["article_id"]] = 1
 					}
-					if(i["UDID"] in udid_dict.keys()){
+					if(i["UDID"] in udid_dict){
 						udid_dict[i["UDID"]] += 1
 					}
 					else{
