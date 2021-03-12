@@ -534,7 +534,7 @@ app.get('/sessions_UDID', function(req,res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
-		dbd.collection(combined_sessions_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
+		dbd.collection(combined_sessions_collection).find({"completed": true}).sort({_id: -1}).toArray(async function(err, results) {
 			if (err) throw err;
 			//console.log(results)
 
