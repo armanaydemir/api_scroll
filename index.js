@@ -539,17 +539,25 @@ app.get('/sessions_UDID', function(req,res){
 			//console.log(results)
 
 			sessions_helper(dbd,results).then(data => {
+				var tempi = 0
 				udid_dict = {}
 				article_dict = {}
-				for i in data:
-					if(i["article_id"] not in article_dict.keys()):
+				while(tempi < results.length){
+					i = data[tempi]
+					if(i["article_id"] not in article_dict.keys()){
 						article_dict[i["article_id"]] = 1
-					else:
+					}
+					else{
 						article_dict[i["article_id"]] += 1
-					if(i["UDID"] not in udid_dict.keys()):
+					}
+					if(i["UDID"] not in udid_dict.keys()){
 						udid_dict[i["UDID"]] = 1
-					else:
+					}
+					else{
 						udid_dict[i["UDID"]] += 1
+					}
+					tempi = tempi + 1
+				}
 
 				console.log(udid_dict)
 				console.log(article_dict)
