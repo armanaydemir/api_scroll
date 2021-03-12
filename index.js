@@ -343,55 +343,6 @@ async function add_article_npr(data, callback) {
 	})	
 }
 
-// function add_article(data, callback) {
-// 	data.address = data.url
-// 	data.address = data.address.split('.html')[0]
-// 	var link = data.address.split('/')
-// 	data.address = data.address + '.html'
-// 	data.date_written = link.slice(3, 6).join('/')
-// 	data.category = link.slice(6, link.length-1).join('/')
-// 	data.article_link = data.address
-// 	//console.log('add_Article')
-// 	MongoClient.connect(url, function(e, db) {
-// 		if(e) throw e;
-// 		var dbd = db.db(database)
-// 		dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
-// 			if(err) throw(err);
-// 			if(!result){
-// 				//console.log('new article scrape')
-// 				var options = {
-// 					url: data.address
-// 				};
-// 				// console.log(data)
-// 				Mercury.parse(options.url).then(result => {
-// 					data.text = parse_body(result)
-// 					// console.log(data.text)
-// 					data.content = parse_lines(data.text)
-// 					data.title = data.text[0]
-// 					data.version = version
-// 					data.line_count = data.content.length
-// 					//console.log(data)
-// 					//console.log("----")
-// 					//console.log(data.content)
-					
-// 					dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
-// 						db.close()
-// 						// console.log(resu.text)
-// 						// console.log(resu.content)
-// 						// console.log("----")
-// 						callback(resu)
-// 					})
-// 				})
-// 			}else{
-// 				//console.log(result.content)
-// 				db.close()
-// 				callback(result)
-// 			}
-// 		})
-// 	})	
-// }
-
-
 
 function init_session(data, res) {
 	// console.log(data)
@@ -502,7 +453,7 @@ app.get('/sessions', function(req,res){
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database) //'UDID': data.UDID, 
-		dbd.collection(combined_sessions_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
+		dbd.collection(combined_sessions_collection).find({"article_id": ObjectID('60454fe5906d053c3fa1a568')}).sort({_id: -1}).toArray(async function(err, results) {
 			if (err) throw err;
 			//console.log(results)
 
