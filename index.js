@@ -544,17 +544,17 @@ app.get('/sessions_UDID', function(req,res){
 				article_dict = {}
 				while(tempi < results.length){
 					i = data[tempi]
-					if(i["article_id"] not in article_dict.keys()){
-						article_dict[i["article_id"]] = 1
-					}
-					else{
+					if(i["article_id"] in article_dict.keys()){
 						article_dict[i["article_id"]] += 1
 					}
-					if(i["UDID"] not in udid_dict.keys()){
-						udid_dict[i["UDID"]] = 1
+					else{
+						article_dict[i["article_id"]] = 1
+					}
+					if(i["UDID"] in udid_dict.keys()){
+						udid_dict[i["UDID"]] += 1
 					}
 					else{
-						udid_dict[i["UDID"]] += 1
+						udid_dict[i["UDID"]] = 1
 					}
 					tempi = tempi + 1
 				}
