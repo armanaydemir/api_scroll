@@ -525,6 +525,41 @@ app.get('/sessions', function(req,res){
 		})
 	})
 })
+
+app.get('/sessions_UDID', function(req,res){
+	var data = req.body
+	//data.UDID = data.UDID.replace(/-/g, '_');
+	//console.log(data)
+
+	MongoClient.connect(url, function(e, db) {
+		if(e) throw e;
+		var dbd = db.db(database) //'UDID': data.UDID, 
+		dbd.collection(combined_sessions_collection).find({}).sort({_id: -1}).toArray(async function(err, results) {
+			if (err) throw err;
+			//console.log(results)
+
+			sessions_helper(dbd,results).then(data => {
+				udid_dict = {}
+				article_dict = {}
+				for i in data:
+					if(i["article_id"] not in article_dict.keys()):
+						article_dict[i["article_id"]] = 1
+					else:
+						article_dict[i["article_id"]] += 1
+					if(i["UDID"] not in udid_dict.keys()):
+						udid_dict[i["UDID"]] = 1
+					else:
+						udid_dict[i["UDID"]] += 1
+
+				console.log(udid_dict)
+				console.log(article_dict)
+				console.log("---dict")
+				res.send(data)
+				db.close()
+			})
+		})
+	})
+})
  
 //change this back to post
 app.get('/settings', function(req,res){
