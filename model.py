@@ -106,13 +106,19 @@ def findSessions(acceptable, incl_incomplete):
 # 			yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
 
 c = findSessions(acceptable_versions,False)
-dic = {}
+udid_dict = {}
+article_dict = {}
 for i in c:
-	if(i["UDID"] not in dic.keys()):
-		dic[i["UDID"]] = 1
+	if(i["article_id"] not in article_dict.keys()):
+		article_dict[i["article_id"]] = 1
 	else:
-		dic[i["UDID"]] += 1
-print(dic)
+		article_dict[i["article_id"]] += 1
+	if(i["UDID"] not in udid_dict.keys()):
+		udid_dict[i["UDID"]] = 1
+	else:
+		udid_dict[i["UDID"]] += 1
+print(udid_dict)
+print(article_dict)
 
 
 #"----------"
