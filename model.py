@@ -30,8 +30,11 @@ time_offset = 100000000
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 sessions = myclient["sessions_official"]
-sort_param = [("appeared", pymongo.ASCENDING), ("_id", pymongo.ASCENDING)]
+surveys = myclient["questions_official"]
+events = myclient["events_official"]
 data = myclient["data_official"]
+
+sort_param = [("appeared", pymongo.ASCENDING), ("_id", pymongo.ASCENDING)]
 combined_sessions_collection = 'complete_sessions01'
 combined_articles_collection = 'complete_articles01'
 
@@ -60,16 +63,30 @@ def getArticle(id):
 	article = mycol.find_one({"_id": id})
 	return article
 
-def getSessionsSequence(data):
-	return list(sessions[data["UDID"] + float_to_str(data["startTime"]).split(".")[0]].find())
+def getEvents(id):
+	mycol = events[id]
+	events = mycol.find()
+	return events
+
+
+def getSurvey(id):
+	mycol = surveys[id]
+	survey = mycol.find()
+	return survey
+
+
+# def getSessionsSequence(data):
+# 	return list(sessions[data["UDID"] + float_to_str(data["startTime"]).split(".")[0]].find())
 
 #find all completed sessions in the acceptable versions
 def findSessions(acceptable, incl_incomplete):
 	mycol = data[combined_sessions_collection]
 	completed = []
 	for x in mycol.find():  #(x["UDID"] == "A48F157C_4768_44C9_86BF_6978C67BB756" or x["UDID"] == "828296DD_6B30_43B8_8986_8E12A13CD9F2")
-		if( (x["completed"] or not incl_incomplete) and x["type"] != "x86_64"):
-			#x["article_data"] = getArticle(x["article_id"])
+		if( x["completed"] and x["type"] != "x86_64"):
+			x["article_data"] = getArticle(x["article_id"])
+			x["event_data"] = getEvents(x["_id"])
+			x["survey_data"] = getSurvey(x["_id"])
 			completed.append(x)
 	return completed
 
@@ -106,19 +123,20 @@ def findSessions(acceptable, incl_incomplete):
 # 			yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
 
 c = findSessions(acceptable_versions,False)
-udid_dict = {}
-article_dict = {}
-for i in c:
-	if(i["article_id"] not in article_dict.keys()):
-		article_dict[i["article_id"]] = 1
-	else:
-		article_dict[i["article_id"]] += 1
-	if(i["UDID"] not in udid_dict.keys()):
-		udid_dict[i["UDID"]] = 1
-	else:
-		udid_dict[i["UDID"]] += 1
-print(udid_dict)
-print(article_dict)
+print(c[-1])
+# udid_dict = {}
+# article_dict = {}
+# for i in c:
+# 	if(i["article_id"] not in article_dict.keys()):
+# 		article_dict[i["article_id"]] = 1
+# 	else:
+# 		article_dict[i["article_id"]] += 1
+# 	if(i["UDID"] not in udid_dict.keys()):
+# 		udid_dict[i["UDID"]] = 1
+# 	else:
+# 		udid_dict[i["UDID"]] += 1
+# print(udid_dict)
+# print(article_dict)
 
 
 #"----------"
