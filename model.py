@@ -181,19 +181,19 @@ for i in c:
 # 	print("---------------------")
 
 
-for i in article_dict:
-	group_a = [] # some event happened during reading session (should be higher)
-	group_b = [] # no event happened during reading session (should be lower)
-	print(i)
-	print(len(article_dict[i]))
-	for ses in article_dict[i]:
-		if(len(ses["event_data"]) != 0):
-			group_a.append(ses)
-		else:
-			group_b.append(ses)
-	print(getAverageTime(group_a))
-	print(getAverageTime(group_b))
-	print("---------------------")
+# for i in article_dict:
+# 	group_a = [] # some event happened during reading session (should be higher)
+# 	group_b = [] # no event happened during reading session (should be lower)
+# 	print(i)
+# 	print(len(article_dict[i]))
+# 	for ses in article_dict[i]:
+# 		if(len(ses["event_data"]) != 0):
+# 			group_a.append(ses)
+# 		else:
+# 			group_b.append(ses)
+# 	print(getAverageTime(group_a))
+# 	print(getAverageTime(group_b))
+# 	print("---------------------")
 
 for i in article_dict:
 	for ses in article_dict[i]:
