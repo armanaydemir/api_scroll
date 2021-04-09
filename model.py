@@ -25,7 +25,7 @@ import math
 now = datetime.datetime.now()
 path = str(now.month) + '-' + str(now.day) + '-' + str(now.hour) + '-' + str(now.minute)
 
-#acceptable_versions = ["v0.3.1", "v0.2.7","v0.2.7"] # 100000000
+acceptable_versions = ["v0.3.1", "v0.2.7","v0.2.7"] # 100000000
 time_offset = 100000000
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
