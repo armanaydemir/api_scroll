@@ -165,11 +165,16 @@ for i in article_dict:
 	group_a = []
 	group_b = []
 	print(i)
+	print(len(article_dict[i]))
 	for ses in article_dict[i]:
+		print(ses["survey_data"][0]["answers"][3]["option_id"])
 		if(ses["survey_data"][0]["answers"][3]["option_id"] != 1):
 			group_a.append(ses)
 		else:
 			group_b.append(ses)
+	print("-")
+	print(len(group_a))
+	print(len(group_b))
 	print(getAverageTime(group_a))
 	print(getAverageTime(group_b))
 	print("---------------------")
