@@ -86,8 +86,8 @@ def findSessions(acceptable, incl_incomplete):
 		if( x["completed"] and x["type"] != "x86_64"):
 			print(x)
 			x["article_data"] = getArticle(x["article_id"])
-			x["event_data"] = getEvents(x["_id"])
-			x["survey_data"] = getSurvey(x["_id"])
+			x["event_data"] = getEvents(str(x["_id"]))
+			x["survey_data"] = getSurvey(str(x["_id"]))
 			completed.append(x)
 		print("----")
 	return completed
