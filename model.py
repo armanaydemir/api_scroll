@@ -166,13 +166,28 @@ for i in c:
 
 
 
+# for i in article_dict:
+# 	group_a = [] # responded yes to distracted (should be higher)
+# 	group_b = [] # responded no to distracted (should be lower)
+# 	print(i)
+# 	print(len(article_dict[i]))
+# 	for ses in article_dict[i]:
+# 		if(int(ses["survey_data"][0]["answers"][3]["option_id"]) == 1):
+# 			group_a.append(ses)
+# 		else:
+# 			group_b.append(ses)
+# 	print(getAverageTime(group_a))
+# 	print(getAverageTime(group_b))
+# 	print("---------------------")
+
+
 for i in article_dict:
-	group_a = [] # responded yes to distracted (should be higher)
-	group_b = [] # responded no to distracted (should be lower)
+	group_a = [] # some event happened during reading session (should be higher)
+	group_b = [] # no event happened during reading session (should be lower)
 	print(i)
 	print(len(article_dict[i]))
 	for ses in article_dict[i]:
-		if(int(ses["survey_data"][0]["answers"][3]["option_id"]) == 1):
+		if(len(ses["event_data"]) != 0):
 			group_a.append(ses)
 		else:
 			group_b.append(ses)
