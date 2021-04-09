@@ -7,6 +7,7 @@ import time
 import pymongo
 import pandas as pd
 import numpy as np
+import statistics
 import decimal
 import sys
 import re
@@ -196,8 +197,12 @@ for i in c:
 # 	print("---------------------")
 
 for i in article_dict:
+	times_list = []
 	for ses in article_dict[i]:
-		print(getTotalTime(ses))
+		times_list.append(getTotalTime(ses))
+		print(times_list[-1])
+	print("==")
+	statistics.stdev(times_list)
 	print(getAverageTime(article_dict[i]))
 	print("---------------------")
 
