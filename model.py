@@ -177,9 +177,6 @@ for i in article_dict:
 			group_a.append(ses)
 		else:
 			group_b.append(ses)
-	print("-")
-	print(len(group_a))
-	print(len(group_b))
 	print(getAverageTime(group_a))
 	print(getAverageTime(group_b))
 	print("---------------------")
