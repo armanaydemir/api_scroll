@@ -90,6 +90,12 @@ def findSessions(acceptable, incl_incomplete):
 			completed.append(x)
 	return completed
 
+def getAverageTime(data_list):
+	total_time = 0.0
+	for data in data_list:
+		total_time += getTotalTime(data)
+	return total_time/float(len(data_list))
+
 
 def getTotalTime(data):
 	return data["endTime"] - data["startTime"]
@@ -154,7 +160,18 @@ for i in c:
 	else:
 		udid_dict[i["UDID"]].append(i)
 
-print(article_dict)
+
+for i in article_dict:
+	group_a = []
+	group_b = []
+	for ses in i:
+		if(ses["survey_data"][0]["answers"][3]["option_id"] != 1):
+			group_a.append(ses)
+		else:
+			group_b.append(ses)
+	print(getAverageTime(group_a))
+	print(getAverageTime(group_b))
+	print("---------------------")
 
 
 # example_session = c[-1]
