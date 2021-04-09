@@ -136,8 +136,8 @@ for i in c:
 		udid_dict[i["UDID"]] = [i]
 	else:
 		udid_dict[i["UDID"]].append(i)
-print(udid_dict)
-print(article_dict)
+# print(udid_dict)
+# print(article_dict)
 
 
 
