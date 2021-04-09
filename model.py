@@ -154,8 +154,7 @@ for i in c:
 	else:
 		udid_dict[i["UDID"]].append(i)
 
-for i in article_dict:
-	print(i)
+print(article_dict)
 
 
 # example_session = c[-1]
