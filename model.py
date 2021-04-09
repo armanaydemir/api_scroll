@@ -65,13 +65,13 @@ def getArticle(id):
 
 def getEvents(id):
 	mycol = events[id]
-	ev = mycol.find()
+	ev = list(mycol.find_all())
 	return ev
 
 
 def getSurvey(id):
 	mycol = surveys[id]
-	surv = mycol.find()
+	surv = list(mycol.find())
 	return surv
 
 
