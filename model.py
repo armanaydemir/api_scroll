@@ -129,15 +129,33 @@ udid_dict = {}
 article_dict = {}
 for i in c:
 	if(i["article_id"] not in article_dict.keys()):
-		article_dict[i["article_id"]] = 1
+		article_dict[i["article_id"]] = [i]
 	else:
-		article_dict[i["article_id"]] += 1
+		article_dict[i["article_id"]].append(i)
 	if(i["UDID"] not in udid_dict.keys()):
-		udid_dict[i["UDID"]] = 1
+		udid_dict[i["UDID"]] = [i]
 	else:
-		udid_dict[i["UDID"]] += 1
+		udid_dict[i["UDID"]].append(i)
 print(udid_dict)
 print(article_dict)
+
+
+
+
+udid_dict = {}
+article_dict = {}
+for i in c:
+	if(i["article_id"] not in article_dict.keys()):
+		article_dict[i["article_id"]] = [i]
+	else:
+		article_dict[i["article_id"]].append(i)
+	if(i["UDID"] not in udid_dict.keys()):
+		udid_dict[i["UDID"]] = [i]
+	else:
+		udid_dict[i["UDID"]].append(i)
+
+for i in article_dict:
+	print(i)
 
 
 # example_session = c[-1]
