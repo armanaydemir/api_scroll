@@ -202,7 +202,7 @@ for i in article_dict:
 		times_list.append(getTotalTime(ses))
 		print(times_list[-1])
 	print("==")
-	statistics.stdev(times_list)
+	print(statistics.stdev(times_list))
 	print(getAverageTime(article_dict[i]))
 	print("---------------------")
 
