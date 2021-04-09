@@ -72,7 +72,7 @@ def getEvents(id):
 def getSurvey(id):
 	mycol = surveys[id]
 	surv = mycol.find()
-	return sur
+	return surv
 
 
 # def getSessionsSequence(data):
