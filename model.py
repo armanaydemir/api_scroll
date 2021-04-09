@@ -161,14 +161,16 @@ for i in c:
 		udid_dict[i["UDID"]].append(i)
 
 
+
+
 for i in article_dict:
-	group_a = []
-	group_b = []
+	group_a = [] # responded yes to distracted (should be lower)
+	group_b = [] # responded no to distracted (should be higher)
 	print(i)
 	print(len(article_dict[i]))
 	for ses in article_dict[i]:
 		print(ses["survey_data"][0]["answers"][3]["option_id"])
-		if(ses["survey_data"][0]["answers"][3]["option_id"] != 1):
+		if(int(ses["survey_data"][0]["answers"][3]["option_id"]) == 1):
 			group_a.append(ses)
 		else:
 			group_b.append(ses)
