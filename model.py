@@ -65,14 +65,14 @@ def getArticle(id):
 
 def getEvents(id):
 	mycol = events[id]
-	events = mycol.find()
-	return events
+	ev = mycol.find()
+	return ev
 
 
 def getSurvey(id):
 	mycol = surveys[id]
-	survey = mycol.find()
-	return survey
+	surv = mycol.find()
+	return sur
 
 
 # def getSessionsSequence(data):
@@ -84,10 +84,12 @@ def findSessions(acceptable, incl_incomplete):
 	completed = []
 	for x in mycol.find():  #(x["UDID"] == "A48F157C_4768_44C9_86BF_6978C67BB756" or x["UDID"] == "828296DD_6B30_43B8_8986_8E12A13CD9F2")
 		if( x["completed"] and x["type"] != "x86_64"):
+			print(x)
 			x["article_data"] = getArticle(x["article_id"])
 			x["event_data"] = getEvents(x["_id"])
 			x["survey_data"] = getSurvey(x["_id"])
 			completed.append(x)
+		print("----")
 	return completed
 
 
