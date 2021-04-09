@@ -165,7 +165,7 @@ for i in article_dict:
 	group_a = []
 	group_b = []
 	print(i)
-	for ses in i:
+	for ses in article_dict[i]:
 		if(ses["survey_data"][0]["answers"][3]["option_id"] != 1):
 			group_a.append(ses)
 		else:
