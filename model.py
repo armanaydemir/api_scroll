@@ -91,8 +91,8 @@ def findSessions(acceptable, incl_incomplete):
 	return completed
 
 
-# def getTotalTime(data):
-# 	return data["endTime"] - data["startTime"]
+def getTotalTime(data):
+	return data["endTime"] - data["startTime"]
 
 # def getText(ses, tokens_only):
 # 	line = ""
@@ -124,28 +124,30 @@ def findSessions(acceptable, incl_incomplete):
 
 c = findSessions(acceptable_versions,False)
 
+
+udid_dict = {}
+article_dict = {}
+for i in c:
+	if(i["article_id"] not in article_dict.keys()):
+		article_dict[i["article_id"]] = 1
+	else:
+		article_dict[i["article_id"]] += 1
+	if(i["UDID"] not in udid_dict.keys()):
+		udid_dict[i["UDID"]] = 1
+	else:
+		udid_dict[i["UDID"]] += 1
+print(udid_dict)
+print(article_dict)
+
+
 # example_session = c[-1]
 # ex = example_session
-for ex in c:
-	print(ex["UDID"])
-	print(ex["event_data"])
-	print(ex["survey_data"])
-	print("-----")
+# for ex in :
+# 	print(ex["UDID"])
+# 	print(ex["event_data"])
+# 	print(ex["survey_data"])
+# 	print("-----")
 
-
-# udid_dict = {}
-# article_dict = {}
-# for i in c:
-# 	if(i["article_id"] not in article_dict.keys()):
-# 		article_dict[i["article_id"]] = 1
-# 	else:
-# 		article_dict[i["article_id"]] += 1
-# 	if(i["UDID"] not in udid_dict.keys()):
-# 		udid_dict[i["UDID"]] = 1
-# 	else:
-# 		udid_dict[i["UDID"]] += 1
-# print(udid_dict)
-# print(article_dict)
 
 
 #"----------"
