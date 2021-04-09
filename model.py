@@ -94,7 +94,10 @@ def getAverageTime(data_list):
 	total_time = 0.0
 	for data in data_list:
 		total_time += getTotalTime(data)
-	return total_time/float(len(data_list))
+	if(float(len(data_list)) == 0):
+		return "invalid"
+	else:
+		return total_time/float(len(data_list))
 
 
 def getTotalTime(data):
@@ -164,8 +167,8 @@ for i in c:
 
 
 for i in article_dict:
-	group_a = [] # responded yes to distracted (should be lower)
-	group_b = [] # responded no to distracted (should be higher)
+	group_a = [] # responded yes to distracted (should be higher)
+	group_b = [] # responded no to distracted (should be lower)
 	print(i)
 	print(len(article_dict[i]))
 	for ses in article_dict[i]:
