@@ -172,7 +172,6 @@ for i in article_dict:
 	print(i)
 	print(len(article_dict[i]))
 	for ses in article_dict[i]:
-		print(ses["survey_data"][0]["answers"][3]["option_id"])
 		if(int(ses["survey_data"][0]["answers"][3]["option_id"]) == 1):
 			group_a.append(ses)
 		else:
