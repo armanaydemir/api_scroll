@@ -195,6 +195,13 @@ for i in article_dict:
 	print(getAverageTime(group_b))
 	print("---------------------")
 
+for i in article_dict:
+	for ses in article_dict[i]:
+		print(getTotalTime(ses))
+	print(getAverageTime(article_dict[i]))
+	print("---------------------")
+
+
 
 # example_session = c[-1]
 # ex = example_session
