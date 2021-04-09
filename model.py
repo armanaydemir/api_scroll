@@ -164,6 +164,7 @@ for i in c:
 for i in article_dict:
 	group_a = []
 	group_b = []
+	print(i)
 	for ses in i:
 		if(ses["survey_data"][0]["answers"][3]["option_id"] != 1):
 			group_a.append(ses)
@@ -181,69 +182,6 @@ for i in article_dict:
 # 	print(ex["event_data"])
 # 	print(ex["survey_data"])
 # 	print("-----")
-
-
-
-#"----------"
-# train_corpus = list(read_corpus(c[10:]))
-# test_corpus = list(read_corpus(c[:10], tokens_only=True))
-# #print(train_corpus[1])
-# #print(test_corpus[1])
-# model = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=40)
-# model.build_vocab(train_corpus)
-# model.train(train_corpus, total_examples=model.corpus_count, epochs=model.epochs)
-# print(train_corpus[5])
-# vector = model.infer_vector(train_corpus[5].words)
-# print(vector)
-# sims = model.docvecs.most_similar([vector], topn=len(model.docvecs))
-# print(sims)
-# ranks = []
-# second_ranks = []
-# for doc_id in range(len(train_corpus)):
-#     inferred_vector = model.infer_vector(train_corpus[doc_id].words)
-#     sims = model.docvecs.most_similar([inferred_vector], topn=len(model.docvecs))
-#     rank = [docid for docid, sim in sims][doc_id]
-#     print(rank)
-#     print(doc_id)
-#     ranks.append(rank)
-
-#     second_ranks.append(sims[1])
-
-# import collections
-
-# counter = collections.Counter(ranks)
-# print(counter)
-
-
-
-# # Define the model
-# model = tf.keras.Sequential()
-# # Adds a densely-connected layer with 64 units to the model:
-# model.add(layers.Dense(1, activation='elu'))
-# # Add another:
-# #model.add(layers.Dense(5, activation='elu'))
-
-# #model.add(layers.Dense(1, activation='elu'))
-# model.compile(optimizer='adam',#adam
-#               loss='mse',
-#               metrics=['mae'])
-# print(model.weights)
-# model.fit(x,y,epochs=50000,validation_data=(vx, vy),callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=75,restore_best_weights=True)]) #batch_size=80
-# print(model.weights)
-
-# hh = (model.predict(XX))
-# count = 0
-# for i in range(0,len(hh)):
-# 	if(abs(hh[i]-YY[i]) < 30):
-# 		print(i)
-# 		count += 1
-# print(count)
-# print(len(hh))
-
-
-
-
-
 
 
 
