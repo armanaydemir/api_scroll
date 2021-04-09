@@ -124,11 +124,13 @@ def findSessions(acceptable, incl_incomplete):
 
 c = findSessions(acceptable_versions,False)
 
-example_session = c[-1]
-ex = example_session
-
-print(ex["event_data"])
-print(ex["survey_data"])
+# example_session = c[-1]
+# ex = example_session
+for ex in c:
+	print(ex["UDID"])
+	print(ex["event_data"])
+	print(ex["survey_data"])
+	print("-----")
 
 
 # udid_dict = {}
