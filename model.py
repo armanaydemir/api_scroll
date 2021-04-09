@@ -84,12 +84,10 @@ def findSessions(acceptable, incl_incomplete):
 	completed = []
 	for x in mycol.find():  #(x["UDID"] == "A48F157C_4768_44C9_86BF_6978C67BB756" or x["UDID"] == "828296DD_6B30_43B8_8986_8E12A13CD9F2")
 		if( x["completed"] and x["type"] != "x86_64"):
-			print(x)
 			x["article_data"] = getArticle(x["article_id"])
 			x["event_data"] = getEvents(str(x["_id"]))
 			x["survey_data"] = getSurvey(str(x["_id"]))
 			completed.append(x)
-		print("----")
 	return completed
 
 
@@ -125,7 +123,14 @@ def findSessions(acceptable, incl_incomplete):
 # 			yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
 
 c = findSessions(acceptable_versions,False)
-print(c[-1])
+
+example_session = c[-1]
+ex = example_session
+
+print(ex["event_data"])
+print(ex["survey_data"])
+
+
 # udid_dict = {}
 # article_dict = {}
 # for i in c:
