@@ -200,7 +200,7 @@ for i in article_dict:
 	times_list = []
 	for ses in article_dict[i]:
 		times_list.append(getTotalTime(ses))
-		print(times_list[-1])
+		print(ses["UDID"] + " : " + str(times_list[-1]))
 	print("==")
 	print(statistics.stdev(times_list))
 	print(getAverageTime(article_dict[i]))
