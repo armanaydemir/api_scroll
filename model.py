@@ -211,6 +211,8 @@ def timeVersusProgress_helper(data, cell_string):
 	for row in mycol.find().sort(sort_param):
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
+	print(times)
+	print(lines)
 	return (times, lines)
 
 for i in article_dict:
