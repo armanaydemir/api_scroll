@@ -218,7 +218,7 @@ for i in article_dict:
 	for ses in article_dict[i]:
 		plt.ylabel("Line #")
 		plt.xlabel("seconds since start of reading session")
-		plt.suptitle(make_title(data))
+		plt.suptitle(str(data["_id"]))
 		(times, lines) = timeVersusProgress_helper(data, "first_cell")
 		plt.plot(time, lines)
 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
