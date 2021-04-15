@@ -7,6 +7,9 @@ import time
 import pymongo
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import statistics
 import decimal
 import sys
@@ -196,15 +199,31 @@ for i in c:
 # 	print(getAverageTime(group_b))
 # 	print("---------------------")
 
+def make_title(data):
+	return ("Start Time:" + str(data["startTime"]/time_offset) + " -  UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"] + " - version:" +  data["version"])
+
+
+
+def timeVersusProgress_helper(data, cell_string):
+	mycol = sessions[data["_id"]]
+	times = []
+	lines = []
+	for row in mycol.find().sort(sort_param):
+		times.append((row["appeared"] - data["startTime"])/time_offset)
+		lines.append(int(row[cell_string]))
+	return (times, lines)
+
 for i in article_dict:
 	times_list = []
 	for ses in article_dict[i]:
-		times_list.append(getTotalTime(ses))
-		print(ses["UDID"] + " : " + str(times_list[-1]))
-	print("==")
-	print(statistics.stdev(times_list))
-	print(getAverageTime(article_dict[i]))
-	print("---------------------")
+		plt.ylabel("Line #")
+		plt.xlabel("seconds since start of reading session")
+		plt.suptitle(make_title(data))
+		(times, lines) = timeVersusProgress_helper(data, "first_cell")
+		plt.plot(time, lines)
+		(times, lines) = timeVersusProgress_helper(data, "last_cell")
+		plt.plot(time, lines)
+		plt.savefig(i + '/' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
 
 
 
