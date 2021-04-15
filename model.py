@@ -211,38 +211,36 @@ def timeVersusProgress_helper(data, cell_string):
 	for row in mycol.find().sort(sort_param):
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
-	print(len(times))
-	print(len(lines))
 	return (np.array(times), np.array(lines))
 
-for i in article_dict:
-	times_list = []
-	plt.ylabel("Line #")
-	plt.xlabel("seconds since start of reading session")
-	plt.suptitle("all last cell for article id:" + str(i))
-	for data in article_dict[i]:
-		
-		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
-		# plt.plot(times, lines)
-		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-		plt.plot(times, lines, label=data["UDID"])
-	plt.legend()
-	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
-	plt.clf()
-
-
-# for i in udid_dict:
+# for i in article_dict:
 # 	times_list = []
-# 	for data in udid_dict[i]:
-# 		plt.ylabel("Line #")
-# 		plt.xlabel("seconds since start of reading session")
-# 		plt.suptitle(make_title(data))
-# 		(times, lines) = timeVersusProgress_helper(data, "first_cell")
-# 		plt.plot(times, lines)
+# 	plt.ylabel("Line #")
+# 	plt.xlabel("seconds since start of reading session")
+# 	plt.suptitle("all last cell for article id:" + str(i))
+# 	for data in article_dict[i]:
+		
+# 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
+# 		# plt.plot(times, lines)
 # 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-# 		plt.plot(times, lines)
-# 		plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
-# 		plt.clf()
+# 		plt.plot(times, lines, label=data["UDID"])
+# 	plt.legend()
+# 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
+# 	plt.clf()
+
+
+for i in udid_dict:
+	times_list = []
+	for data in udid_dict[i]:
+		plt.ylabel("Line #")
+		plt.xlabel("seconds since start of reading session")
+		plt.suptitle(make_title(data))
+		(times, lines) = timeVersusProgress_helper(data, "first_cell")
+		plt.plot(times, lines)
+		(times, lines) = timeVersusProgress_helper(data, "last_cell")
+		plt.plot(times, lines)
+		plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+		plt.clf()
 
 
 
