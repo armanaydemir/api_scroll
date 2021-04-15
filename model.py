@@ -205,7 +205,7 @@ def make_title(data):
 
 
 def timeVersusProgress_helper(data, cell_string):
-	mycol = sessions[data["_id"]]
+	mycol = sessions[str(data["_id"])]
 	times = []
 	lines = []
 	for row in mycol.find().sort(sort_param):
