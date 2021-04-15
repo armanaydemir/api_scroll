@@ -205,20 +205,17 @@ def make_title(data):
 
 
 def timeVersusProgress_helper(data, cell_string):
-	print(data["_id"])
 	mycol = sessions[str(data["_id"])]
 	times = []
 	lines = []
 	for row in mycol.find().sort(sort_param):
 		times.append((row["appeared"] - data["startTime"])/time_offset)
 		lines.append(int(row[cell_string]))
-	print(times)
-	print(lines)
 	return (times, lines)
 
 for i in article_dict:
 	times_list = []
-	for ses in article_dict[i]:
+	for data in article_dict[i]:
 		plt.ylabel("Line #")
 		plt.xlabel("seconds since start of reading session")
 		plt.suptitle(str(data["_id"]))
