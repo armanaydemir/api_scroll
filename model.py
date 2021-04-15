@@ -200,7 +200,7 @@ for i in c:
 # 	print("---------------------")
 
 def make_title(data):
-	return ("UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"])
+	return ("UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"] + " - Device:" + data["type"])
 
 
 
@@ -217,16 +217,32 @@ def timeVersusProgress_helper(data, cell_string):
 
 for i in article_dict:
 	times_list = []
+	plt.ylabel("Line #")
+	plt.xlabel("seconds since start of reading session")
+	plt.suptitle("all last cell for article id:" + str(i))
 	for data in article_dict[i]:
-		plt.ylabel("Line #")
-		plt.xlabel("seconds since start of reading session")
-		plt.suptitle(make_title(data))
-		(times, lines) = timeVersusProgress_helper(data, "first_cell")
-		plt.plot(times, lines)
+		
+		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
+		# plt.plot(times, lines)
 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
 		plt.plot(times, lines)
-		plt.savefig("./" + str(i) + '-' + str(data["UDID"]) + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
-		plt.clf()
+	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
+	plt.clf()
+
+
+# for i in udid_dict:
+# 	times_list = []
+# 	for data in udid_dict[i]:
+# 		plt.ylabel("Line #")
+# 		plt.xlabel("seconds since start of reading session")
+# 		plt.suptitle(make_title(data))
+# 		(times, lines) = timeVersusProgress_helper(data, "first_cell")
+# 		plt.plot(times, lines)
+# 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
+# 		plt.plot(times, lines)
+# 		plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+# 		plt.clf()
+
 
 
 
