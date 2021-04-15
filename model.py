@@ -218,8 +218,7 @@ def timeVersusProgress_helper(data, cell_string):
 # 	plt.ylabel("Line #")
 # 	plt.xlabel("seconds since start of reading session")
 # 	plt.suptitle("all last cell for article id:" + str(i))
-# 	for data in article_dict[i]:
-		
+# 	for data in article_dict[i]:	
 # 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
 # 		# plt.plot(times, lines)
 # 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
@@ -230,17 +229,16 @@ def timeVersusProgress_helper(data, cell_string):
 
 
 for i in udid_dict:
-	times_list = []
+	plt.ylabel("Line #")
+	plt.xlabel("seconds since start of reading session")
+	plt.suptitle(make_title(data))
 	for data in udid_dict[i]:
-		plt.ylabel("Line #")
-		plt.xlabel("seconds since start of reading session")
-		plt.suptitle(make_title(data))
-		(times, lines) = timeVersusProgress_helper(data, "first_cell")
-		plt.plot(times, lines)
+		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
+		# plt.plot(times, lines)
 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
 		plt.plot(times, lines)
-		plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
-		plt.clf()
+	plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+	plt.clf()
 
 
 
