@@ -221,8 +221,8 @@ for i in article_dict:
 		plt.suptitle(str(data["_id"]))
 		(times, lines) = timeVersusProgress_helper(data, "first_cell")
 		plt.plot(time, lines)
-		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-		plt.plot(time, lines)
+		# (times, lines) = timeVersusProgress_helper(data, "last_cell")
+		# plt.plot(time, lines)
 		plt.savefig(i + '/' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
 
 
