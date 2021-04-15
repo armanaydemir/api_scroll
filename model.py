@@ -231,7 +231,7 @@ def timeVersusProgress_helper(data, cell_string):
 for i in udid_dict:
 	plt.ylabel("Line #")
 	plt.xlabel("seconds since start of reading session")
-	plt.suptitle(make_title(data))
+	plt.suptitle(str(i))
 	for data in udid_dict[i]:
 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
 		# plt.plot(times, lines)
