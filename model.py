@@ -200,7 +200,7 @@ for i in c:
 # 	print("---------------------")
 
 def make_title(data):
-	return ("Start Time:" + str(data["startTime"]/time_offset) + " -  UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"] + " - version:" +  data["version"])
+	return ("UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"])
 
 
 
@@ -220,12 +220,12 @@ for i in article_dict:
 	for data in article_dict[i]:
 		plt.ylabel("Line #")
 		plt.xlabel("seconds since start of reading session")
-		plt.suptitle(str(data["_id"]))
+		plt.suptitle(make_title(data))
 		(times, lines) = timeVersusProgress_helper(data, "first_cell")
 		plt.plot(times, lines)
-		# (times, lines) = timeVersusProgress_helper(data, "last_cell")
-		# plt.plot(times, lines)
-		plt.savefig("./" + str(i) + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+		(times, lines) = timeVersusProgress_helper(data, "last_cell")
+		plt.plot(times, lines)
+		plt.savefig("./" + str(i) + '-' + str(data["UDID"]) + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
 		plt.clf()
 
 
