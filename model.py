@@ -205,6 +205,7 @@ def make_title(data):
 
 
 def timeVersusProgress_helper(data, cell_string):
+	print(data["_id"])
 	mycol = sessions[str(data["_id"])]
 	times = []
 	lines = []
