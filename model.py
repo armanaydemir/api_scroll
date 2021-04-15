@@ -226,6 +226,7 @@ for i in article_dict:
 		# (times, lines) = timeVersusProgress_helper(data, "last_cell")
 		# plt.plot(times, lines)
 		plt.savefig("./" + str(i) + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+		plt.clf()
 
 
 
