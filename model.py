@@ -238,6 +238,8 @@ for i in udid_dict:
 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
 		plt.plot(times, lines)
 	plt.grid()
+	plt.xlim([0, 1200])
+	plt.ylim([0, 600])
 	plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
 	plt.clf()
 
