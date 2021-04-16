@@ -168,7 +168,7 @@ for i in c:
 		udid_dict[i["UDID"]].append(i)
 
 for i in udid_dict:
-	print(str(i) + " : " +str(len(i)))
+	print(str(i) + " : " + str(len(udid_dict[i])))
 
 
 
