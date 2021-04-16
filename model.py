@@ -167,6 +167,8 @@ for i in c:
 	else:
 		udid_dict[i["UDID"]].append(i)
 
+for i in udid_dict:
+	print(str(i) + " : " +str(len(i)))
 
 
 
