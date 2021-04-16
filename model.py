@@ -229,8 +229,8 @@ for i in article_dict:
 		plt.plot(times, lines, label=data["UDID"])
 	plt.legend()
 	plt.grid()
-	plt.xlim([0, 1200])
-	plt.ylim([0, 600])
+	plt.xlim(max(x), min(x))
+	plt.ylim(max(y), min(y))
 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
 	plt.clf()
 
