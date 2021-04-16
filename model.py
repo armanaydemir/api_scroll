@@ -215,35 +215,41 @@ def timeVersusProgress_helper(data, cell_string):
 		lines.append(int(row[cell_string]))
 	return (np.array(times), np.array(lines))
 
-# for i in article_dict:
-# 	times_list = []
-# 	plt.ylabel("Line #")
-# 	plt.xlabel("seconds since start of reading session")
-# 	plt.suptitle("all last cell for article id:" + str(i))
-# 	for data in article_dict[i]:	
-# 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
-# 		# plt.plot(times, lines)
-# 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-# 		plt.plot(times, lines, label=data["UDID"])
-# 	plt.legend()
-# 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
-# 	plt.clf()
 
-
-for i in udid_dict:
+## all sessions for article
+for i in article_dict:
+	times_list = []
 	plt.ylabel("Line #")
 	plt.xlabel("seconds since start of reading session")
-	plt.suptitle(str(i) + " : All reading sessions")
-	for data in udid_dict[i]:
+	plt.suptitle("all last cell for article id:" + str(i))
+	for data in article_dict[i]:	
 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
 		# plt.plot(times, lines)
 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-		plt.plot(times, lines)
+		plt.plot(times, lines, label=data["UDID"])
+	plt.legend()
 	plt.grid()
 	plt.xlim([0, 1200])
 	plt.ylim([0, 600])
-	plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
 	plt.clf()
+
+
+## all sessions for udid
+# for i in udid_dict:
+# 	plt.ylabel("Line #")
+# 	plt.xlabel("seconds since start of reading session")
+# 	plt.suptitle(str(i) + " : All reading sessions")
+# 	for data in udid_dict[i]:
+# 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
+# 		# plt.plot(times, lines)
+# 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
+# 		plt.plot(times, lines)
+# 	plt.grid()
+# 	plt.xlim([0, 1200])
+# 	plt.ylim([0, 600])
+# 	plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+# 	plt.clf()
 
 
 
