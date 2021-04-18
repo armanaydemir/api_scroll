@@ -149,57 +149,27 @@ for i in c:
 		udid_dict[i["UDID"]] = [i]
 	else:
 		udid_dict[i["UDID"]].append(i)
-# print(udid_dict)
-# print(article_dict)
+print(udid_dict)
+print(article_dict)
 
 
 
 
-udid_dict = {}
-article_dict = {}
-for i in c:
-	if(i["article_id"] not in article_dict.keys()):
-		article_dict[i["article_id"]] = [i]
-	else:
-		article_dict[i["article_id"]].append(i)
-	if(i["UDID"] not in udid_dict.keys()):
-		udid_dict[i["UDID"]] = [i]
-	else:
-		udid_dict[i["UDID"]].append(i)
+# udid_dict = {}
+# article_dict = {}
+# for i in c:
+# 	if(i["article_id"] not in article_dict.keys()):
+# 		article_dict[i["article_id"]] = [i]
+# 	else:
+# 		article_dict[i["article_id"]].append(i)
+# 	if(i["UDID"] not in udid_dict.keys()):
+# 		udid_dict[i["UDID"]] = [i]
+# 	else:
+# 		udid_dict[i["UDID"]].append(i)
 
-for i in udid_dict:
-	print(str(i) + " : " + str(len(udid_dict[i])))
+# for i in udid_dict:
+# 	print(str(i) + " : " + str(len(udid_dict[i])))
 
-
-
-# for i in article_dict:
-# 	group_a = [] # responded yes to distracted (should be higher)
-# 	group_b = [] # responded no to distracted (should be lower)
-# 	print(i)
-# 	print(len(article_dict[i]))
-# 	for ses in article_dict[i]:
-# 		if(int(ses["survey_data"][0]["answers"][3]["option_id"]) == 1):
-# 			group_a.append(ses)
-# 		else:
-# 			group_b.append(ses)
-# 	print(getAverageTime(group_a))
-# 	print(getAverageTime(group_b))
-# 	print("---------------------")
-
-
-# for i in article_dict:
-# 	group_a = [] # some event happened during reading session (should be higher)
-# 	group_b = [] # no event happened during reading session (should be lower)
-# 	print(i)
-# 	print(len(article_dict[i]))
-# 	for ses in article_dict[i]:
-# 		if(len(ses["event_data"]) != 0):
-# 			group_a.append(ses)
-# 		else:
-# 			group_b.append(ses)
-# 	print(getAverageTime(group_a))
-# 	print(getAverageTime(group_b))
-# 	print("---------------------")
 
 def make_title(data):
 	return ("UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"] + " - Device:" + data["type"])
@@ -216,40 +186,39 @@ def timeVersusProgress_helper(data, cell_string):
 	return (np.array(times), np.array(lines))
 
 
-## all sessions for article
-for i in article_dict:
-	times_list = []
-	plt.ylabel("Line #")
-	plt.xlabel("seconds since start of reading session")
-	plt.suptitle("all last cell for article id:" + str(i))
-	for data in article_dict[i]:	
-		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
-		# plt.plot(times, lines)
-		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-		plt.plot(times, lines, label=data["UDID"])
-	plt.legend()
-	plt.grid()
-	plt.ylim(max(lines), min(lines))
-	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
-	plt.clf()
-
-
-## all sessions for udid
-# for i in udid_dict:
+# ## all sessions for article
+# for i in article_dict:
+# 	times_list = []
 # 	plt.ylabel("Line #")
 # 	plt.xlabel("seconds since start of reading session")
-# 	plt.suptitle(str(i) + " : All reading sessions")
-# 	for data in udid_dict[i]:
+# 	plt.suptitle("all last cell for article id:" + str(i))
+# 	for data in article_dict[i]:	
 # 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
 # 		# plt.plot(times, lines)
 # 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-# 		plt.plot(times, lines)
+# 		plt.plot(times, lines, label=data["UDID"])
+# 	plt.legend()
 # 	plt.grid()
-# 	plt.xlim([0, 1200])
-# 	plt.ylim([0, 600])
-# 	plt.savefig("./" + str(i)  + '-' + str(data["_id"]) + "timeVersusProgress.pdf", bbox_inches="tight")
+# 	plt.ylim(max(lines), min(lines))
+# 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
 # 	plt.clf()
 
+
+# all sessions for udid
+for i in udid_dict:
+	plt.ylabel("Line #")
+	plt.xlabel("seconds since start of reading session")
+	plt.suptitle(str(i) + " : All reading sessions")
+	for data in udid_dict[i]:
+		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
+		# plt.plot(times, lines)
+		(times, lines) = timeVersusProgress_helper(data, "last_cell")
+		plt.plot(times, lines)
+	plt.grid()
+	plt.xlim([0, 1200])
+	plt.ylim([600, 0])
+	plt.savefig("./" + str(i)  + "top_down.pdf", bbox_inches="tight")
+	plt.clf()
 
 
 
