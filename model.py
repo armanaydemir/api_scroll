@@ -250,7 +250,7 @@ for i in udid_dict:
 	rates = []
 	for data in udid_dict[i]:
 		(times, lines) = timeVersusProgressAverage_helper(data)
-		rates.append(times[-1]/len(data["article_data"]["content"]))
+		rates.append(len(data["article_data"]["content"])/times[-1])
 	print(rates)
 	print(sum(rates)/len(rates))
 	avg = sum(rates)/len(rates)
