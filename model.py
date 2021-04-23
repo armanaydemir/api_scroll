@@ -194,7 +194,7 @@ def timeVersusProgress_helper(data, cell_string):
 	return (np.array(times), np.array(lines))
 
 
-udids = udid_dict.keys()
+udids = list(udid_dict.keys())
 cmap = plt.get_cmap('jet')
 colors = cmap(np.linspace(0, 1.0, len(udids)))
 ## all sessions for article
