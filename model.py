@@ -222,7 +222,7 @@ def timeVersusProgress_helper(data, cell_string):
 
 
 
-articles = list(articles_dict.keys())
+articles = list(article_dict.keys())
 print(articles)
 cmap = plt.get_cmap('jet')
 colors = cmap(np.linspace(0, 1.0, len(articles)))
