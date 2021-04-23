@@ -195,6 +195,7 @@ def timeVersusProgress_helper(data, cell_string):
 
 
 udids = list(udid_dict.keys())
+print(udids)
 cmap = plt.get_cmap('jet')
 colors = cmap(np.linspace(0, 1.0, len(udids)))
 ## all sessions for article
@@ -212,7 +213,7 @@ for i in article_dict:
 			max_lines = max(lines)
 		if(min(lines) < min_lines):
 			min_lines = min(lines)
-		plt.plot(times, lines, label=data["UDID"], color=color)
+		plt.plot(times, lines, label="user " + str(udids.index(data["UDID"])), color=color)
 	plt.legend()
 	plt.grid()
 	plt.ylim(max_lines, min_lines)
