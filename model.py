@@ -246,11 +246,13 @@ def timeVersusProgress_helper(data, cell_string):
 
 ##all sessions for udid
 for i in udid_dict:
+	print(i)
 	rates = []
 	for data in udid_dict[i]:
 		(times, lines) = timeVersusProgressAverage_helper(data)
 		rates.append(times[-1]/len(data["article_data"]["content"]))
-	print(data["article_data"])
+	print(rates)
+	print("_______")
 
 
 # example_session = c[-1]
