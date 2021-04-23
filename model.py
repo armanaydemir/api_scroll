@@ -194,10 +194,9 @@ def timeVersusProgress_helper(data, cell_string):
 	return (np.array(times), np.array(lines))
 
 
-# udids = list(udid_dict.keys())
-# print(udids)
-# cmap = plt.get_cmap('jet')
-# colors = cmap(np.linspace(0, 1.0, len(udids)))
+udids = list(udid_dict.keys())
+cmap = plt.get_cmap('jet')
+colors = cmap(np.linspace(0, 1.0, len(udids)))
 # ## all sessions for article 
 # for i in article_dict:
 # 	times_list = []
@@ -222,40 +221,39 @@ def timeVersusProgress_helper(data, cell_string):
 
 
 
-# articles = list(article_dict.keys())
-# print(articles)
-# cmap = plt.get_cmap('jet')
-# colors = cmap(np.linspace(0, 1.0, len(articles)))
-# ## all sessions for udid 
-# for i in udid_dict:
-# 	times_list = []
-# 	plt.ylabel("Line #")
-# 	plt.xlabel("seconds since start of reading session")
-# 	plt.suptitle("all sessions data for udid:" + str(i))
-# 	for data in udid_dict[i]:	
-# 		(times, lines) = timeVersusProgressAverage_helper(data)
-# 		color = colors[articles.index(data["article_id"])]
-# 		plt.plot(times, lines, color=color)
-# 	plt.legend()
-# 	plt.grid()
-# 	plt.xlim([0, 1200])
-# 	plt.ylim([600, 0])
-# 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
-# 	plt.clf()
+articles = list(article_dict.keys())
+print(articles)
+cmap = plt.get_cmap('jet')
+colors = cmap(np.linspace(0, 1.0, len(articles)))
+## all sessions for udid 
+for i in udid_dict:
+	times_list = []
+	plt.ylabel("Line #")
+	plt.xlabel("seconds since start of reading session")
+	plt.suptitle("All Sessions Data for User " + str(udids.index(i)))
+	for data in udid_dict[i]:	
+		(times, lines) = timeVersusProgressAverage_helper(data)
+		color = colors[articles.index(data["article_id"])]
+		plt.plot(times, lines, color=color)
+	plt.grid()
+	plt.xlim([0, 1200])
+	plt.ylim([600, 0])
+	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
+	plt.clf()
 
 
 ##all sessions for udid
-for i in udid_dict:
-	print(i)
-	rates = []
-	for data in udid_dict[i]:
-		(times, lines) = timeVersusProgressAverage_helper(data)
-		rates.append(len(data["article_data"]["content"])/times[-1])
-	print(rates)
-	print(sum(rates)/len(rates))
-	avg = sum(rates)/len(rates)
-	print(sum((x-avg)**2 for x in rates) / len(rates))
-	print("_______")
+# for i in udid_dict:
+# 	print(i)
+# 	rates = []
+# 	for data in udid_dict[i]:
+# 		(times, lines) = timeVersusProgressAverage_helper(data)
+# 		rates.append(len(data["article_data"]["content"])/times[-1])
+# 	print(rates)
+# 	print(sum(rates)/len(rates))
+# 	avg = sum(rates)/len(rates)
+# 	print(sum((x-avg)**2 for x in rates) / len(rates))
+# 	print("_______")
 
 
 # example_session = c[-1]
