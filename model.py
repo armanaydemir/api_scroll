@@ -222,43 +222,35 @@ def timeVersusProgress_helper(data, cell_string):
 
 
 
-articles = list(article_dict.keys())
-print(articles)
-cmap = plt.get_cmap('jet')
-colors = cmap(np.linspace(0, 1.0, len(articles)))
-## all sessions for article 
-for i in udid_dict:
-	times_list = []
-	plt.ylabel("Line #")
-	plt.xlabel("seconds since start of reading session")
-	plt.suptitle("all sessions data for udid:" + str(i))
-	for data in udid_dict[i]:	
-		(times, lines) = timeVersusProgressAverage_helper(data)
-		color = colors[articles.index(data["article_id"])]
-		plt.plot(times, lines, color=color)
-	plt.legend()
-	plt.grid()
-	plt.xlim([0, 1200])
-	plt.ylim([600, 0])
-	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
-	plt.clf()
-
-
-
-# all sessions for udid
+# articles = list(article_dict.keys())
+# print(articles)
+# cmap = plt.get_cmap('jet')
+# colors = cmap(np.linspace(0, 1.0, len(articles)))
+# ## all sessions for udid 
 # for i in udid_dict:
+# 	times_list = []
 # 	plt.ylabel("Line #")
 # 	plt.xlabel("seconds since start of reading session")
-# 	plt.suptitle(str(i) + " : All reading sessions")
-# 	for data in udid_dict[i]:
+# 	plt.suptitle("all sessions data for udid:" + str(i))
+# 	for data in udid_dict[i]:	
 # 		(times, lines) = timeVersusProgressAverage_helper(data)
-# 		plt.plot(times, lines)
+# 		color = colors[articles.index(data["article_id"])]
+# 		plt.plot(times, lines, color=color)
+# 	plt.legend()
 # 	plt.grid()
-#	plt.xlim([0, 1200])
-#	plt.ylim([600, 0])
-# 	plt.savefig("./" + str(i)  + "top_down.pdf", bbox_inches="tight")
+# 	plt.xlim([0, 1200])
+# 	plt.ylim([600, 0])
+# 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
 # 	plt.clf()
 
+
+##all sessions for udid
+for i in udid_dict:
+	rates = []
+	for data in udid_dict[i]:
+		(times, lines) = timeVersusProgressAverage_helper(data)
+		rates.append(times[-1]/len(data["article_data"]["content"]))
+	print(data["article_data"])
 
 
 # example_session = c[-1]
