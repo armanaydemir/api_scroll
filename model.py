@@ -207,7 +207,7 @@ for i in article_dict:
 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
 		# plt.plot(times, lines)
 		(times, lines) = timeVersusProgressAverage_helper(data)
-		color = colors[udids.indexOf(data["UDID"])]
+		color = colors[udids.index(data["UDID"])]
 		plt.plot(times, lines, label=data["UDID"], color=color)
 	plt.legend()
 	plt.grid()
