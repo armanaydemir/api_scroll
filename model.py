@@ -203,15 +203,19 @@ for i in article_dict:
 	plt.ylabel("Line #")
 	plt.xlabel("seconds since start of reading session")
 	plt.suptitle("all last cell for article id:" + str(i))
+	max_lines = 0
+	min_lines = 0
 	for data in article_dict[i]:	
-		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
-		# plt.plot(times, lines)
 		(times, lines) = timeVersusProgressAverage_helper(data)
 		color = colors[udids.index(data["UDID"])]
+		if(max(lines) > max_lines):
+			max_lines = max(lines)
+		if(min(lines) < min_lines):
+			min_lines = min(lines)
 		plt.plot(times, lines, label=data["UDID"], color=color)
 	plt.legend()
 	plt.grid()
-	plt.ylim(max(lines), min(lines))
+	plt.ylim(max_lines, min_lines)
 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
 	plt.clf()
 
