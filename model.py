@@ -149,9 +149,6 @@ for i in c:
 		udid_dict[i["UDID"]] = [i]
 	else:
 		udid_dict[i["UDID"]].append(i)
-print(udid_dict)
-print(article_dict)
-
 
 
 
@@ -167,14 +164,25 @@ print(article_dict)
 # 	else:
 # 		udid_dict[i["UDID"]].append(i)
 
-# for i in udid_dict:
-# 	print(str(i) + " : " + str(len(udid_dict[i])))
+for i in udid_dict:
+	print(str(i) + " : " + str(len(udid_dict[i])))
+for i in article_dict:
+	print(str(i) + " : " + str(len(article_dict[i])))
+
 
 
 def make_title(data):
 	return ("UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"] + " - Device:" + data["type"])
 
 
+def timeVersusProgressAverage_helper(data):
+	mycol = sessions[str(data["_id"])]
+	times = []
+	lines = []
+	for row in mycol.find().sort(sort_param):
+		times.append((row["appeared"] - data["startTime"])/time_offset)
+		lines.append(int((row["first_cell"] + row["last_cell"])/2))
+	return (np.array(times), np.array(lines))
 
 def timeVersusProgress_helper(data, cell_string):
 	mycol = sessions[str(data["_id"])]
@@ -186,39 +194,41 @@ def timeVersusProgress_helper(data, cell_string):
 	return (np.array(times), np.array(lines))
 
 
-# ## all sessions for article
-# for i in article_dict:
-# 	times_list = []
-# 	plt.ylabel("Line #")
-# 	plt.xlabel("seconds since start of reading session")
-# 	plt.suptitle("all last cell for article id:" + str(i))
-# 	for data in article_dict[i]:	
-# 		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
-# 		# plt.plot(times, lines)
-# 		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-# 		plt.plot(times, lines, label=data["UDID"])
-# 	plt.legend()
-# 	plt.grid()
-# 	plt.ylim(max(lines), min(lines))
-# 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
-# 	plt.clf()
+udids = udid_dict.keys()
+cmap = plt.get_cmap('jet')
+colors = cmap(np.linspace(0, 1.0, len(udids)))
+## all sessions for article
+for i in article_dict:
+	times_list = []
+	plt.ylabel("Line #")
+	plt.xlabel("seconds since start of reading session")
+	plt.suptitle("all last cell for article id:" + str(i))
+	for data in article_dict[i]:	
+		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
+		# plt.plot(times, lines)
+		(times, lines) = timeVersusProgressAverage_helper(data)
+		color = colors[udids.indexOf(data["UDID"])]
+		plt.plot(times, lines, label=data["UDID"], color=color)
+	plt.legend()
+	plt.grid()
+	plt.ylim(max(lines), min(lines))
+	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
+	plt.clf()
 
 
 # all sessions for udid
-for i in udid_dict:
-	plt.ylabel("Line #")
-	plt.xlabel("seconds since start of reading session")
-	plt.suptitle(str(i) + " : All reading sessions")
-	for data in udid_dict[i]:
-		# (times, lines) = timeVersusProgress_helper(data, "first_cell")
-		# plt.plot(times, lines)
-		(times, lines) = timeVersusProgress_helper(data, "last_cell")
-		plt.plot(times, lines)
-	plt.grid()
-	plt.xlim([0, 1200])
-	plt.ylim([600, 0])
-	plt.savefig("./" + str(i)  + "top_down.pdf", bbox_inches="tight")
-	plt.clf()
+# for i in udid_dict:
+# 	plt.ylabel("Line #")
+# 	plt.xlabel("seconds since start of reading session")
+# 	plt.suptitle(str(i) + " : All reading sessions")
+# 	for data in udid_dict[i]:
+# 		(times, lines) = timeVersusProgressAverage_helper(data)
+# 		plt.plot(times, lines)
+# 	plt.grid()
+# 	plt.xlim([0, 1200])
+# 	plt.ylim([600, 0])
+# 	plt.savefig("./" + str(i)  + "top_down.pdf", bbox_inches="tight")
+# 	plt.clf()
 
 
 
