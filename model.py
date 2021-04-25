@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-# import tensorflow as tf
-# from tensorflow.keras import layers
+import tensorflow as tf
+from tensorflow.keras import layers
 import os
 import time
 import pymongo
@@ -197,6 +197,7 @@ def timeVersusProgress_helper(data, cell_string):
 
 
 udids = list(udid_dict.keys())
+articles = list(article_dict.keys())
 cmap = plt.get_cmap('jet')
 colors = cmap(np.linspace(0, 1.0, len(udids)))
 # ## all sessions for article 
@@ -223,7 +224,6 @@ colors = cmap(np.linspace(0, 1.0, len(udids)))
 
 
 
-# articles = list(article_dict.keys())
 # print(articles)
 # cmap = plt.get_cmap('jet')
 # colors = cmap(np.linspace(0, 1.0, len(articles)))
@@ -279,6 +279,7 @@ print(len(users_data))
 print(users)
 
 
+
 #user reading model takes in 2 variables (time, article), and outputs number which relates to line #
 
 for i in range(0,len(users)):
@@ -292,10 +293,40 @@ for i in range(0,len(users)):
 	for n in range(0, len(data), num):
 		test_data = data[n:n + num] 
 		training_data = data[:n] + data[n+num:]
-		print(len(test_data))
-		print(len(training_data))
-		print("--")
-	print("========")
+
+		training_x= []
+		training_y = []
+		for tdata in training_data:
+			line_count = tdata["article_data"]["line_count"]
+			article_index = tf.one_hot([articles.index(tdata["article_data"]["_id"])], len(articles))
+			UDID_index = tf.one_hot([udids.index(tdata["UDID"])], len(udids))
+			total_time = getTotalTime(tdata)
+			training_x.append([line_count, article_index, UDID_index])
+			training_y.append(total_time)
+
+		test_x = []
+		test_y = []
+		for tdata in test_data:
+			line_count = tdata["article_data"]["line_count"]
+			article_index = tf.one_hot([articles.index(tdata["article_data"]["_id"])], len(articles))
+			UDID_index = tf.one_hot([udids.index(tdata["UDID"])], len(udids))
+			total_time = getTotalTime(tdata)
+			test_x.append([line_count, article_index, UDID_index])
+			test_y.append(total_time)
+
+
+
+		model = tf.keras.models.Sequential([
+		  	tf.keras.layers.Flatten(input_shape=(3, )),
+		  	tf.keras.layers.Dense(10),
+		  	tf.keras.layers.Dense(1)
+		])
+		mse = tf.keras.losses.MeanSquaredError()
+
+		model.compile(optimizer='adam',
+              loss=loss_fn,
+              metrics=['accuracy'])
+		model.fit(train_x, train_y, epochs=5)
 
 	# print("NEW USER===================")
 	# for s in range(len(split_data)):
