@@ -221,25 +221,26 @@ colors = cmap(np.linspace(0, 1.0, len(udids)))
 
 
 
-articles = list(article_dict.keys())
-print(articles)
-cmap = plt.get_cmap('jet')
-colors = cmap(np.linspace(0, 1.0, len(articles)))
-## all sessions for udid 
-for i in udid_dict:
-	times_list = []
-	plt.ylabel("Line #")
-	plt.xlabel("seconds since start of reading session")
-	plt.suptitle("All Sessions Data for User " + str(udids.index(i)))
-	for data in udid_dict[i]:	
-		(times, lines) = timeVersusProgressAverage_helper(data)
-		color = colors[articles.index(data["article_id"])]
-		plt.plot(times, lines, color=color)
-	plt.grid()
-	plt.xlim([0, 1200])
-	plt.ylim([600, 0])
-	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
-	plt.clf()
+# articles = list(article_dict.keys())
+# print(articles)
+# cmap = plt.get_cmap('jet')
+# colors = cmap(np.linspace(0, 1.0, len(articles)))
+# ## all sessions for udid 
+# for i in udid_dict:
+# 	times_list = []
+# 	plt.ylabel("Line #")
+# 	plt.xlabel("seconds since start of reading session")
+# 	plt.suptitle("All Sessions Data for User " + str(udids.index(i)))
+# 	for data in udid_dict[i]:	
+# 		(times, lines) = timeVersusProgressAverage_helper(data)
+# 		color = colors[articles.index(data["article_id"])]
+# 		plt.plot(times, lines, color=color)
+# 	plt.grid()
+# 	plt.xlim([0, 1200])
+# 	plt.ylim([600, 0])
+# 	plt.savefig("./" + str(i) + "timeVersusProgress.pdf", bbox_inches="tight")
+# 	plt.clf()
+
 
 
 ##all sessions for udid
@@ -263,6 +264,33 @@ for i in udid_dict:
 # 	print(ex["event_data"])
 # 	print(ex["survey_data"])
 # 	print("-----")
+
+users = ["A0CA009C_BF85_4B86_94E9_1AC72729372C", "24F95563_FF38_41C0_969E_64DEDDA48DCE", "7D969264_E226_49EE_8833_89DCF9A43164"]
+
+users_data = [udid_dict[i] for i in users]
+
+print(users_data)
+print(users)
+
+#user reading model takes in 2 variables (time, article), and outputs number which relates to line #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
