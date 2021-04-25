@@ -289,11 +289,12 @@ for i in range(0,len(users)):
 	lst = data
 	split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
 	print(len(split_data))
-	tfolds = [(split_data[i], split_data[:i].append(split_data[i:])) for i in range(1, len(split_data)) ]
-	folds = [(split_data[0], split_data[0:])] + tfolds
+	folds = [(split_data[i], spit_data[:i] + split_index[i+1:]) for i in range(1, len(split_data)) ]
 	print(len(folds))
+	print("=")
 	print(len(folds[0][0]))
 	print(len(folds[0][1]))
+	print("-")
 	print(len(folds[2][0]))
 	print(len(folds[2][1]))
 
