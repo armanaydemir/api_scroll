@@ -268,9 +268,9 @@ colors = cmap(np.linspace(0, 1.0, len(udids)))
 users = ["A0CA009C_BF85_4B86_94E9_1AC72729372C", "24F95563_FF38_41C0_969E_64DEDDA48DCE", "7D969264_E226_49EE_8833_89DCF9A43164"]
 
 users_data = [udid_dict[i] for i in users]
-
-print(users_data)
 print(users)
+print(users_data)
+
 
 #user reading model takes in 2 variables (time, article), and outputs number which relates to line #
 
