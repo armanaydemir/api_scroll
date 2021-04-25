@@ -291,7 +291,7 @@ for i in range(0,len(users)):
 	# split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
 	for n in range(0, len(data), num):
 		test_data = data[n:n + num] 
-		training_data = data[:n] + data[n+num+1:]
+		training_data = data[:n] + data[n+num:]
 		print(len(test_data))
 		print(len(training_data))
 		print("--")
