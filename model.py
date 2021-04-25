@@ -268,6 +268,13 @@ colors = cmap(np.linspace(0, 1.0, len(udids)))
 users = ["A0CA009C_BF85_4B86_94E9_1AC72729372C", "24F95563_FF38_41C0_969E_64DEDDA48DCE", "7D969264_E226_49EE_8833_89DCF9A43164"]
 
 users_data = [udid_dict[i] for i in users]
+
+text_file = open("3usersdata.txt", "w")
+
+text_file.write(users_data)
+
+text_file.close()
+print(len(users_data))
 print(users)
 print(users_data)
 
