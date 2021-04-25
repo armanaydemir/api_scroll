@@ -286,24 +286,32 @@ for i in range(0,len(users)):
 	data = users_data[i]
 	random.shuffle(data)
 
-	n = int(len(data)/4)
-	lst = data
-	split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
-	print("NEW USER===================")
-	for s in range(len(split_data)):
-		print("new split ------------")
-		copy_split = split_data
-		test_data = copy_split[s]
-		print(test_data)
-		print("::::")
-		training_data = []
-		for copy_data in copy_split.pop(s):
-			for cd in copy_data:
-				training_data.append(cd)
-				print(cd)
-				print("-")
+	num = int(len(data)/4)
+	# lst = data
+	# split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
+	for n in range(0, len(data), num):
+		test_data = data[n:n + num] 
+		training_data = data[:n] + data[n+1:]
 		print(len(test_data))
 		print(len(training_data))
+		print("--")
+	print("========")
+
+	# print("NEW USER===================")
+	# for s in range(len(split_data)):
+	# 	print("new split ------------")
+	# 	copy_split = split_data
+	# 	test_data = copy_split[s]
+	# 	print(test_data)
+	# 	print("::::")
+	# 	training_data = []
+	# 	for copy_data in copy_split.pop(s):
+	# 		for cd in copy_data:
+	# 			training_data.append(cd)
+	# 			print(cd)
+	# 			print("-")
+	# 	print(len(test_data))
+	# 	print(len(training_data))
 		
 
 
