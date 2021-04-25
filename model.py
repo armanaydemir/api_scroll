@@ -271,7 +271,7 @@ users_data = [udid_dict[i] for i in users]
 
 text_file = open("3usersdata.txt", "w")
 
-text_file.write(users_data)
+text_file.write(str(users_data))
 
 text_file.close()
 print(len(users_data))
