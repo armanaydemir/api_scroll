@@ -17,6 +17,7 @@ import re
 import datetime
 import math
 import random
+from sklearn.model_selection import KFold
 
 # from pprint import pprint as print
 # from gensim.models.fasttext import FastText as FT_gensim
@@ -288,15 +289,33 @@ for i in range(0,len(users)):
 	n = int(len(data)/4)
 	lst = data
 	split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
-	print(len(split_data))
-	folds = [(split_data[i], split_data[:i] + split_data[i+1:]) for i in range(1, len(split_data)) ]
-	print(len(folds))
-	print("=")
-	print(len(folds[0][0]))
-	print(len(folds[0][1]))
-	print("-")
-	print(len(folds[2][0]))
-	print(len(folds[2][1]))
+	print("NEW USER===================")
+	for s in range(len(split_data)):
+		print("new split ------------")
+		copy_split = split_data
+		test_data = copy_split[s]
+		print(test_data)
+		print("::::")
+		training_data = []
+		for copy_data in copy_split.pop(s):
+			for cd in copy_data:
+				training_data.append(cd)
+				print(cd)
+				print("-")
+		print(len(test_data))
+		print(len(training_data))
+		
+
+
+	# print(len(split_data))
+	# folds = [(split_data[i], split_data[:i] + split_data[i+1:]) for i in range(0, len(split_data)) ]
+	# print(len(folds))
+	# print("=")
+	# print(len(folds[0][0]))
+	# print(len(folds[0][1]))
+	# print("-")
+	# print(len(folds[2][0]))
+	# print(len(folds[2][1]))
 
 	
 
