@@ -287,7 +287,7 @@ for i in range(0,len(users)):
 
 	n = len(data)/4
 	lst = data
-	split_data = [lst[i:i + n] for i in xrange(0, len(lst), n)]
+	split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
 	print(len(split_data))
 	folds = [ (split_data[i], split_data[:i].append(split_data[i:])) for i in range(0, len(split_data)) ]
 	print(len(folds))
