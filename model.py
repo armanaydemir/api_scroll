@@ -285,7 +285,7 @@ for i in range(0,len(users)):
 	data = users_data[i]
 	random.shuffle(data)
 
-	n = len(data)/4
+	n = int(len(data)/4)
 	lst = data
 	split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
 	print(len(split_data))
