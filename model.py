@@ -16,6 +16,7 @@ import sys
 import re
 import datetime
 import math
+import random
 
 # from pprint import pprint as print
 # from gensim.models.fasttext import FastText as FT_gensim
@@ -269,19 +270,33 @@ users = ["A0CA009C_BF85_4B86_94E9_1AC72729372C", "24F95563_FF38_41C0_969E_64DEDD
 
 users_data = [udid_dict[i] for i in users]
 
-text_file = open("3usersdata.txt", "w")
+# text_file = open("3usersdata.txt", "w")
+# text_file.write(str(users_data))
+# text_file.close()
 
-text_file.write(str(users_data))
-
-text_file.close()
 print(len(users_data))
 print(users)
 
 
 #user reading model takes in 2 variables (time, article), and outputs number which relates to line #
 
+for i in range(0,len(users)):
+	user = users[i]
+	data = users_data[i]
+	random.shuffle(data)
 
+	n = len(data)/4
+	lst = data
+	split_data = [lst[i:i + n] for i in xrange(0, len(lst), n)]
+	print(len(split_data))
+	folds = [ (split_data[i], split_data[:i].append(split_data[i:])) for i in range(0, len(split_data)) ]
+	print(len(folds))
+	print(len(folds[0][0]))
+	print(len(folds[0][1]))
+	print(len(folds[2][0]))
+	print(len(folds[2][1]))
 
+	
 
 
 
