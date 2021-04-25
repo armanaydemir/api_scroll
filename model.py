@@ -276,7 +276,6 @@ text_file.write(str(users_data))
 text_file.close()
 print(len(users_data))
 print(users)
-print(users_data)
 
 
 #user reading model takes in 2 variables (time, article), and outputs number which relates to line #
