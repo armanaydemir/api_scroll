@@ -154,7 +154,7 @@ for i in c:
 		udid_dict[i["UDID"]].append(i)
 
 
-
+print(len(udid_dict))
 # udid_dict = {}
 # article_dict = {}
 # for i in c:
@@ -167,12 +167,22 @@ for i in c:
 # 	else:
 # 		udid_dict[i["UDID"]].append(i)
 
+n_bins = 19
+udid_hist = []
+article_hist = []
 for i in udid_dict:
 	print(str(i) + " : " + str(len(udid_dict[i])))
+	udid_hist.append(len(udid_dict[i]))
 for i in article_dict:
 	print(str(i) + " : " + str(len(article_dict[i])))
-
-
+	article_hist.append(len(article_dict[i]))
+counts, bins, patches = plt.hist(udid_hist, bins=n_bins)
+plt.xticks(bins)
+plt.yticks([1,2,3,4])
+plt.xlabel("Number of Articles Read")
+plt.ylabel("# of Participants")
+# plt.show()
+plt.clf()
 
 def make_title(data):
 	return ("UDID:" + data["UDID"] + " -  Article Link:" + data["article_data"]["article_link"] + " - Device:" + data["type"])
@@ -204,26 +214,28 @@ cmap = plt.get_cmap('jet')
 users_data = [udid_dict[i] for i in users]
 users_rates = []
 users_regression = []
+colors = ["red", "orange", "yellow", "green", "blue"]
 for i in users:
 	x = []
 	y = []
 	for data in udid_dict[i]:
 		(times, lines) = timeVersusProgressAverage_helper(data)
+		plt.plot(times,lines,color=colors[int(data["survey_data"][0]["answers"][1]["option_id"])-1])
 		for time in times:
 			woah = [time]
-			for ii in range(0, len(articles)):
-				if(ii ==  articles.index(data["article_data"]["_id"])):
-					woah.append(1)
-				else:
-					woah.append(0)
-			for ii in range(0, len(users)):
-				if(ii ==  users.index(i)):
-					woah.append(1)
-				else:
-					woah.append(0)
+			# for ii in range(0, len(data["survey_data"][0]["answers"])):
+				# print( data["survey_data"][0]["answers"][ii])
+			woah.append(int(data["survey_data"][0]["answers"][1]["option_id"])-1)
+			# for ii in range(0, len(articles)):
+			# 	if(ii ==  articles.index(data["article_data"]["_id"])):
+			# 		woah.append(1)
+			# 	else:
+			# 		woah.append(0)
 			x.append(woah)
 		for line in lines:
 			y.append(line)
+	plt.savefig("./" + i  + "color_coded")
+	plt.clf()
 	x = np.array(x)
 	y = np.array(y)
 	model = LinearRegression(fit_intercept=False).fit(x, y)
@@ -240,62 +252,135 @@ for i in range(1, len(users_regression[0][0])):
 	print([users_regression[0][0][i], users_regression[1][0][i],users_regression[2][0][i]])
 	article_coefs.append([users_regression[0][0][i], users_regression[1][0][i],users_regression[2][0][i]])
 
+# barWidth = 0.25
+# user3 = []
+# user4 = []
+# user10 = []
+# for i in article_coefs:
+# 	user3.append(i[0])
+# 	user4.append(i[1])
+# 	user10.append(i[2])
+# br1 = np.arange(len(user3))
+# br2 = [x + barWidth for x in br1]
+# br3 = [x + barWidth for x in br2]
+# plt.figure(figsize =(20, 7))
+# plt.bar(br1, user3, color ='r', width = barWidth,
+#         edgecolor ='grey', label ='User 3')
+# plt.bar(br2, user4, color ='g', width = barWidth,
+#         edgecolor ='grey', label ='User 4')
+# plt.bar(br3, user10, color ='b', width = barWidth,
+#         edgecolor ='grey', label ='User 10')
 
-#regression model with one hot for articles and users
-for i in range(0,len(users)):
-	user = users[i]
-	data = users_data[i]
-	random.shuffle(data)
+# plt.xlabel('Article #')
+# plt.ylabel('Weight')
+# plt.xticks([r + barWidth for r in range(len(user3))],
+#         [str(i) for i in range(len(user3))])
+# plt.legend()
+# plt.savefig("./articleweights2222")
+# plt.clf()
 
-	num = int(len(data)/4)
-	# lst = data
-	# split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
-	for n in range(0, len(data), num):
-		test_data = data[n:n + num] 
-		training_data = data[:n] + data[n+num:]
-		training_data += users_data[(i+1)%3] + users_data[(i+2)%3]
-		x = []
-		y = []
-		for data in training_data:
-			(times, lines) = timeVersusProgressAverage_helper(data)
-			for time in times:
-				woah = [time]
-				for ii in range(0, len(articles)):
-					if(ii ==  articles.index(data["article_data"]["_id"])):
-						woah.append(1)
-					else:
-						woah.append(0)
-				for ii in range(0, len(users)):
-					if(ii == i):
-						woah.append(1)
-					else:
-						woah.append(0)
-				x.append(woah)
-			for line in lines:
-				y.append(line)
-		model = LinearRegression(fit_intercept=False).fit(x, y)
-		for test in test_data:
-			(times, lines) = timeVersusProgressAverage_helper(data)
-			plt.ylabel("Line #")
-			plt.xlabel("seconds since start of reading session")
-			plt.plot(times, lines)
-			test_x = []
-			for time in (0,10):
-				woah = [time]
-				for ii in range(0, len(articles)):
-					if(ii ==  articles.index(data["article_data"]["_id"])):
-						woah.append(1)
-					else:
-						woah.append(0)
-				for ii in range(0, len(users)):
-					if(ii == i):
-						woah.append(1)
-					else:
-						woah.append(0)
-				test_x.append(woah)
-			plt.plot([0,10], model.predict(test_x))
-			plt.savefig("./regression_model_graphs/" + str(test["UDID"] + "_" + str(test["article_data"]["_id"] + "_" + str(n))))
-			plt.clf()
+# barWidth = 0.25
+# user3 = []
+# user4 = []
+# user10 = []
+# for i in article_coefs[10:]:
+# 	user3.append(i[0])
+# 	user4.append(i[1])
+# 	user10.append(i[2])
+
+# br1 = np.arange(len(user3))
+# br2 = [x + barWidth for x in br1]
+# br3 = [x + barWidth for x in br2]
+
+# plt.bar(br1, user3, color ='r', width = barWidth,
+#         edgecolor ='grey', label ='User 3')
+# plt.bar(br2, user4, color ='g', width = barWidth,
+#         edgecolor ='grey', label ='User 4')
+# plt.bar(br3, user10, color ='b', width = barWidth,
+#         edgecolor ='grey', label ='User 10')
+
+# plt.xlabel('Article #')
+# plt.ylabel('Weight')
+# plt.xticks([r + barWidth for r in range(len(user3))],
+#         [str(10+i) for i in range(len(user3))])
+# plt.legend()
+# plt.savefig("./articleweights10")
+# plt.clf()
+# #regression model with one hot for articles and users
+# for i in range(0,len(users)):
+# 	user = users[i]
+# 	data = users_data[i]
+# 	random.shuffle(data)
+
+# 	num = int(len(data)/20)
+# 	# lst = data
+# 	# split_data = [lst[i:i + n] for i in range(0, len(lst), n)]
+# 	for n in range(0, len(data), num):
+# 		print(len(data))
+# 		test_data = data[n:n + num] 
+# 		training_data = data[:n] + data[n+num:]
+# 		#training_data += users_data[(i+1)%3] + users_data[(i+2)%3]
+# 		x = []
+# 		y = []
+# 		for training in training_data:
+# 			(times, lines) = timeVersusProgressAverage_helper(training)
+# 			for time in times:
+# 				woah = [time]
+# 				for ii in range(0, len(articles)):
+# 					if(ii ==  articles.index(training["article_data"]["_id"])):
+# 						woah.append(1)
+# 					else:
+# 						woah.append(0)
+# 				for ii in range(0, len(users)):
+# 					if(ii == i):
+# 						woah.append(1)
+# 					else:
+# 						woah.append(0)
+# 				x.append(woah)
+# 			for line in lines:
+# 				y.append(line)
+# 		# for test in test_data: 
+# 		# 	woah = [0]
+# 		# 	for ii in range(0, len(articles)):
+# 		# 		if(ii ==  articles.index(training["article_data"]["_id"])):
+# 		# 			woah.append(1)
+# 		# 		else:
+# 		# 			woah.append(0)
+# 		# 	for ii in range(0, len(users)):
+# 		# 		if(ii == i):
+# 		# 			woah.append(1)
+# 		# 		else:
+# 		# 			woah.append(0)
+# 		# 	x.append(woah)
+# 		# 	y.append(0)
+
+# 		model = LinearRegression(fit_intercept=True).fit(x, y)
+# 		r_sq = model.score(x, y)
+# 		print('coefficient of determination:', r_sq)
+# 		for test in test_data:
+# 			(times, lines) = timeVersusProgressAverage_helper(test)
+# 			plt.ylabel("Line #")
+# 			plt.xlabel("seconds since start of reading session")
+# 			plt.plot(times, lines)
+# 			test_x = []
+# 			for time in (0,10):
+# 				woah = [time]
+# 				for ii in range(0, len(articles)):
+# 					if(ii ==  articles.index(test["article_data"]["_id"])):
+# 						woah.append(1)
+# 					else:
+# 						woah.append(0)
+# 				for ii in range(0, len(users)):
+# 					if(ii == i):
+# 						woah.append(1)
+# 					else:
+# 						woah.append(0)
+# 				test_x.append(woah)
+# 			predi = model.predict(test_x)
+# 			rate = (predi[1] - predi[0])/10
+# 			plt.plot([0, max(lines)], [0, max(lines)])
+# 			plt.savefig("./regression_model_graphs/" + str(test["UDID"]) + "_" + str(test["article_data"]["_id"]) + "_" + str(n))
+# 			plt.clf()
 # pos = 0
 # neg = 0
 # for percent_difs in article_coefs:
@@ -319,17 +404,16 @@ for i in range(0,len(users)):
  
 # print(articles)
 cmap = plt.get_cmap('jet')
-colors = cmap(np.linspace(0, 1.0, len(articles)))
+colors = cmap(np.linspace(0, 1.0, len(udids)))
 ## all sessions for udid  
-colors = ['red', 'green', 'blue']
 for i in users:
 	times_list = []
 	rates = []
 	max_lines = 600
 	plt.ylabel("Line #")
 	plt.xlabel("seconds since start of reading session")
-	plt.suptitle("All Sessions Data for User " + str(udids.index(i)))
-	color = colors.pop()
+	
+	color = colors[udids.index(i)]
 	for data in udid_dict[i]:	
 		(times, lines) = timeVersusProgressAverage_helper(data)
 		rates.append(len(data["article_data"]["content"])/times[-1])
@@ -340,10 +424,14 @@ for i in users:
 	users_rates.append((avg, avg_var))
 	slope_times = [0, max_lines/avg]
 	slope_lines = [0, max_lines]
-	plt.plot(slope_times, slope_lines, color=color, linestyle='dashed')
-	plt.xlim([0, 1200])
-	plt.ylim([max_lines, 0])
-#plt.savefig("./slope_graphs/" + str(i) + "timeVersusProgress", bbox_inches="tight")
+	avg = users_regression[users.index(data["UDID"])][0]
+	slope_times = [0, (max_lines/avg)]
+	slope_lines = [0, max_lines]
+	plt.plot(slope_times, slope_lines, color=color, linestyle='dashed', label="user " + str(udids.index(i)))
+plt.xlim([0, 1200])
+plt.ylim([max_lines, 0])
+plt.suptitle("Every Article's Session Data and Regression for Each User")
+plt.savefig("./regression_all_sessions", bbox_inches="tight")
 plt.clf()
 
 colors = cmap(np.linspace(0, 1.0, len(udids)))
@@ -354,9 +442,10 @@ for i in article_dict:
 	times_list = []
 	plt.ylabel("Line #")
 	plt.xlabel("seconds since start of reading session")
-	plt.suptitle("All Sessions Data for Article " + (str(i)))
+	plt.suptitle("All Sessions Data for Article " + str(articles.index(i)))
 	max_lines = 0
 	min_lines = 0
+	avgs = []
 	for data in article_dict[i]:	
 		(times, lines) = timeVersusProgressAverage_helper(data)
 		color = colors[udids.index(data["UDID"])]
@@ -366,14 +455,16 @@ for i in article_dict:
 			min_lines = min(lines)
 		if(data["UDID"] in users):
 			plt.plot(times, lines, label="user " + str(udids.index(data["UDID"])), color=color)
-			avg = users_rates[users.index(data["UDID"])][0]
-			slope_times = [0, (max(lines)/avg)]
-			slope_lines = [0, max(lines)]
-			plt.plot(slope_times, slope_lines, color=color, linestyle='dashed')
+			avg = users_regression[users.index(data["UDID"])][0]
+			avgs.append((avg, color))
+	# for avg, color in avgs:
+	# 	slope_times = [0, (max_lines/avg)]
+	# 	slope_lines = [0, max_lines]
+	# 	plt.plot(slope_times, slope_lines, color=color, linestyle='dashed')
 	plt.legend()
 	plt.grid()
-	plt.ylim(max_lines, min_lines)
-	#plt.savefig("./3user_for_all_articles/" + str(i) + "3users", bbox_inches="tight")
+	plt.ylim(max_lines, 0)
+	plt.savefig("./3users_graphs/" + str(i) + "3users", bbox_inches="tight")
 	plt.clf()
 
 
