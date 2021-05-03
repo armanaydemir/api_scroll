@@ -8,6 +8,7 @@ import pymongo
 import pandas as pd
 import numpy as np
 import matplotlib
+from matplotlib.lines import Line2D
 #matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import statistics
@@ -214,13 +215,22 @@ cmap = plt.get_cmap('jet')
 users_data = [udid_dict[i] for i in users]
 users_rates = []
 users_regression = []
-colors = ["red", "orange", "yellow", "green", "blue"]
+colors = ["#b9ff00", "#ffa900", "#ff002d", "#ff009a", "#0003fd"]
+labels = ["Little", "Below Average", "Average", "Above Average", "Complete"]
+hh = []
+for i in range(len(labels)):
+	hh.append(Line2D([0], [0], color=colors[i], label=labels[i]))
 for i in users:
 	x = []
 	y = []
-	for data in udid_dict[i]:
+	for data in udid_dict[i][::-1]:
 		(times, lines) = timeVersusProgressAverage_helper(data)
-		plt.plot(times,lines,color=colors[int(data["survey_data"][0]["answers"][1]["option_id"])-1])
+		# if(int(data["survey_data"][0]["answers"][1]["option_id"]) not in prev):
+		# 	ll = plt.plot(times,lines, label="Option " + str(int(data["survey_data"][0]["answers"][1]["option_id"])), color=colors[int(data["survey_data"][0]["answers"][1]["option_id"])-1])
+		# 	handles.append(ll)
+		# 	prev.append(int(data["survey_data"][0]["answers"][1]["option_id"]))
+		# else:
+		plt.plot(times,lines, color=colors[int(data["survey_data"][0]["answers"][1]["option_id"])-1])
 		for time in times:
 			woah = [time]
 			# for ii in range(0, len(data["survey_data"][0]["answers"])):
@@ -234,6 +244,10 @@ for i in users:
 			x.append(woah)
 		for line in lines:
 			y.append(line)
+	plt.ylabel("Line #")
+	plt.suptitle("Reading Progress Color Coded by Comprehension Response for Participant " + str(udids.index(i)))
+	plt.legend(handles=hh)
+	plt.xlabel("seconds since start of reading session")
 	plt.savefig("./" + i  + "color_coded")
 	plt.clf()
 	x = np.array(x)
@@ -252,6 +266,56 @@ for i in range(1, len(users_regression[0][0])):
 	print([users_regression[0][0][i], users_regression[1][0][i],users_regression[2][0][i]])
 	article_coefs.append([users_regression[0][0][i], users_regression[1][0][i],users_regression[2][0][i]])
 
+print("-------------")
+#new model based on mozer suggestions
+x = []
+y = []
+for i in users:
+	for data in udid_dict[i]:
+		(times, lines) = timeVersusProgressAverage_helper(data)
+		for time in times:
+			tempx = []
+			for uu in users:
+				if(i == uu):
+					tempx.append(time)
+				else:
+					tempx.append(0)
+			for ii in range(0, len(articles)):
+				if(articles[ii] == data["article_data"]["_id"]):
+					tempx.append(time)
+				else:
+					tempx.append(0)
+			x.append(tempx)
+		for line in lines:
+			y.append(line)
+x = np.array(x)
+y = np.array(y)
+model = LinearRegression(fit_intercept=False).fit(x, y)
+r_sq = model.score(x, y)
+print('coefficient of determination:', r_sq)
+print('intercept:', model.intercept_)
+print('slope:', model.coef_)
+users_slops = model.coef_[:3]
+users_slops = [i - (model.coef_[0]-0.44111436) for i in users_slops]
+print(users_slops)
+weights = model.coef_[3:]
+weights = [i+(model.coef_[0]-0.44111436) for i in weights]
+print(weights)
+
+a = weights
+ranked_indices = sorted(range(len(a)), key=lambda i: a[i], reverse=True)
+print(ranked_indices[0])
+print(a[ranked_indices[0]])
+print(article_dict[articles[ranked_indices[0]]][0])
+print(ranked_indices[1])
+print(a[ranked_indices[1]])
+print(article_dict[articles[ranked_indices[1]]][0])
+print(ranked_indices[-1])
+print(a[ranked_indices[-1]])
+print(article_dict[articles[ranked_indices[-1]]][0])
+print(ranked_indices[-2])
+print(a[ranked_indices[-2]])
+print(article_dict[articles[ranked_indices[-2]]][0])
 # barWidth = 0.25
 # user3 = []
 # user4 = []
@@ -403,69 +467,69 @@ for i in range(1, len(users_regression[0][0])):
 # print(neg)
  
 # print(articles)
-cmap = plt.get_cmap('jet')
-colors = cmap(np.linspace(0, 1.0, len(udids)))
-## all sessions for udid  
-for i in users:
-	times_list = []
-	rates = []
-	max_lines = 600
-	plt.ylabel("Line #")
-	plt.xlabel("seconds since start of reading session")
+# cmap = plt.get_cmap('jet')
+# colors = cmap(np.linspace(0, 1.0, len(udids)))
+# ## all sessions for udid  
+# for i in users:
+# 	times_list = []
+# 	rates = []
+# 	max_lines = 600
+# 	plt.ylabel("Line #")
+# 	plt.xlabel("seconds since start of reading session")
 	
-	color = colors[udids.index(i)]
-	for data in udid_dict[i]:	
-		(times, lines) = timeVersusProgressAverage_helper(data)
-		rates.append(len(data["article_data"]["content"])/times[-1])
-		plt.plot(times, lines, color=color)
-	plt.grid()
-	avg = sum(rates)/len(rates)
-	avg_var = sum((x-avg)**2 for x in rates) / len(rates)
-	users_rates.append((avg, avg_var))
-	slope_times = [0, max_lines/avg]
-	slope_lines = [0, max_lines]
-	avg = users_regression[users.index(data["UDID"])][0]
-	slope_times = [0, (max_lines/avg)]
-	slope_lines = [0, max_lines]
-	plt.plot(slope_times, slope_lines, color=color, linestyle='dashed', label="user " + str(udids.index(i)))
-plt.xlim([0, 1200])
-plt.ylim([max_lines, 0])
-plt.suptitle("Every Article's Session Data and Regression for Each User")
-plt.savefig("./regression_all_sessions", bbox_inches="tight")
-plt.clf()
+# 	color = colors[udids.index(i)]
+# 	for data in udid_dict[i]:	
+# 		(times, lines) = timeVersusProgressAverage_helper(data)
+# 		rates.append(len(data["article_data"]["content"])/times[-1])
+# 		plt.plot(times, lines, color=color)
+# 	plt.grid()
+# 	avg = sum(rates)/len(rates)
+# 	avg_var = sum((x-avg)**2 for x in rates) / len(rates)
+# 	users_rates.append((avg, avg_var))
+# 	slope_times = [0, max_lines/avg]
+# 	slope_lines = [0, max_lines]
+# 	avg = users_regression[users.index(data["UDID"])][0]
+# 	slope_times = [0, (max_lines/avg)]
+# 	slope_lines = [0, max_lines]
+# 	plt.plot(slope_times, slope_lines, color=color, linestyle='dashed', label="user " + str(udids.index(i)))
+# plt.xlim([0, 1200])
+# plt.ylim([max_lines, 0])
+# plt.suptitle("Every Article's Session Data and Regression for Each User")
+# plt.savefig("./regression_all_sessions", bbox_inches="tight")
+# plt.clf()
 
-colors = cmap(np.linspace(0, 1.0, len(udids)))
+# colors = cmap(np.linspace(0, 1.0, len(udids)))
 
 
-# ## all sessions for article 
-for i in article_dict:
-	times_list = []
-	plt.ylabel("Line #")
-	plt.xlabel("seconds since start of reading session")
-	plt.suptitle("All Sessions Data for Article " + str(articles.index(i)))
-	max_lines = 0
-	min_lines = 0
-	avgs = []
-	for data in article_dict[i]:	
-		(times, lines) = timeVersusProgressAverage_helper(data)
-		color = colors[udids.index(data["UDID"])]
-		if(max(lines) > max_lines):
-			max_lines = max(lines)
-		if(min(lines) < min_lines):
-			min_lines = min(lines)
-		if(data["UDID"] in users):
-			plt.plot(times, lines, label="user " + str(udids.index(data["UDID"])), color=color)
-			avg = users_regression[users.index(data["UDID"])][0]
-			avgs.append((avg, color))
-	# for avg, color in avgs:
-	# 	slope_times = [0, (max_lines/avg)]
-	# 	slope_lines = [0, max_lines]
-	# 	plt.plot(slope_times, slope_lines, color=color, linestyle='dashed')
-	plt.legend()
-	plt.grid()
-	plt.ylim(max_lines, 0)
-	plt.savefig("./3users_graphs/" + str(i) + "3users", bbox_inches="tight")
-	plt.clf()
+# # ## all sessions for article 
+# for i in article_dict:
+# 	times_list = []
+# 	plt.ylabel("Line #")
+# 	plt.xlabel("seconds since start of reading session")
+# 	plt.suptitle("All Sessions Data for Article " + str(articles.index(i)))
+# 	max_lines = 0
+# 	min_lines = 0
+# 	avgs = []
+# 	for data in article_dict[i]:	
+# 		(times, lines) = timeVersusProgressAverage_helper(data)
+# 		color = colors[udids.index(data["UDID"])]
+# 		if(max(lines) > max_lines):
+# 			max_lines = max(lines)
+# 		if(min(lines) < min_lines):
+# 			min_lines = min(lines)
+# 		if(data["UDID"] in users):
+# 			plt.plot(times, lines, label="user " + str(udids.index(data["UDID"])), color=color)
+# 			avg = users_regression[users.index(data["UDID"])][0]
+# 			avgs.append((avg, color))
+# 	# for avg, color in avgs:
+# 	# 	slope_times = [0, (max_lines/avg)]
+# 	# 	slope_lines = [0, max_lines]
+# 	# 	plt.plot(slope_times, slope_lines, color=color, linestyle='dashed')
+# 	plt.legend()
+# 	plt.grid()
+# 	plt.ylim(max_lines, 0)
+# 	plt.savefig("./3users_graphs/" + str(i) + "3users", bbox_inches="tight")
+# 	plt.clf()
 
 
 # [9, 14]
