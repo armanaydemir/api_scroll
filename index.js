@@ -533,10 +533,14 @@ app.get('/settings', function(req,res){
 	res.send(toReturn)
 })
 
+//called when a user submits their email after accepting terms on initial splash screen
+//adds their email and udid to emails_collection in main database
 app.post('/submit_email', function(req,res){
 	var data = req.body
 	console.log('submit_email')
 	console.log(data)
+
+	//cleaning udid
 	var udid = req.get("X-UDID")
 	udid = udid.replace(/-/g, '_');
 	data.UDID = udid
@@ -544,85 +548,54 @@ app.post('/submit_email', function(req,res){
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(database) 
 		if (err) throw err;
+		//adding their email and udid to user list
   		dbd.collection(emails_collection).insertOne(data, function(e, resu){ if (e) {throw e;} else {res.send({"success": true})} });
   		db.close();
 	});
 })
 
+//called when a user submits responses to survey after reading an article
+//adds their responses to session's collection in questions_db
 app.post('/submit_answers', function(req,res){
 	var data = req.body
-	console.log('submit_answers')
-	console.log(data)
 
-	// if(data.article){
-	// 	data.article = data.article.split('.html')[0] + '.html'
-	// }
-	// data.UDID = data.UDID.replace(/-/g, '_');
-	// console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(questions_db) 
 		if (err) throw err;
-		// var s = data.startTime.toString().split('.')[0]
-		//console.log(data.UDID + s)
   		dbd.collection(data.session_id).insertOne(data, function(e, resu){ if (e) {throw e;} else {res.send({"success": true})} });
   		db.close();
 	});
 })
 
-app.post('/get_survey', function(req, res){
-	var data = req.body
-	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db(questions_db) 
-		if (err) throw err;
-		// var s = data.startTime.toString().split('.')[0]
-		//console.log(data.UDID + s)
-  		dbd.collection(data.session_id).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
-  		db.close();
-	});
-})
-
-app.post('/get_event', function(req, res){
-	var data = req.body
-	MongoClient.connect(url, function(err, db) {
-		var dbd = db.db(events_db) 
-		if (err) throw err;
-		//var s = data.startTime.toString().split('.')[0]
-		// //console.log(data.UDID + s)
-  		dbd.collection(data.session_id).find({}).toArray(async function(e, resu){ if (e) {throw e;} else {res.send(resu)} });
-  		db.close();
-	});
-})
-
+//returns sessions in proper format for replaying
 app.post('/session_replay', function(req,res){
-	console.log('session_replay')
-	//in this context article link actual means session id
-
-	//console.log(data)
+	// console.log('session_replay')
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var data = req.body
-		data.UDID = data.UDID.replace(/-/g, '_');
-		//console.log(data)
 		var dbd = db.db(database)
 		var dbsession = db.db(sessions_db)
-		console.log(data.article_link)
+
+		//cleaning udid
+		data.UDID = data.UDID.replace(/-/g, '_');
+
+		//find session  //in this context article link actually means session id
 		dbd.collection(combined_sessions_collection).findOne({'_id': ObjectId(data.article_link)}, function(err, result) {
 		    if (err) throw err;
+
+		    //collect article data
 		    dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)},function(er, article){
 		    	if (er) throw er;
 		    	result.article_data = article
-		    	//article.text.unshift(data.article_link)
 		    	result.paragraphs = article.text
-		    	var s = result.startTime.toString().split('.')[0]
+
+		    	//collect sessions data
 		    	dbsession.collection(data.article_link).find({}).toArray(function(errr, col){
-		    		if (errr) throw errr;
-		    		i = 0
-		    		
-		    		c = result.content
-		    		
+		    		if (errr) throw errr;	
 	    			result.session_data = col
 	    			result.max_lines = maxLines
-	    			
+
+	    			//send results
 					res.send(result)
 					db.close();
 		    	})
