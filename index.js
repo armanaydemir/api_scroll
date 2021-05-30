@@ -8,8 +8,6 @@ var KalmanFilter = require('kalmanjs')
 var kf = new KalmanFilter();
 //var moment = require('moment')
 var Mercury = require('@postlight/mercury-parser')
-var politico_api = "eacb0f942382464a9193148875c93431"
-var nyt_key = "Mgbw0wTgMWZQezAzmYBPmSFG2jFgRLi2" // new york times api key for top stories
 
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
@@ -99,26 +97,6 @@ console.log('started at least')
 spaceLabelHeightRatio = 0.25
 maxLines = 20
 maxChars = 55
-/*
-things to do
-------------------
-look into CFAbsoluteTime vs Date()
-	- maybe just have both???
-improve vis.py and make it take arguments
-add politico/other news sites scrapers (npr, cnn) , apple news api
-
-
-better practices
--------------------
-batch requests
-dont do dynamic sizing computation every time
-
-
-data sources we can add
---------------------
-add camera to see if they are looking at screen if its easy enough
-add finger positioning
-*/
 
 
 app.use(bodyParser.json());
@@ -134,23 +112,10 @@ function parse_body_npr(result) {
 	const $ = cheerio.load(body);
 	const bodies = $('p');
 	var i = 0;
-	// const headers = $('h1')
 	const title = $(".story-title")
 	console.log(title.text())
 	var sections = [title.text()]; 
-	// console.log('headers.length')
-	// console.log(headers.length)
-	// while(i < headers.length){
-	// 	var o = 0
-	// 	while(o < headers[i].children.length){
-	// 		if(headers[i].children[o].type == 'text'){
-	// 			console.log('hhh')
-	// 			sections.push(bodies[i].children[o].data.replace('\\n',''))
-	// 		}
-	// 		o ++;
-	// 	}
-	// 	i ++;
-	// }
+
 
 
 	i = 2
@@ -179,40 +144,6 @@ function parse_body_npr(result) {
 	return sections;
 }
 
-// function parse_body(result) {
-// 	var body = result.content
-// 	const $ = cheerio.load(body);
-// 	const bodies = $('p');
-// 	var i = 0;
-// 	var sections = []; 
-// 	const title = result.title
-// 	sections.push(title)
-// 	while(i < bodies.length){
-// 		var o = 0;
-// 		var subsections = [];
-// 		//console.log(bodies[i].children.length)
-// 		while(o < bodies[i].children.length){
-// 			if(bodies[i].children[o].type == 'text'){
-// 				subsections.push(bodies[i].children[o].data.replace('\\n',''));
-// 				//console.log(bodies[i].children[o].data)
-// 			}
-// 			else if(bodies[i].children[o].type == 'tag' && bodies[i].children[o].children.length > 0 && bodies[i].children[o].children[0].data){
-// 				//console.log(bodies[i].children[o].children[0])
-// 				subsections.push(bodies[i].children[o].children[0].data.replace('\\n',''));
-				
-// 			}
-// 			o ++;
-// 		}	
-// 		//console.log(subsections);
-// 		//console.log(subsections.join(''));
-// 		//console.log('------------------------')
-// 		sections.push(subsections.join(''));
-// 		i ++;
-// 	}
-// 	//console.log(title);
-// 	return sections;
-// }
-
 function parse_lines(text) {
 	var content = []
 	var i = 1
@@ -239,31 +170,6 @@ function parse_lines(text) {
 		i += 1
 	}
 	return content
-}
-
-function scrape_top_npr(callback) {
-	request.get({ url: "https://text.npr.org" }, 
-	function(err, response, body) {
-		if(err) throw err;
-	 	const $ = cheerio.load(body);
-		const bodies = $('ul');
-		const li = bodies[0].children
-		var i = 0
-		var r = []
-		while(i < li.length){
-			const link = li[i]
-			r.push({"url": link.children[0].attribs.href})
-			// console.log(link.children[0].attribs.href)
-			i = i+1
-		}
-		//console.log(r)
-	 	r.map(function(data){
-	 		add_article_npr(data, function(result){
-	 			return result
-	 		})
-	 	})
-	 	callback(r)
-	})
 }
 
 function promise_add_article_npr(data) {
@@ -375,15 +281,6 @@ function init_session(data, res) {
 	})
 }
 
-app.get('/npr_scrape_all', function(req, res){
-	scrape_top_npr(function(tops){
-		console.log("tops")
-		//console.log(tops[0].title)
-		console.log(tops)
-		res.send(tops)
-	})
-});
-
 app.get('/npr_scrape_one', function(req, res){
 	var data = req.body
 	add_article_npr(data, function(result){
@@ -410,25 +307,10 @@ app.get('/articles', function(req, res){
 				i = i + 1
 			}
 			res.send(new_data)
-			db.close()
-			
-				
-			
+			db.close()	
 		})
 	})
 })
-
-
-// app.get('/identities', function(req,res){
-// 	res.send([{"udid":"0B70C724_6597_4659_9322_E113E9403601","device":"iPhone9,1"}
-// 		,{"udid":"35F7C004_7F5D_4C77_8E84_313FD79C77E0","device":"iPad6,11"}
-// 		,{"udid":"828296DD_6B30_43B8_8986_8E12A13CD9F2","device":"iPhone9,1"}
-// 		,{"udid":"8CE7904A_11BC_4E65_A236_00BAC8F51F6B","device":"iPhone9,3"}
-// 		,{"udid":"93D9D52B_04D9_4532_A24B_D90B845A062E","device":"iPhone10,3"}
-// 		,{"udid":"A48F157C_4768_44C9_86BF_6978C67BB756","device":"iPad7,3"}
-// 		,{"udid":"ACE7A1BC_AB49_42A6_B276_2A0852E0B9EE","device":"iPhone8,1"}]
-// 	)
-// })
 
 async function sessions_article_helper(dbd,result){
 	article_data = await dbd.collection(combined_articles_collection).findOne({'_id': ObjectId(result.article_id)})
@@ -444,7 +326,7 @@ async function sessions_helper(dbd, results){
 	return Promise.all(results.map(result => sessions_article_helper(dbd,result)))
 }
 
-
+//returns all completed sessions
 app.get('/sessions', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
@@ -477,6 +359,7 @@ app.get('/sessions', function(req,res){
 	})
 })
 
+//returns stats about how many sessions each user has completed
 app.get('/sessions_UDID', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
@@ -604,33 +487,24 @@ app.post('/session_replay', function(req,res){
 	})
 })
 
-
+//called when user selects an article to begin a reading sessions
+//calls init_session
 app.post("/open_article", function(req, res) {
 	//console.log('open article')
 	var data = req.body
-
-	//data.article_link = data.article_link.split('.html')[0] + '.html'
+	//clean udid
 	data.UDID = data.UDID.replace(/-/g, '_');
-	// console.log(data.article_link + ' : ' + data.UDID);s
-	// console.log(': ' + data.startTime + ' :')
-	// console.log('----------')
     init_session(data, res);
 });
 
+//old function to submit one update for sessions, only batched version should be used now
 app.post("/submit_data", function(req, res) {
 	var data = req.body
-	//console.log('submit data')
-	//article link and UDID stuffs
-	// if(data.article){
-	// 	data.article = data.article.split('.html')[0] + '.html'
-	// }
+	//clean udid
 	data.UDID = data.UDID.replace(/-/g, '_');
-	// console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(sessions_db) 
 		if (err) throw err;
-		// var s = data.startTime.toString().split('.')[0]
-		//console.log(data.UDID + s)
   		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
@@ -638,22 +512,16 @@ app.post("/submit_data", function(req, res) {
 	res.sendStatus(200)
 });
 
-
+// called when submitting data during reading session
+// adds data to session's collection in the session DB
 app.post("/submit_data_batched", function(req, res) {
 	var data = req.body
-	console.log('submit data batched')
-	//article link and UDID stuffs
-	// if(data.article){
-	// 	data.article = data.article.split('.html')[0] + '.html'
-	// }
+	// console.log('submit data batched')
+	// clean udid
 	data.UDID = data.UDID.replace(/-/g, '_');
-	//console.log(data.data)
-	//console.log(data.session_id)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(sessions_db) 
 		if (err) throw err;
-		// var s = data.startTime.toString().split('.')[0]
-		//console.log(data.UDID + s)
   		dbd.collection(data.session_id).insertMany(data.data, function(e, ress){ 
   			if (e) throw e; 
   			toReturn = {}
@@ -661,27 +529,21 @@ app.post("/submit_data_batched", function(req, res) {
   		});
   		db.close();
 	});
-
-	//res.sendStatus(200)
 });
 
+// called when an event occurs during reading session
+// adds event to session's collection in event DB
 app.post("/submit_event", function(req, res) {
 	var data = req.body
-	console.log('submit event')
-	console.log(data)
-	console.log("---")
-	//article link and UDID stuffs
-	// if(data.article){
-	// 	data.article = data.article.split('.html')[0] + '.html'
-	// }
+	// console.log('submit event')
+	// console.log(data)
+	// console.log("---")
+
 	data.UDID = data.UDID.replace(/-/g, '_');
 	console.log(data.UDID)
 	MongoClient.connect(url, function(err, db) {
 		var dbd = db.db(events_db) 
 		if (err) throw err;
-
-		//var s = data.startTime.toString().split('.')[0]
-		//console.log(data.UDID + s)
   		dbd.collection(data.session_id).insertOne(data, function(e, res){ if (e) throw e; });
   		db.close();
 	});
@@ -689,6 +551,8 @@ app.post("/submit_event", function(req, res) {
 	res.sendStatus(200)
 });
 
+//called when user hits 'completed reading' button
+//marks session as complete in combined sessions collection in main DB
 app.post("/close_article", function(req,res){
 	var data = req.body
 
@@ -696,9 +560,7 @@ app.post("/close_article", function(req,res){
 		var dbd = db.db(database)
 		if (err) throw err; 
 		var s = new ObjectId(data.session_id)
-
 		var q = {'_id': s}
-		//console.log(data.content)
 		var nv = {$set:{"portait": data.portrait, "content": data.content, "word_splits": data.word_splits, "character_splits": data.character_splits, "completed": data.complete, "endTime": data.time}}
 		dbd.collection(combined_sessions_collection).updateOne(q, nv, function(err, result){
 			if(err) throw err
