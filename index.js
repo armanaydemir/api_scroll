@@ -1,3 +1,24 @@
+/*
+Arman Aydemir
+
+
+db overview:
+	main database:
+		- articles collection
+			- all article data
+		- emails collection 
+			- UDID, email
+		- sessions collection
+			- basic session data
+	events database: (collection for each session_id)
+		- events which occured during session (if any exist)
+	sessions database: (collection for each session_id)
+		- actual reading session data (from submit_data_batched)
+	questions database: (collection for each session_id)
+		- responses to survey for that reading session
+*/
+
+
 var express = require("express");
 var bodyParser = require("body-parser");
 const cheerio = require('cheerio')
@@ -7,10 +28,6 @@ var request = require('request');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
-
-var sessionsCollection = 'complete_sessions01'
-var articlesCollection = 'complete_articles01'
-var emailsCollection = "complete_emails01"
 
 // VERY VERY IMPORTANT
 var database = 'data_official'
@@ -509,9 +526,6 @@ app.post("/close_article", function(req,res){
 
 	res.sendStatus(200)
 });
-
-
-
 
 
 
