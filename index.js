@@ -3,11 +3,6 @@ var bodyParser = require("body-parser");
 const cheerio = require('cheerio')
 var app = express();
 var request = require('request');
-var fs = require('fs');
-var KalmanFilter = require('kalmanjs')
-var kf = new KalmanFilter();
-//var moment = require('moment')
-var Mercury = require('@postlight/mercury-parser')
 
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
@@ -22,6 +17,7 @@ var database = 'data_official'
 var sessions_db = 'sessions_official'
 var events_db = 'events_official'
 var questions_db = 'questions_official'
+const version = "v0.5.0"
 
 var old_db = 'data'
 var old_sessions = 'sessions'
@@ -77,21 +73,6 @@ var standard_questions = [
 ]
 
 
-//complete_sessions01
-//complete_articles01
-
-// var sessionsCollection = 'complete_sessions01'
-// var articlesCollection = 'complete_articles01'
-// var database = 'data034'
-
-// var old_db = 'data'
-// var old_sessions = 'sessions'
-// var old_articles = 'articles'
-// var combined_sessions_collection = 'complete_sessions01'
-// var combined_articles_collection = 'complete_articles01'
-
-const version = "v0.5.0"
-
 console.log('started at least')
 
 spaceLabelHeightRatio = 0.25
@@ -106,6 +87,7 @@ var headers = {
     'x-api-key': 'F38xVZRhInLJvodLQdS1GDbyBroIScfRgGAbzhVY'
 };
 
+//retrieves text from npr html
 function parse_body_npr(result) {
 	console.log("parse_body_npr")
 	var body = result
@@ -113,10 +95,7 @@ function parse_body_npr(result) {
 	const bodies = $('p');
 	var i = 0;
 	const title = $(".story-title")
-	console.log(title.text())
 	var sections = [title.text()]; 
-
-
 
 	i = 2
 	while(i < bodies.length){
@@ -126,24 +105,19 @@ function parse_body_npr(result) {
 		while(o < bodies[i].children.length){
 			if(bodies[i].children[o].type == 'text'){
 				subsections.push(bodies[i].children[o].data.replace('\\n',''));
-				//console.log(bodies[i].children[o].data)
 			}
 			else if(bodies[i].children[o].type == 'tag' && bodies[i].children[o].children.length > 0 && bodies[i].children[o].children[0].data){
-				//console.log(bodies[i].children[o].children[0])
 				subsections.push(bodies[i].children[o].children[0].data.replace('\\n',''));
-				
 			}
 			o ++;
 		}	
-		//console.log(subsections);
-		//console.log(subsections.join(''));
-		//console.log('------------------------')
 		sections.push(subsections.join(''));
 		i ++;
 	}
 	return sections;
 }
 
+//splits out content into lines of 30 characters or less
 function parse_lines(text) {
 	var content = []
 	var i = 1
@@ -172,52 +146,9 @@ function parse_lines(text) {
 	return content
 }
 
-function promise_add_article_npr(data) {
-	return new Promise((resolve, reject) => {
-		console.log("add article npr")
-		data.address = data.url
-		data.article_link = data.address
-		console.log(data.address)
-		MongoClient.connect(url, function(e, db) {
-			if(e) throw e;
-			var dbd = db.db(database)
-			dbd.collection(combined_articles_collection).findOne({'article_link': data.address}, function(err, result){
-				if(err) throw(err);
-				if(!result){
-					//console.log('new article scrape')
-					//console.log(data)
-					request.get({ url: data.address }, function(er, response, body) {
-						data.text = parse_body_npr(body)
-						//console.log(data.text)
-						data.content = parse_lines(data.text)
-						data.title = data.text[0]
-						data.version = version
-						data.line_count = data.content.length
-						//console.log(data)
-						//console.log("----")
-						//console.log(data.content)
-						
-						dbd.collection(combined_articles_collection).insertOne(data, function(e, resu){ if (e) throw e; 
-							db.close()
-							// console.log(resu.text)
-							// console.log(resu.content)
-							// console.log("----")
-							console.log(resu.title)
-							resolve(resu)
-						})
-					})
-				}else{
-					//console.log(result)
-					db.close()
-					resolve(result)
-				}
-			})
-		})	
-	})
-	
-}
 
-
+//adds article to combined articles collection in main DB if it doesnt exist
+//calls parse lines and parse body npr
 async function add_article_npr(data, callback) {
 	console.log("add article npr")
 	data.address = data.url
@@ -250,6 +181,8 @@ async function add_article_npr(data, callback) {
 }
 
 
+//called when a reading session is initialized (/open_article)
+//initializes reading session in sessions collection in main DB
 function init_session(data, res) {
 	// console.log(data)
 	var address = data.article_link
@@ -281,6 +214,8 @@ function init_session(data, res) {
 	})
 }
 
+//add one npr article
+// calls add_article_npr
 app.get('/npr_scrape_one', function(req, res){
 	var data = req.body
 	add_article_npr(data, function(result){
@@ -289,17 +224,21 @@ app.get('/npr_scrape_one', function(req, res){
 	})
 });
 
+//returns list of articles which user has not completed
 app.get('/articles', function(req, res){
 	var data = req.get("X-UDID")
+	//clean udid
 	data = data.replace(/-/g, '_');
 	MongoClient.connect(url, function(e, db) {
 		if(e) throw e;
 		var dbd = db.db(database)
+		//retrieve all articles
 		dbd.collection(combined_articles_collection).find({}).sort({_id: -1}).toArray(async function(er, results) {
 			if(er) throw er;
 			var new_data = []
 			var i = 0
 			while(i < results.length){
+				//only send those which have not been completed
 				session = await dbd.collection(combined_sessions_collection).findOne({'article_id': ObjectId(results[i]._id),'UDID': data, 'completed': true})
 				if(!session){
 					new_data.push(results[i])
@@ -326,7 +265,7 @@ async function sessions_helper(dbd, results){
 	return Promise.all(results.map(result => sessions_article_helper(dbd,result)))
 }
 
-//returns all completed sessions
+//returns all completed sessions for sessions view
 app.get('/sessions', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
@@ -359,7 +298,7 @@ app.get('/sessions', function(req,res){
 	})
 })
 
-//returns stats about how many sessions each user has completed
+//returns basic stats about how many sessions each user has completed
 app.get('/sessions_UDID', function(req,res){
 	var data = req.body
 	//data.UDID = data.UDID.replace(/-/g, '_');
@@ -450,7 +389,7 @@ app.post('/submit_answers', function(req,res){
 	});
 })
 
-//returns sessions in proper format for replaying
+//returns session data in proper format for replaying
 app.post('/session_replay', function(req,res){
 	// console.log('session_replay')
 	MongoClient.connect(url, function(e, db) {
