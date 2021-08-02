@@ -369,7 +369,7 @@ app.get('/settings', function(req,res){
 	toReturn = {}
 	var type = req.get("X-DEVICE-TYPE")
 	//toReturn.showReplays = type.includes("x86")
-	toReturn.introHTML = introHTML
+	toReturn.intro_html = introHTML
 	toReturn.showIntro = true
 	res.send(toReturn)
 })
@@ -587,7 +587,7 @@ introHTML = `
 <h2><strong><em>Can I be removed from the research without my OK?</em></strong></h2>
 <p><span style="font-weight: 400;">The person in charge of the research study or the sponsor can remove you from the research study without your approval. Possible reasons for removal include the inability to follow study procedures.</span></p>
 <h2><strong><em>What else do I need to know?</em></strong></h2>
-<p><span style="font-weight: 400;">If you agree to take part in this research study, we will offer you a $40 Amazon gift card following completion of the study.&nbsp;</span></p>
+<p><span style="font-weight: 400;">If you agree to take part in this research study, we will offer you a $40 Amazon gift card following completion of the study and all 10 articles.&nbsp;</span></p>
 <p><span style="font-weight: 400;">If you wish to learn more about the results of this research you can contact Arman Aydemir arman.aydemir@colorado.edu.</span></p>
 <p><br /><br /></p>
 `;
