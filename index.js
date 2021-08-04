@@ -30,11 +30,11 @@ var ObjectId = require('mongodb').ObjectId;
 var url = "mongodb://localhost:27017/";
 
 // VERY VERY IMPORTANT
-var database = 'data_official_run01'
-var sessions_db = 'sessions_official_run01'
-var events_db = 'events_official_run01'
-var questions_db = 'questions_official_run01'
-const version = "v0.5.0"
+var database = 'data_official_run02'
+var sessions_db = 'sessions_official_run02'
+var events_db = 'events_official_run02'
+var questions_db = 'questions_official_run02'
+const version = "v0.5.1"
 
 var old_db = 'data'
 var old_sessions = 'sessions'
