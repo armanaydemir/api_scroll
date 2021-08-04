@@ -368,7 +368,7 @@ app.get('/settings', function(req,res){
 	console.log(data)
 	toReturn = {}
 	var type = req.get("X-DEVICE-TYPE")
-	//toReturn.showReplays = type.includes("x86")
+	toReturn.showReplays = type.includes("x86")
 	toReturn.intro_html = introHTML
 	toReturn.showIntro = true
 	res.send(toReturn)
